@@ -655,7 +655,7 @@ async function loadMoney() {
 
   document.getElementById('totalBalance').textContent =
     (income - expense).toLocaleString('vi-VN') + 'đ';
-}}async function deleteEmployee(id) {
+}async function deleteEmployee(id) {
 
   if (!confirm('Bạn có chắc muốn xóa nhân viên này?')) {
     return;
