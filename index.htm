@@ -1260,7 +1260,30 @@ async function addMoney(){
   }
 
 }
+async function deleteMoney(id){
 
+  if(!confirm('Bạn có chắc muốn xóa giao dịch này?')){
+    return;
+  }
+
+  const { error } =
+    await supabaseClient
+      .from('money')
+      .delete()
+      .eq('id', id);
+
+  if(error){
+
+    alert('Lỗi: ' + error.message);
+    return;
+
+  }
+
+  alert('Đã xóa giao dịch!');
+
+  loadMoney();
+
+}
 // ============================
 // TẢI GIAO DỊCH
 // ============================
