@@ -548,7 +548,53 @@
     // ============================
     // NHÂN VIÊN
     // ============================
+async function loadEmployees(){
 
+  const box =
+    document.getElementById("employeeList");
+
+  if(!box) return;
+
+  const { data, error } =
+    await supabaseClient
+      .from("employees")
+      .select("id, name, created_at")
+      .order("created_at", {
+        ascending: false
+      });
+
+  if(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      "<div class='card'>Không tải được danh sách nhân viên.</div>";
+
+    return;
+  }
+
+  box.innerHTML = "";
+
+  data.forEach(employee => {
+
+    const item =
+      document.createElement("div");
+
+    item.className = "card";
+
+    item.innerHTML =
+      "<h3>👤 " +
+      escapeHtml(employee.name) +
+      "</h3>" +
+      "<p>ID: " +
+      escapeHtml(employee.id) +
+      "</p>";
+
+    box.appendChild(item);
+
+  });
+
+}
     async function addEmployee(){
 
   const name =
