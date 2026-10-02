@@ -457,7 +457,94 @@ body{
     class="btn goldbtn"
     style="width:100%"
     onclick="addServiceRecord()"
-  >
+  >async function loadServiceRecords(){
+
+  const list =
+    document.getElementById('serviceList');
+
+  if(!list){
+    return;
+  }
+
+  list.innerHTML =
+    '<div class="muted small">Đang tải...</div>';
+
+  const { data, error } =
+    await supabaseClient
+      .from('service_records')
+      .select('*')
+      .order('created_at', {
+        ascending: false
+      });
+
+  if(error){
+    console.error(error);
+    list.innerHTML =
+      '<div class="muted small">Không tải được dịch vụ.</div>';
+    return;
+  }
+
+  if(!data || data.length === 0){
+    list.innerHTML =
+      '<div class="muted small">Chưa có dịch vụ nào.</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+
+  data.forEach(item => {
+
+    const total =
+      Number(item.price) *
+      Number(item.quantity);
+
+    const commission =
+      Number(item.commission);
+
+    const row =
+      document.createElement('div');
+
+    row.className = 'card';
+
+    row.innerHTML = `
+      <b>
+        ${escapeHtml(item.employee_name)}
+      </b>
+
+      <div class="muted small">
+        ${escapeHtml(item.service_name)}
+        × ${item.quantity}
+      </div>
+
+      <div class="num">
+        ${total.toLocaleString('vi-VN')}đ
+      </div>
+
+      <div class="gold">
+        Hoa hồng 50%:
+        ${commission.toLocaleString('vi-VN')}đ
+      </div>
+
+      <button
+        type="button"
+        onclick="deleteServiceRecord('${item.id}')"
+        style="
+          margin-top:10px;
+          border:0;
+          border-radius:8px;
+          padding:7px 12px;
+          cursor:pointer;
+        "
+      >
+        🗑️ Xóa
+      </button>
+    `;
+
+    list.appendChild(row);
+
+  });
+
+}
     ➕ Lưu dịch vụ
   </button>
 
