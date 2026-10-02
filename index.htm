@@ -409,7 +409,65 @@ body{
   >
     ＋ Thêm nhân viên
   </button>
+<div class="sectiontitle">
+  💈 Dịch vụ hôm nay
+</div>
 
+<div class="card">
+
+  <select
+    class="input"
+    id="serviceName"
+  >
+    <option value="Cắt tóc" data-price="50000">
+      Cắt tóc — 50.000đ
+    </option>
+
+    <option value="Cắt trẻ em" data-price="40000">
+      Cắt trẻ em — 40.000đ
+    </option>
+
+    <option value="Cạo mặt" data-price="10000">
+      Cạo mặt — 10.000đ
+    </option>
+
+    <option value="Lột mụn" data-price="20000">
+      Lột mụn — 20.000đ
+    </option>
+
+    <option value="Gội đầu" data-price="20000">
+      Gội đầu — 20.000đ
+    </option>
+
+    <option value="Ráy tai" data-price="40000">
+      Ráy tai — 40.000đ
+    </option>
+  </select>
+
+  <input
+    class="input"
+    id="serviceQuantity"
+    type="number"
+    min="1"
+    value="1"
+    placeholder="Số lượng"
+  >
+
+  <button
+    class="btn goldbtn"
+    style="width:100%"
+    onclick="addServiceRecord()"
+  >
+    ➕ Lưu dịch vụ
+  </button>
+
+</div>
+
+<div class="sectiontitle">
+  📋 Dịch vụ đã làm
+</div>
+
+<div id="serviceList"></div>
 </div>
 
 
