@@ -1368,26 +1368,40 @@ async function loadMoney(){
 
     row.innerHTML = `
 
-      <b>
-        ${
-          item.type === 'income'
-            ? '💰 Thu'
-            : '💸 Chi'
-        }
-      </b>
+  <b>
+    ${
+      item.type === 'income'
+        ? '💰 Thu'
+        : '💸 Chi'
+    }
+  </b>
 
-      <div class="num">
-        ${amount.toLocaleString('vi-VN')}đ
-      </div>
+  <div class="num">
+    ${amount.toLocaleString('vi-VN')}đ
+  </div>
 
-      <div class="muted small">
-        ${escapeHtml(
-          item.note ||
-          'Không có ghi chú'
-        )}
-      </div>
+  <div class="muted small">
+    ${escapeHtml(
+      item.note ||
+      'Không có ghi chú'
+    )}
+  </div>
 
-    `;
+  <button
+    type="button"
+    onclick="deleteMoney('${item.id}')"
+    style="
+      margin-top:10px;
+      border:0;
+      border-radius:8px;
+      padding:7px 12px;
+      cursor:pointer;
+    "
+  >
+    🗑️ Xóa giao dịch
+  </button>
+
+`;
 
 
     list.appendChild(row);
