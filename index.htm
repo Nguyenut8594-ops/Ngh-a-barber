@@ -198,7 +198,64 @@ body{margin:0;background:#0d0d0d;color:#f5f5f5;font-family:-apple-system,BlinkMa
 
   </div>
 
-</main>
+<!-- QUẢN LÝ TIỀN -->
+<div class="page" id="money">
+
+  <div class="row">
+    <div>
+      <div class="muted small">Quản lý</div>
+      <div class="brand">💰 Quản lý tiền</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="muted small">Tổng thu</div>
+      <div class="num gold" id="totalIncome">0đ</div>
+    </div>
+
+    <div class="stat">
+      <div class="muted small">Tổng chi</div>
+      <div class="num" id="totalExpense">0đ</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="muted small">Còn lại</div>
+    <div class="num gold" id="totalBalance">0đ</div>
+  </div>
+
+  <div class="sectiontitle">Thêm giao dịch</div>
+
+  <div class="card">
+    <select class="input" id="moneyType">
+      <option value="income">💰 Khoản thu</option>
+      <option value="expense">💸 Khoản chi</option>
+    </select>
+
+    <input
+      class="input"
+      id="moneyAmount"
+      type="number"
+      placeholder="Số tiền"
+    >
+
+    <input
+      class="input"
+      id="moneyNote"
+      placeholder="Ghi chú"
+    >
+
+    <button class="btn goldbtn" onclick="addMoney()">
+      ➕ Lưu giao dịch
+    </button>
+  </div>
+
+  <div class="sectiontitle">Lịch sử giao dịch</div>
+
+  <div id="moneyList"></div>
+
+</div></main>
 
 
 <!-- THANH ĐIỀU HƯỚNG -->
