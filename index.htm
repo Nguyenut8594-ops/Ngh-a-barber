@@ -593,7 +593,68 @@ async function addEmployee(){
   document.getElementById('moneyNote').value = '';
 
   loadMoney();
-}async function deleteEmployee(id) {
+async function loadMoney() {
+
+  const { data, error } = await supabaseClient
+    .from('money')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    alert('Lỗi tải dữ liệu: ' + error.message);
+    return;
+  }
+
+  let income = 0;
+  let expense = 0;
+
+  const list = document.getElementById('moneyList');
+  list.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    list.innerHTML =
+      '<div class="muted small">Chưa có giao dịch nào.</div>';
+
+    document.getElementById('totalIncome').textContent = '0đ';
+    document.getElementById('totalExpense').textContent = '0đ';
+    document.getElementById('totalBalance').textContent = '0đ';
+
+    return;
+  }
+
+  data.forEach(item => {
+
+    const amount = Number(item.amount || 0);
+
+    if (item.type === 'income') {
+      income += amount;
+    } else {
+      expense += amount;
+    }
+
+    const row = document.createElement('div');
+    row.className = 'card';
+
+    row.innerHTML = `
+      <b>${item.type === 'income' ? '💰 Thu' : '💸 Chi'}</b>
+      <div class="num">${amount.toLocaleString('vi-VN')}đ</div>
+      <div class="muted small">
+        ${escapeHtml(item.note || 'Không có ghi chú')}
+      </div>
+    `;
+
+    list.appendChild(row);
+  });
+
+  document.getElementById('totalIncome').textContent =
+    income.toLocaleString('vi-VN') + 'đ';
+
+  document.getElementById('totalExpense').textContent =
+    expense.toLocaleString('vi-VN') + 'đ';
+
+  document.getElementById('totalBalance').textContent =
+    (income - expense).toLocaleString('vi-VN') + 'đ';
+}}async function deleteEmployee(id) {
 
   if (!confirm('Bạn có chắc muốn xóa nhân viên này?')) {
     return;
