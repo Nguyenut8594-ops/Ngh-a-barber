@@ -1,16 +1,19 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL =
-  "https://nwnbwhgxeidbclpywzpe.supabase.co";
+let supabaseClient = null;
 
-const SUPABASE_KEY =
-  "sb_publishable_as-NhQ3Bzc9WL4rza6latg_eUNCOP9r";
-
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+try {
+  if (typeof supabase !== "undefined") {
+    supabaseClient = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+  } else {
+    console.log("Supabase chưa tải");
+  }
+} catch (error) {
+  console.error("Lỗi Supabase:", error);
+}
 
 
 // ============================
