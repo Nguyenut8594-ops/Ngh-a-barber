@@ -662,7 +662,7 @@ async function loadMoney() {
     (income - expense).toLocaleString('vi-VN') + 'đ';
 
 }
-
+async function deleteEmployee(id) {
   if (!confirm('Bạn có chắc muốn xóa nhân viên này?')) {
     return;
   }
