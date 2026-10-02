@@ -444,6 +444,25 @@ async function addEmployee(){
   loadEmployees();
 
 }
+  async function deleteEmployee(id) {
+
+  if (!confirm('Bạn có chắc muốn xóa nhân viên này?')) {
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from('employees')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    alert('Lỗi: ' + error.message);
+    return;
+  }
+
+  alert('Đã xóa nhân viên!');
+  loadEmployees();
+}
 
 
 
