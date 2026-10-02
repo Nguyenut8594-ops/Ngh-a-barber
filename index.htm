@@ -415,7 +415,7 @@ async function addEmployee(){
     .from('employees')
     .insert([
       {
-        name: cleanName
+        "Name": cleanName
       }
     ]);
 
