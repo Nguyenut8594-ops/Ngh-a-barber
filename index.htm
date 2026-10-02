@@ -14,7 +14,7 @@ body{margin:0;background:#0d0d0d;color:#f5f5f5;font-family:-apple-system,BlinkMa
 .muted{color:#9b9b9b}
 .card{background:#181818;border:1px solid #292929;border-radius:18px;padding:16px;margin:12px 0}
 .gold{color:#e7b75a}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}ưo
 .stat{background:#202020;border-radius:14px;padding:14px}
 .num{font-size:24px;font-weight:800;margin-top:5px}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -527,11 +527,10 @@ async function addEmployee(){
   const name = prompt('Nhập tên nhân viên:');
 
   if(!name || !name.trim()){
-    return
-
+    return;
+  }
 
   const cleanName = name.trim();
-
 
   const { error } = await supabaseClient
     .from('employees')
@@ -540,7 +539,6 @@ async function addEmployee(){
         "Name": cleanName
       }
     ]);
-
 
   if(error){
 
@@ -553,13 +551,18 @@ async function addEmployee(){
     return;
   }
 
-
   alert('Đã thêm nhân viên ' + cleanName);
 
   loadEmployees();
 
 }
-  async function addMoney() {
+
+
+// ============================
+// QUẢN LÝ TIỀN
+// ============================
+
+async function addMoney() {
 
   const type = document.getElementById('moneyType').value;
   const amount = Number(document.getElementById('moneyAmount').value);
@@ -580,8 +583,85 @@ async function addEmployee(){
 
   if (error) {
     alert('Lỗi: ' + error.message);
-    return;}
-  async function deleteEmployee(id) {
+    return;
+  }
+
+  alert('Đã lưu giao dịch!');
+
+  document.getElementById('moneyAmount').value = '';
+  document.getElementById('moneyNote').value = '';
+
+  loadMoney();
+}
+
+
+async function loadMoney() {
+
+  const { data, error } = await supabaseClient
+    .from('money')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    alert('Lỗi tải dữ liệu: ' + error.message);
+    return;
+  }
+
+  let income = 0;
+  let expense = 0;
+
+  const list = document.getElementById('moneyList');
+
+  list.innerHTML = '';
+
+  if (!data || data.length === 0) {
+
+    list.innerHTML =
+      '<div class="muted small">Chưa có giao dịch nào.</div>';
+
+    document.getElementById('totalIncome').textContent = '0đ';
+    document.getElementById('totalExpense').textContent = '0đ';
+    document.getElementById('totalBalance').textContent = '0đ';
+
+    return;
+  }
+
+  data.forEach(item => {
+
+    const amount = Number(item.amount || 0);
+
+    if (item.type === 'income') {
+      income += amount;
+    } else {
+      expense += amount;
+    }
+
+    const row = document.createElement('div');
+
+    row.className = 'card';
+
+    row.innerHTML = `
+      <b>${item.type === 'income' ? '💰 Thu' : '💸 Chi'}</b>
+      <div class="num">${amount.toLocaleString('vi-VN')}đ</div>
+      <div class="muted small">
+        ${escapeHtml(item.note || 'Không có ghi chú')}
+      </div>
+    `;
+
+    list.appendChild(row);
+
+  });
+
+  document.getElementById('totalIncome').textContent =
+    income.toLocaleString('vi-VN') + 'đ';
+
+  document.getElementById('totalExpense').textContent =
+    expense.toLocaleString('vi-VN') + 'đ';
+
+  document.getElementById('totalBalance').textContent =
+    (income - expense).toLocaleString('vi-VN') + 'đ';
+
+}
 
   if (!confirm('Bạn có chắc muốn xóa nhân viên này?')) {
     return;
