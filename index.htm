@@ -1191,7 +1191,75 @@ async function addMoney(){
   loadMoney();
 
 }
+async function addMoney(){
 
+  try {
+
+    const type =
+      document.getElementById('moneyType').value;
+
+    const amount =
+      Number(
+        document.getElementById('moneyAmount').value
+      );
+
+    const note =
+      document.getElementById('moneyNote').value.trim();
+
+    if(!amount || amount <= 0){
+
+      alert('Vui lòng nhập số tiền!');
+      return;
+
+    }
+
+    console.log('Đang lưu:', {
+      type: type,
+      amount: amount,
+      note: note
+    });
+
+    const result =
+      await supabaseClient
+        .from('money')
+        .insert({
+          type: type,
+          amount: amount,
+          note: note
+        });
+
+    console.log('Kết quả Supabase:', result);
+
+    if(result.error){
+
+      alert(
+        'Supabase báo lỗi:\n' +
+        result.error.message
+      );
+
+      return;
+
+    }
+
+    alert('Đã lưu giao dịch!');
+
+    document.getElementById('moneyAmount').value = '';
+    document.getElementById('moneyNote').value = '';
+
+    loadMoney();
+
+  } catch(error){
+
+    console.error('LỖI:', error);
+
+    alert(
+      'Lỗi JavaScript:\n' +
+      error.message
+    );
+
+  }
+
+}
 
 // ============================
 // TẢI GIAO DỊCH
