@@ -485,7 +485,7 @@ async function loadEmployees(){
 
     const name = employee.Name || employee.name || 'Nhân viên';
 
-;const firstLetter =
+const firstLetter =
       name.trim().charAt(0).toUpperCase();
 
 
@@ -531,8 +531,7 @@ async function addEmployee(){
   const name = prompt('Nhập tên nhân viên:');
 
   if(!name || !name.trim()){
-    return;
-  }
+    return
 
 
   const cleanName = name.trim();
