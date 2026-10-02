@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -7,231 +8,645 @@
 <title>Nghĩa Barber</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0d0d0d;color:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.app{max-width:430px;margin:auto;min-height:100vh;padding:20px 16px 90px}
-.brand{font-size:28px;font-weight:800}
-.muted{color:#9b9b9b}
-.card{background:#181818;border:1px solid #292929;border-radius:18px;padding:16px;margin:12px 0}
-.gold{color:#e7b75a}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}ưo
-.stat{background:#202020;border-radius:14px;padding:14px}
-.num{font-size:24px;font-weight:800;margin-top:5px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn{border:0;border-radius:14px;padding:14px;background:#252525;color:white;font-weight:700;font-size:15px}
-.btn.goldbtn{background:#d9a441;color:#111}
-.row{display:flex;justify-content:space-between;align-items:center}
-.employee{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #292929}
-.avatar{width:42px;height:42px;border-radius:50%;background:#333;display:grid;place-items:center;font-weight:800}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#151515;border-top:1px solid #292929;padding:10px max(16px,calc((100vw - 430px)/2 + 16px));display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.nav button{background:none;border:0;color:#999;font-size:12px}
-.nav button.active{color:#e7b75a}
-.page{display:none}
-.page.active{display:block}
-.login{min-height:100vh;display:grid;place-items:center;padding:24px}
-.loginbox{width:100%;max-width:390px}
-.input{width:100%;padding:15px;border-radius:13px;border:1px solid #333;background:#181818;color:#fff;margin:7px 0 12px;font-size:16px}
-.small{font-size:13px}
-.tag{padding:5px 9px;border-radius:999px;background:#183b28;color:#75d99a;font-size:12px}
-.sectiontitle{font-size:19px;font-weight:800;margin-top:22px}
+*{
+  box-sizing:border-box
+}
+
+body{
+  margin:0;
+  background:#0d0d0d;
+  color:#f5f5f5;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+}
+
+.app{
+  max-width:430px;
+  margin:auto;
+  min-height:100vh;
+  padding:20px 16px 90px
+}
+
+.brand{
+  font-size:28px;
+  font-weight:800
+}
+
+.muted{
+  color:#9b9b9b
+}
+
+.card{
+  background:#181818;
+  border:1px solid #292929;
+  border-radius:18px;
+  padding:16px;
+  margin:12px 0
+}
+
+.gold{
+  color:#e7b75a
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.stat{
+  background:#202020;
+  border-radius:14px;
+  padding:14px
+}
+
+.num{
+  font-size:24px;
+  font-weight:800;
+  margin-top:5px
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.btn{
+  border:0;
+  border-radius:14px;
+  padding:14px;
+  background:#252525;
+  color:white;
+  font-weight:700;
+  font-size:15px
+}
+
+.btn.goldbtn{
+  background:#d9a441;
+  color:#111
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+
+.employee{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid #292929
+}
+
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#333;
+  display:grid;
+  place-items:center;
+  font-weight:800
+}
+
+.nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#151515;
+  border-top:1px solid #292929;
+  padding:10px max(16px,calc((100vw - 430px)/2 + 16px));
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px
+}
+
+.nav button{
+  background:none;
+  border:0;
+  color:#999;
+  font-size:12px
+}
+
+.nav button.active{
+  color:#e7b75a
+}
+
+.page{
+  display:none
+}
+
+.page.active{
+  display:block
+}
+
+.login{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px
+}
+
+.loginbox{
+  width:100%;
+  max-width:390px
+}
+
+.input{
+  width:100%;
+  padding:15px;
+  border-radius:13px;
+  border:1px solid #333;
+  background:#181818;
+  color:#fff;
+  margin:7px 0 12px;
+  font-size:16px
+}
+
+.small{
+  font-size:13px
+}
+
+.tag{
+  padding:5px 9px;
+  border-radius:999px;
+  background:#183b28;
+  color:#75d99a;
+  font-size:12px
+}
+
+.sectiontitle{
+  font-size:19px;
+  font-weight:800;
+  margin-top:22px
+}
 </style>
+
 </head>
 
 <body>
 
-<!-- ĐĂNG NHẬP -->
+
+<!-- =========================
+     ĐĂNG NHẬP
+========================= -->
+
 <div id="login" class="login">
+
   <div class="loginbox">
-    <div class="brand">✂️ Nghĩa <span class="gold">Barber</span></div>
-    <p class="muted">Quản lý tiệm & nhân viên</p>
+
+    <div class="brand">
+      ✂️ Nghĩa <span class="gold">Barber</span>
+    </div>
+
+    <p class="muted">
+      Quản lý tiệm & nhân viên
+    </p>
 
     <div class="card">
-      <label class="small muted">Tài khoản</label>
-      <input class="input" id="user" placeholder="Nhập tài khoản">
 
-      <label class="small muted">Mật khẩu</label>
-      <input class="input" id="pass" type="password" placeholder="Nhập mật khẩu">
+      <label class="small muted">
+        Tài khoản
+      </label>
 
-      <button class="btn goldbtn" style="width:100%" onclick="login()">
+      <input
+        class="input"
+        id="user"
+        placeholder="Nhập tài khoản"
+      >
+
+      <label class="small muted">
+        Mật khẩu
+      </label>
+
+      <input
+        class="input"
+        id="pass"
+        type="password"
+        placeholder="Nhập mật khẩu"
+      >
+
+      <button
+        class="btn goldbtn"
+        style="width:100%"
+        onclick="login()"
+      >
         Đăng nhập
       </button>
 
       <p class="small muted">
         Bản mẫu: chủ / 1234 hoặc nv1 / 1234
       </p>
+
     </div>
+
   </div>
+
 </div>
 
 
-<!-- ỨNG DỤNG -->
-<main id="app" class="app" style="display:none">
+<!-- =========================
+     ỨNG DỤNG
+========================= -->
 
-  <!-- TRANG CHỦ -->
-  <div class="page active" id="home">
+<main
+  id="app"
+  class="app"
+  style="display:none"
+>
 
-    <div class="row">
-      <div>
-        <div class="muted small">Xin chào</div>
-        <div class="brand" id="hello">Chủ tiệm</div>
+
+<!-- =========================
+     TRANG CHỦ
+========================= -->
+
+<div class="page active" id="home">
+
+  <div class="row">
+
+    <div>
+
+      <div class="muted small">
+        Xin chào
       </div>
-      <div class="tag">Đang mở</div>
+
+      <div
+        class="brand"
+        id="hello"
+      >
+        Chủ tiệm
+      </div>
+
     </div>
 
-    <div class="card">
-      <div class="muted small">Doanh thu hôm nay</div>
-      <div class="num gold">2.450.000đ</div>
-      <div class="muted small">+8% so với hôm qua</div>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <div class="muted small">Nhân viên</div>
-        <div class="num" id="employeeCount">0</div>
-      </div>
-
-      <div class="stat">
-        <div class="muted small">Đang làm</div>
-        <div class="num">3</div>
-      </div>
-    </div>
-
-    <div class="sectiontitle">Thao tác nhanh</div>
-
-    <div class="actions">
-      <button class="btn goldbtn" onclick="show('attendance')">
-        ⏱ Chấm công
-      </button>
-
-      <button class="btn" onclick="show('employees')">
-        👥 Nhân viên
-      </button>
-
-      <button class="btn" onclick="show('schedule')">
-        📅 Lịch làm
-      </button>
-
-      <button class="btn" onclick="show('money')">
-  💰 Quản lý tiền
-</button>
+    <div class="tag">
+      Đang mở
     </div>
 
   </div>
 
 
-  <!-- NHÂN VIÊN -->
-  <div class="page" id="employees">
+  <div class="card">
 
-    <div class="brand">Nhân viên</div>
-
-    <div class="card" id="employeeList">
-      <div class="muted small">Đang tải nhân viên...</div>
+    <div class="muted small">
+      Doanh thu hôm nay
     </div>
 
-    <button class="btn goldbtn" style="width:100%" onclick="addEmployee()">
-      ＋ Thêm nhân viên
+    <div class="num gold">
+      2.450.000đ
+    </div>
+
+    <div class="muted small">
+      +8% so với hôm qua
+    </div>
+
+  </div>
+
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <div class="muted small">
+        Nhân viên
+      </div>
+
+      <div
+        class="num"
+        id="employeeCount"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="muted small">
+        Đang làm
+      </div>
+
+      <div class="num">
+        3
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="sectiontitle">
+    Thao tác nhanh
+  </div>
+
+
+  <div class="actions">
+
+    <button
+      class="btn goldbtn"
+      onclick="show('attendance')"
+    >
+      ⏱ Chấm công
+    </button>
+
+
+    <button
+      class="btn"
+      onclick="show('employees')"
+    >
+      👥 Nhân viên
+    </button>
+
+
+    <button
+      class="btn"
+      onclick="show('schedule')"
+    >
+      📅 Lịch làm
+    </button>
+
+
+    <button
+      class="btn"
+      onclick="show('money')"
+    >
+      💰 Quản lý tiền
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     NHÂN VIÊN
+========================= -->
+
+<div class="page" id="employees">
+
+  <div class="brand">
+    Nhân viên
+  </div>
+
+
+  <div
+    class="card"
+    id="employeeList"
+  >
+    <div class="muted small">
+      Đang tải nhân viên...
+    </div>
+  </div>
+
+
+  <button
+    class="btn goldbtn"
+    style="width:100%"
+    onclick="addEmployee()"
+  >
+    ＋ Thêm nhân viên
+  </button>
+
+</div>
+
+
+<!-- =========================
+     CHẤM CÔNG
+========================= -->
+
+<div class="page" id="attendance">
+
+  <div class="brand">
+    Chấm công
+  </div>
+
+
+  <div class="card">
+
+    <div class="muted small">
+      Hôm nay
+    </div>
+
+    <div class="num">
+      08:30 — ?
+    </div>
+
+    <p class="muted">
+      Trạng thái: chưa chấm công ra
+    </p>
+
+
+    <button
+      class="btn goldbtn"
+      style="width:100%"
+      onclick="this.textContent='✓ Đã chấm công ra';this.disabled=true"
+    >
+      Chấm công ra
     </button>
 
   </div>
 
 
-  <!-- CHẤM CÔNG -->
-  <div class="page" id="attendance">
+  <div class="card">
 
-    <div class="brand">Chấm công</div>
+    <b>
+      Chấm công hôm nay
+    </b>
 
-    <div class="card">
-      <div class="muted small">Hôm nay</div>
-      <div class="num">08:30 — ?</div>
 
-      <p class="muted">
-        Trạng thái: chưa chấm công ra
-      </p>
+    <div class="employee">
 
-      <button class="btn goldbtn"
-        style="width:100%"
-        onclick="this.textContent='✓ Đã chấm công ra';this.disabled=true">
-        Chấm công ra
-      </button>
-    </div>
-
-    <div class="card">
-      <b>Chấm công hôm nay</b>
-
-      <div class="employee">
-        <div class="avatar">A</div>
-        <div>
-          <b>An</b>
-          <div class="muted small">08:02 — 17:35</div>
-        </div>
+      <div class="avatar">
+        A
       </div>
 
-      <div class="employee">
-        <div class="avatar">K</div>
-        <div>
-          <b>Khoa</b>
-          <div class="muted small">08:18 — Đang làm</div>
+      <div>
+
+        <b>
+          An
+        </b>
+
+        <div class="muted small">
+          08:02 — 17:35
         </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="employee">
+
+      <div class="avatar">
+        K
+      </div>
+
+      <div>
+
+        <b>
+          Khoa
+        </b>
+
+        <div class="muted small">
+          08:18 — Đang làm
+        </div>
+
       </div>
 
     </div>
 
   </div>
 
+</div>
 
-  <!-- LỊCH -->
-  <div class="page" id="schedule">
 
-    <div class="brand">Lịch làm</div>
+<!-- =========================
+     LỊCH
+========================= -->
 
-    <div class="card">
-      <b>Thứ Năm • 01/10</b>
-      <p>08:00–20:00</p>
-      <div class="muted small">An • Khoa • Minh</div>
-    </div>
+<div class="page" id="schedule">
 
-    <div class="card">
-      <b>Thứ Sáu • 02/10</b>
-      <p>08:00–20:00</p>
-      <div class="muted small">An • Khoa</div>
+  <div class="brand">
+    Lịch làm
+  </div>
+
+
+  <div class="card">
+
+    <b>
+      Thứ Năm • 01/10
+    </b>
+
+    <p>
+      08:00–20:00
+    </p>
+
+    <div class="muted small">
+      An • Khoa • Minh
     </div>
 
   </div>
 
-<!-- QUẢN LÝ TIỀN -->
+
+  <div class="card">
+
+    <b>
+      Thứ Sáu • 02/10
+    </b>
+
+    <p>
+      08:00–20:00
+    </p>
+
+    <div class="muted small">
+      An • Khoa
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     QUẢN LÝ TIỀN
+========================= -->
+
 <div class="page" id="money">
 
   <div class="row">
+
     <div>
-      <div class="muted small">Quản lý</div>
-      <div class="brand">💰 Quản lý tiền</div>
+
+      <div class="muted small">
+        Quản lý
+      </div>
+
+      <div class="brand">
+        💰 Quản lý tiền
+      </div>
+
     </div>
+
   </div>
+
 
   <div class="stats">
-    <div class="stat">
-      <div class="muted small">Tổng thu</div>
-      <div class="num gold" id="totalIncome">0đ</div>
-    </div>
 
     <div class="stat">
-      <div class="muted small">Tổng chi</div>
-      <div class="num" id="totalExpense">0đ</div>
+
+      <div class="muted small">
+        Tổng thu
+      </div>
+
+      <div
+        class="num gold"
+        id="totalIncome"
+      >
+        0đ
+      </div>
+
     </div>
+
+
+    <div class="stat">
+
+      <div class="muted small">
+        Tổng chi
+      </div>
+
+      <div
+        class="num"
+        id="totalExpense"
+      >
+        0đ
+      </div>
+
+    </div>
+
   </div>
 
+
   <div class="card">
-    <div class="muted small">Còn lại</div>
-    <div class="num gold" id="totalBalance">0đ</div>
+
+    <div class="muted small">
+      Còn lại
+    </div>
+
+    <div
+      class="num gold"
+      id="totalBalance"
+    >
+      0đ
+    </div>
+
   </div>
 
-  <div class="sectiontitle">Thêm giao dịch</div>
+
+  <div class="sectiontitle">
+    Thêm giao dịch
+  </div>
+
 
   <div class="card">
-    <select class="input" id="moneyType">
-      <option value="income">💰 Khoản thu</option>
-      <option value="expense">💸 Khoản chi</option>
+
+    <select
+      class="input"
+      id="moneyType"
+    >
+
+      <option value="income">
+        💰 Khoản thu
+      </option>
+
+      <option value="expense">
+        💸 Khoản chi
+      </option>
+
     </select>
+
 
     <input
       class="input"
@@ -240,117 +655,108 @@ body{margin:0;background:#0d0d0d;color:#f5f5f5;font-family:-apple-system,BlinkMa
       placeholder="Số tiền"
     >
 
+
     <input
       class="input"
       id="moneyNote"
       placeholder="Ghi chú"
     >
 
-    <button class="btn goldbtn" onclick="addMoney()">
 
-  const { data, error } = await supabaseClient
-    .from('money')
-    .select('*')
-    .order('created_at', { ascending: false });
+    <button
+      class="btn goldbtn"
+      style="width:100%"
+      onclick="addMoney()"
+    >
+      ➕ Lưu giao dịch
+    </button>
 
-  if (error) {
-    alert('Lỗi tải dữ liệu: ' + error.message);
-    return;
-  }
+  </div>
 
-  let income = 0;
-  let expense = 0;
 
-  const list = document.getElementById('moneyList');
+  <div class="sectiontitle">
+    Lịch sử giao dịch
+  </div>
 
-  list.innerHTML = '';
 
-  if (!data || data.length === 0) {
-    list.innerHTML =
-      '<div class="muted small">Chưa có giao dịch nào.</div>';
+  <div id="moneyList"></div>
 
-    document.getElementById('totalIncome').textContent = '0đ';
-    document.getElementById('totalExpense').textContent = '0đ';
-    document.getElementById('totalBalance').textContent = '0đ';
+</div>
 
-    return;
-  }
 
-  data.forEach(item => {
+</main>
 
-    const amount = Number(item.amount || 0);
 
-    if (item.type === 'income') {
-      income += amount;
-    } else {
-      expense += amount;
-    }
+<!-- =========================
+     THANH ĐIỀU HƯỚNG
+========================= -->
 
-    const row = document.createElement('div');
+<nav
+  class="nav"
+  id="nav"
+  style="display:none"
+>
 
-    row.className = 'card';
-
-    row.innerHTML = `
-      <b>${item.type === 'income' ? '💰 Thu' : '💸 Chi'}</b>
-      <div class="num">${amount.toLocaleString('vi-VN')}đ</div>
-      <div class="muted small">
-        ${escapeHtml(item.note || 'Không có ghi chú')}
-      </div>
-    `;
-
-    list.appendChild(row);
-  });
-
-  document.getElementById('totalIncome').textContent =
-    income.toLocaleString('vi-VN') + 'đ';
-
-  document.getElementById('totalExpense').textContent =
-    expense.toLocaleString('vi-VN') + 'đ';
-
-  document.getElementById('totalBalance').textContent =
-    (income - expense).toLocaleString('vi-VN') + 'đ';
-}
-
-</div></main>
-
-<!-- THANH ĐIỀU HƯỚNG -->
-<nav class="nav" id="nav" style="display:none">
-
-  <button class="active" onclick="show('home',this)">
-    ⌂<br>Trang chủ
+  <button
+    class="active"
+    onclick="show('home',this)"
+  >
+    ⌂<br>
+    Trang chủ
   </button>
 
-  <button onclick="show('employees',this)">
-    👥<br>Nhân viên
+
+  <button
+    onclick="show('employees',this)"
+  >
+    👥<br>
+    Nhân viên
   </button>
 
-  <button onclick="show('attendance',this)">
-    ⏱<br>Chấm công
+
+  <button
+    onclick="show('attendance',this)"
+  >
+    ⏱<br>
+    Chấm công
   </button>
 
-  <button onclick="show('schedule',this)">
-    📅<br>Lịch
+
+  <button
+    onclick="show('schedule',this)"
+  >
+    📅<br>
+    Lịch
   </button>
 
 </nav>
 
 
-<!-- SUPABASE -->
+<!-- =========================
+     SUPABASE
+========================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-const SUPABASE_URL = "https://nwnbwhgxeidbclpywzpe.supabase.co";
+const SUPABASE_URL =
+  "https://nwnbwhgxeidbclpywzpe.supabase.co";
+
 
 /*
-  DÁN PUBLISHABLE KEY CỦA BẠN VÀO ĐÂY
+  GIỮ KEY SUPABASE CŨ CỦA BẠN Ở ĐÂY
 */
-const SUPABASE_KEY = "sb_publishable_as-NhQ3Bzc9WL4rza6latg_eUNCOP9r";
 
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const SUPABASE_KEY =
+  "DÁN_KEY_CŨ_CỦA_BẠN_VÀO_ĐÂY";
+
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
 // ============================
@@ -359,24 +765,42 @@ const supabaseClient = supabase.createClient(
 
 function login(){
 
-  let u = document.getElementById('user').value.trim();
-  let p = document.getElementById('pass').value;
+  const u =
+    document.getElementById('user').value.trim();
 
-  if((u === 'chủ' || u === 'chu') && p === '1234'){
+  const p =
+    document.getElementById('pass').value;
 
-    document.getElementById('hello').textContent = 'Chủ tiệm';
+
+  if(
+    (u === 'chủ' || u === 'chu') &&
+    p === '1234'
+  ){
+
+    document.getElementById('hello').textContent =
+      'Chủ tiệm';
 
     openApp();
 
-  }else if(u === 'nv1' && p === '1234'){
+  }
 
-    document.getElementById('hello').textContent = 'Nhân viên An';
+  else if(
+    u === 'nv1' &&
+    p === '1234'
+  ){
+
+    document.getElementById('hello').textContent =
+      'Nhân viên An';
 
     openApp();
 
-  }else{
+  }
 
-    alert('Tài khoản hoặc mật khẩu chưa đúng. Bản mẫu dùng: chủ / 1234 hoặc nv1 / 1234');
+  else{
+
+    alert(
+      'Tài khoản hoặc mật khẩu chưa đúng. Bản mẫu dùng: chủ / 1234 hoặc nv1 / 1234'
+    );
 
   }
 
@@ -389,11 +813,14 @@ function login(){
 
 function openApp(){
 
-  document.getElementById('login').style.display = 'none';
+  document.getElementById('login').style.display =
+    'none';
 
-  document.getElementById('app').style.display = 'block';
+  document.getElementById('app').style.display =
+    'block';
 
-  document.getElementById('nav').style.display = 'grid';
+  document.getElementById('nav').style.display =
+    'grid';
 
   loadEmployees();
 
@@ -406,46 +833,73 @@ function openApp(){
 
 function show(id,el){
 
-  document.querySelectorAll('.page').forEach(x =>
-    x.classList.remove('active')
-  );
+  document.querySelectorAll('.page')
+    .forEach(x =>
+      x.classList.remove('active')
+    );
 
-  document.getElementById(id).classList.add('active');
 
-  document.querySelectorAll('.nav button').forEach(x =>
-    x.classList.remove('active')
-  );
+  const page =
+    document.getElementById(id);
 
-  if(el){
-    el.classList.add('active');
+  if(page){
+
+    page.classList.add('active');
+
   }
 
-  if(id === 'employees'){
-  loadEmployees();
-}
 
-if(id === 'money'){
-  loadMoney();
-}
+  document.querySelectorAll('.nav button')
+    .forEach(x =>
+      x.classList.remove('active')
+    );
+
+
+  if(el){
+
+    el.classList.add('active');
+
+  }
+
+
+  if(id === 'employees'){
+
+    loadEmployees();
+
+  }
+
+
+  if(id === 'money'){
+
+    loadMoney();
+
+  }
 
 }
 
 
 // ============================
-// TẢI NHÂN VIÊN TỪ SUPABASE
+// TẢI NHÂN VIÊN
 // ============================
 
 async function loadEmployees(){
 
-  const list = document.getElementById('employeeList');
+  const list =
+    document.getElementById('employeeList');
+
 
   list.innerHTML =
     '<div class="muted small">Đang tải nhân viên...</div>';
 
-  const { data, error } = await supabaseClient
-    .from('employees')
-    .select('*')
-    .order('created_at', { ascending:true });
+
+  const { data,error } =
+    await supabaseClient
+      .from('employees')
+      .select('*')
+      .order(
+        'created_at',
+        { ascending:true }
+      );
 
 
   if(error){
@@ -456,21 +910,30 @@ async function loadEmployees(){
       '<div class="muted small">Không tải được danh sách nhân viên.</div>';
 
     return;
+
   }
 
 
-  if(!data || data.length === 0){
+  if(
+    !data ||
+    data.length === 0
+  ){
 
     list.innerHTML =
       '<div class="muted small">Chưa có nhân viên nào.</div>';
 
-    document.getElementById('employeeCount').textContent = '0';
+    document.getElementById(
+      'employeeCount'
+    ).textContent = '0';
 
     return;
+
   }
 
 
-  document.getElementById('employeeCount').textContent =
+  document.getElementById(
+    'employeeCount'
+  ).textContent =
     data.length;
 
 
@@ -479,39 +942,67 @@ async function loadEmployees(){
 
   data.forEach(employee => {
 
-    const name = employee.Name || employee.name || 'Nhân viên';
+    const name =
+      employee.Name ||
+      employee.name ||
+      'Nhân viên';
 
-const firstLetter =
-      name.trim().charAt(0).toUpperCase();
+
+    const firstLetter =
+      name
+        .trim()
+        .charAt(0)
+        .toUpperCase();
 
 
-    const item = document.createElement('div');
+    const item =
+      document.createElement('div');
 
-item.className = 'employee';
 
-item.innerHTML = `
-  <div class="avatar">${firstLetter}</div>
+    item.className =
+      'employee';
 
-  <div style="flex:1">
-    <b>${escapeHtml(name)}</b>
-    <div class="muted small">
-      Barber • Đang làm
-    </div>
-  </div>
 
-  <span class="tag">
-    Có mặt
-  </span>
+    item.innerHTML = `
 
-  <button type="button"
-    onclick="deleteEmployee('${employee.id}')"
-    style="margin-left:10px;border:0;border-radius:8px;padding:6px 9px;cursor:pointer;"
-  >
-    🗑️
-  </button>
-`;
+      <div class="avatar">
+        ${escapeHtml(firstLetter)}
+      </div>
 
-list.appendChild(item);
+      <div style="flex:1">
+
+        <b>
+          ${escapeHtml(name)}
+        </b>
+
+        <div class="muted small">
+          Barber • Đang làm
+        </div>
+
+      </div>
+
+      <span class="tag">
+        Có mặt
+      </span>
+
+      <button
+        type="button"
+        onclick="deleteEmployee('${employee.id}')"
+        style="
+          margin-left:10px;
+          border:0;
+          border-radius:8px;
+          padding:6px 9px;
+          cursor:pointer;
+        "
+      >
+        🗑️
+      </button>
+
+    `;
+
+
+    list.appendChild(item);
 
   });
 
@@ -524,21 +1015,33 @@ list.appendChild(item);
 
 async function addEmployee(){
 
-  const name = prompt('Nhập tên nhân viên:');
+  const name =
+    prompt('Nhập tên nhân viên:');
 
-  if(!name || !name.trim()){
+
+  if(
+    !name ||
+    !name.trim()
+  ){
+
     return;
+
   }
 
-  const cleanName = name.trim();
 
-  const { error } = await supabaseClient
-    .from('employees')
-    .insert([
-      {
-        "Name": cleanName
-      }
-    ]);
+  const cleanName =
+    name.trim();
+
+
+  const { error } =
+    await supabaseClient
+      .from('employees')
+      .insert([
+        {
+          "Name": cleanName
+        }
+      ]);
+
 
   if(error){
 
@@ -549,9 +1052,15 @@ async function addEmployee(){
     );
 
     return;
+
   }
 
-  alert('Đã thêm nhân viên ' + cleanName);
+
+  alert(
+    'Đã thêm nhân viên ' +
+    cleanName
+  );
+
 
   loadEmployees();
 
@@ -559,128 +1068,293 @@ async function addEmployee(){
 
 
 // ============================
-// QUẢN LÝ TIỀN
+// XÓA NHÂN VIÊN
 // ============================
 
-async function addMoney() {
+async function deleteEmployee(id){
 
-  const type = document.getElementById('moneyType').value;
-  const amount = Number(document.getElementById('moneyAmount').value);
-  const note = document.getElementById('moneyNote').value.trim();
+  if(
+    !confirm(
+      'Bạn có chắc muốn xóa nhân viên này?'
+    )
+  ){
 
-  if (!amount || amount <= 0) {
-    alert('Vui lòng nhập số tiền!');
     return;
+
   }
 
-  const { error } = await supabaseClient
-    .from('money')
-    .insert({
-      type: type,
-      amount: amount,
-      note: note
-    });
 
-  if (error) {
-    alert('Lỗi: ' + error.message);
+  const { error } =
+    await supabaseClient
+      .from('employees')
+      .delete()
+      .eq('id',id);
+
+
+  if(error){
+
+    alert(
+      'Lỗi: ' +
+      error.message
+    );
+
     return;
+
   }
 
-  alert('Đã lưu giao dịch!');
 
-  document.getElementById('moneyAmount').value = '';
-  document.getElementById('moneyNote').value = '';
+  alert(
+    'Đã xóa nhân viên!'
+  );
 
-  loadMoney();
+
+  loadEmployees();
+
 }
 
 
-async function loadMoney() {
+// ============================
+// THÊM GIAO DỊCH
+// ============================
 
-  const { data, error } = await supabaseClient
-    .from('money')
-    .select('*')
-    .order('created_at', { ascending: false });
+async function addMoney(){
 
-  if (error) {
-    alert('Lỗi tải dữ liệu: ' + error.message);
+  const type =
+    document.getElementById(
+      'moneyType'
+    ).value;
+
+
+  const amount =
+    Number(
+      document.getElementById(
+        'moneyAmount'
+      ).value
+    );
+
+
+  const note =
+    document.getElementById(
+      'moneyNote'
+    ).value.trim();
+
+
+  if(
+    !amount ||
+    amount <= 0
+  ){
+
+    alert(
+      'Vui lòng nhập số tiền!'
+    );
+
     return;
+
   }
 
+
+  const { error } =
+    await supabaseClient
+      .from('money')
+      .insert({
+
+        type: type,
+
+        amount: amount,
+
+        note: note
+
+      });
+
+
+  if(error){
+
+    alert(
+      'Lỗi: ' +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    'Đã lưu giao dịch!'
+  );
+
+
+  document.getElementById(
+    'moneyAmount'
+  ).value = '';
+
+
+  document.getElementById(
+    'moneyNote'
+  ).value = '';
+
+
+  loadMoney();
+
+}
+
+
+// ============================
+// TẢI GIAO DỊCH
+// ============================
+
+async function loadMoney(){
+
+  const { data,error } =
+    await supabaseClient
+      .from('money')
+      .select('*')
+      .order(
+        'created_at',
+        { ascending:false }
+      );
+
+
+  if(error){
+
+    alert(
+      'Lỗi tải dữ liệu: ' +
+      error.message
+    );
+
+    return;
+
+  }
+
+
   let income = 0;
+
   let expense = 0;
 
-  const list = document.getElementById('moneyList');
+
+  const list =
+    document.getElementById(
+      'moneyList'
+    );
+
 
   list.innerHTML = '';
 
-  if (!data || data.length === 0) {
+
+  if(
+    !data ||
+    data.length === 0
+  ){
 
     list.innerHTML =
       '<div class="muted small">Chưa có giao dịch nào.</div>';
 
-    document.getElementById('totalIncome').textContent = '0đ';
-    document.getElementById('totalExpense').textContent = '0đ';
-    document.getElementById('totalBalance').textContent = '0đ';
+
+    document.getElementById(
+      'totalIncome'
+    ).textContent =
+      '0đ';
+
+
+    document.getElementById(
+      'totalExpense'
+    ).textContent =
+      '0đ';
+
+
+    document.getElementById(
+      'totalBalance'
+    ).textContent =
+      '0đ';
+
 
     return;
+
   }
+
 
   data.forEach(item => {
 
-    const amount = Number(item.amount || 0);
+    const amount =
+      Number(
+        item.amount || 0
+      );
 
-    if (item.type === 'income') {
+
+    if(
+      item.type === 'income'
+    ){
+
       income += amount;
-    } else {
-      expense += amount;
+
     }
 
-    const row = document.createElement('div');
+    else{
 
-    row.className = 'card';
+      expense += amount;
+
+    }
+
+
+    const row =
+      document.createElement('div');
+
+
+    row.className =
+      'card';
+
 
     row.innerHTML = `
-      <b>${item.type === 'income' ? '💰 Thu' : '💸 Chi'}</b>
-      <div class="num">${amount.toLocaleString('vi-VN')}đ</div>
-      <div class="muted small">
-        ${escapeHtml(item.note || 'Không có ghi chú')}
+
+      <b>
+        ${
+          item.type === 'income'
+            ? '💰 Thu'
+            : '💸 Chi'
+        }
+      </b>
+
+      <div class="num">
+        ${amount.toLocaleString('vi-VN')}đ
       </div>
+
+      <div class="muted small">
+        ${escapeHtml(
+          item.note ||
+          'Không có ghi chú'
+        )}
+      </div>
+
     `;
+
 
     list.appendChild(row);
 
   });
 
-  document.getElementById('totalIncome').textContent =
-    income.toLocaleString('vi-VN') + 'đ';
 
-  document.getElementById('totalExpense').textContent =
-    expense.toLocaleString('vi-VN') + 'đ';
+  document.getElementById(
+    'totalIncome'
+  ).textContent =
+    income.toLocaleString('vi-VN') +
+    'đ';
 
-  document.getElementById('totalBalance').textContent =
-    (income - expense).toLocaleString('vi-VN') + 'đ';
+
+  document.getElementById(
+    'totalExpense'
+  ).textContent =
+    expense.toLocaleString('vi-VN') +
+    'đ';
+
+
+  document.getElementById(
+    'totalBalance'
+  ).textContent =
+    (income - expense)
+      .toLocaleString('vi-VN') +
+    'đ';
 
 }
-async function deleteEmployee(id) {
-  if (!confirm('Bạn có chắc muốn xóa nhân viên này?')) {
-    return;
-  }
-
-  const { error } = await supabaseClient
-    .from('employees')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    alert('Lỗi: ' + error.message);
-    return;
-  }
-
-  alert('Đã xóa nhân viên!');
-  loadEmployees();
-}
-
 
 
 // ============================
@@ -689,15 +1363,20 @@ async function deleteEmployee(id) {
 
 function escapeHtml(text){
 
-  const div = document.createElement('div');
+  const div =
+    document.createElement('div');
 
-  div.textContent = text;
+
+  div.textContent =
+    text;
+
 
   return div.innerHTML;
 
 }
 
 </script>
+
 
 </body>
 </html>
