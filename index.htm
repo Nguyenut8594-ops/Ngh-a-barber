@@ -443,25 +443,6 @@ async function addEmployee(){
 
   loadEmployees();
 
-}async function deleteEmployee(id){
-
-  if(!confirm('Bạn có chắc muốn xóa nhân viên này?')){
-    return;
-  }
-
-  const { error } = await supabaseClient
-    .from('employees')
-    .delete()
-    .eq('Id', id);
-
-  if(error){
-    console.error(error);
-    alert('Lỗi: ' + error.message);
-    return;
-  }
-
-  alert('Đã xóa nhân viên!');
-  loadEmployees();
 }
 
 
