@@ -549,65 +549,51 @@
     // NHÂN VIÊN
     // ============================
 
-    function addEmployee(){
+    async function addEmployee(){
 
-      const name =
-        document.getElementById(
-          "employeeName"
-        ).value.trim();
+  const name =
+    document.getElementById("employeeName").value.trim();
 
-      const phone =
-        document.getElementById(
-          "employeePhone"
-        ).value.trim();
+  if(!name){
+    alert("Vui lòng nhập tên nhân viên.");
+    return;
+  }
 
+  if(!supabaseClient){
+    alert("Chưa kết nối được Supabase.");
+    return;
+  }
 
-      if(!name){
+  const { data, error } =
+    await supabaseClient
+      .from("employees")
+      .insert([
+        {
+          name: name
+        }
+      ])
+      .select();
 
-        alert(
-          "Vui lòng nhập tên nhân viên."
-        );
+  if(error){
 
-        return;
-      }
+    console.error(error);
 
+    alert(
+      "Không thể thêm nhân viên:\n" +
+      error.message
+    );
 
-      const box =
-        document.getElementById(
-          "employeeList"
-        );
+    return;
+  }
 
+  alert("Đã thêm nhân viên!");
 
-      const item =
-        document.createElement(
-          "div"
-        );
+  document.getElementById(
+    "employeeName"
+  ).value = "";
 
-      item.className =
-        "card";
-
-
-      item.innerHTML =
-        "<h3>" +
-        escapeHtml(name) +
-        "</h3>" +
-        "<p>📞 " +
-        escapeHtml(phone) +
-        "</p>";
-
-
-      box.appendChild(item);
-
-
-      document.getElementById(
-        "employeeName"
-      ).value = "";
-
-      document.getElementById(
-        "employeePhone"
-      ).value = "";
-
-    }
+  loadEmployees();
+}
 
 
     // ============================
