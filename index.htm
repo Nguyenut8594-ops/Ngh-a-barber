@@ -443,7 +443,7 @@ async function addEmployee(){
 
   loadEmployees();
 
-}async function deleteEmployee(Id){
+}async function deleteEmployee(id){
 
   if(!confirm('Bạn có chắc muốn xóa nhân viên này?')){
     return;
@@ -460,7 +460,9 @@ async function addEmployee(){
     return;
   }
 
+  alert('Đã xóa nhân viên!');
   loadEmployees();
+}
 }
 
 
