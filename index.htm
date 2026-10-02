@@ -371,24 +371,31 @@ async function loadEmployees(){
 
     const item = document.createElement('div');
 
-    item.className = 'employee';
+item.className = 'employee';
 
-    item.innerHTML = `
-      <div class="avatar">${firstLetter}</div>
+item.innerHTML = `
+  <div class="avatar">${firstLetter}</div>
 
-      <div>
-        <b>${escapeHtml(name)}</b>
-        <div class="muted small">
-          Barber • Đang làm
-        </div>
-      </div>
+  <div style="flex:1">
+    <b>${escapeHtml(name)}</b>
+    <div class="muted small">
+      Barber • Đang làm
+    </div>
+  </div>
 
-      <span class="tag">
-        Có mặt
-      </span>
-    `;
+  <span class="tag">
+    Có mặt
+  </span>
 
-    list.appendChild(item);
+  <button
+    onclick="deleteEmployee('${employee.id}')"
+    style="margin-left:10px;border:0;border-radius:8px;padding:6px 9px;cursor:pointer;"
+  >
+    🗑️
+  </button>
+`;
+
+list.appendChild(item);
 
   });
 
