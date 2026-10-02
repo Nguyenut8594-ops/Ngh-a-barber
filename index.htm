@@ -456,7 +456,7 @@ async function addEmployee(){
 
   if(error){
     console.error(error);
-    alert('Không xóa được nhân viên.');
+    alert('Lỗi: ' + error.message);
     return;
   }
 
