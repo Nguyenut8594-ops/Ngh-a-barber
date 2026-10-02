@@ -935,7 +935,119 @@ function show(id,el){
 // ============================
 
 async function loadEmployees(){
+const serviceSelect =
 
+    document.getElementById('serviceName');
+
+  const serviceName =
+
+    serviceSelect.value;
+
+  const price =
+
+    Number(
+
+      serviceSelect.options[
+
+        serviceSelect.selectedIndex
+
+      ].dataset.price
+
+    );
+
+  const quantity =
+
+    Number(
+
+      document.getElementById(
+
+        'serviceQuantity'
+
+      ).value
+
+    );
+
+  if(!quantity || quantity <= 0){
+
+    alert('Vui lòng nhập số lượng!');
+
+    return;
+
+  }
+
+  const employeeName =
+
+    document.getElementById(
+
+      'hello'
+
+    ).textContent.trim();
+
+  const total =
+
+    price * quantity;
+
+  const commission =
+
+    total * 0.5;
+
+  const { error } =
+
+    await supabaseClient
+
+      .from('service_records')
+
+      .insert({
+
+        employee_name: employeeName,
+
+        service_name: serviceName,
+
+        price: price,
+
+        quantity: quantity,
+
+        commission: commission
+
+      });
+
+  if(error){
+
+    console.error(error);
+
+    alert('Lỗi lưu dịch vụ: ' + error.message);
+
+    return;
+
+  }
+
+  alert(
+
+    'Đã lưu ' +
+
+    quantity +
+
+    ' ' +
+
+    serviceName +
+
+    ' — Hoa hồng: ' +
+
+    commission.toLocaleString('vi-VN') +
+
+    'đ'
+
+  );
+
+  document.getElementById(
+
+    'serviceQuantity'
+
+  ).value = 1;
+
+  loadServiceRecords();
+
+}
   const list =
     document.getElementById('employeeList');
 
