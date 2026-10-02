@@ -501,7 +501,37 @@ async function addEmployee(){
   loadEmployees();
 
 }
-  async function deleteEmployee(id) {
+  async function addMoney() {
+
+  const type = document.getElementById('moneyType').value;
+  const amount = Number(document.getElementById('moneyAmount').value);
+  const note = document.getElementById('moneyNote').value.trim();
+
+  if (!amount || amount <= 0) {
+    alert('Vui lòng nhập số tiền!');
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from('money')
+    .insert({
+      type: type,
+      amount: amount,
+      note: note
+    });
+
+  if (error) {
+    alert('Lỗi: ' + error.message);
+    return;
+  }
+
+  alert('Đã lưu giao dịch!');
+
+  document.getElementById('moneyAmount').value = '';
+  document.getElementById('moneyNote').value = '';
+
+  loadMoney();
+}async function deleteEmployee(id) {
 
   if (!confirm('Bạn có chắc muốn xóa nhân viên này?')) {
     return;
