@@ -452,7 +452,7 @@ async function addEmployee(){
   const { error } = await supabaseClient
     .from('employees')
     .delete()
-    .eq('id', id);
+    .eq('Id', id);
 
   if(error){
     console.error(error);
