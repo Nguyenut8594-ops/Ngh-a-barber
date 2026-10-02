@@ -458,7 +458,28 @@ body{
     style="width:100%"
     onclick="addServiceRecord()"
   >async function loadServiceRecords(){
+async function deleteServiceRecord(id){
 
+  if(!confirm('Bạn có chắc muốn xóa dịch vụ này?')){
+    return;
+  }
+
+  const { error } =
+    await supabaseClient
+      .from('service_records')
+      .delete()
+      .eq('id', id);
+
+  if(error){
+    alert('Lỗi: ' + error.message);
+    return;
+  }
+
+  alert('Đã xóa dịch vụ!');
+
+  loadServiceRecords();
+
+}
   const list =
     document.getElementById('serviceList');
 
