@@ -705,6 +705,7 @@ async function loadServices(){
     return;
   }
   console.log("DỮ LIỆU SERVICE:", data);
+  alert("SỐ DỊCH VỤ: " + (data ? data.length : "null"));
   box.innerHTML = "";
 
   data.forEach(service => {
