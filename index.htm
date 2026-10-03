@@ -659,9 +659,9 @@ async function addEmployee(){
 
 }
 
-    // ============================
-// DỊCH VỤ
-// ============================
+     // ============================
+    // DỊCH VỤ
+   // ============================
 
 async function loadServices(){
 
@@ -678,6 +678,8 @@ async function loadServices(){
       .select("*");
 
   if(error){
+    
+    alert("LỖI SERVICE: " + error.message);
 
     console.error(
       "LỖI TẢI DỊCH VỤ:",
