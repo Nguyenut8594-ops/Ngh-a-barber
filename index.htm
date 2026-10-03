@@ -3,226 +3,231 @@
 
 <head>
 
-  <meta charset="utf-8">
+<meta charset="utf-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <meta
-    name="theme-color"
-    content="#111111">
+<meta
+  name="theme-color"
+  content="#111111">
 
-  <title>Nghĩa Barber</title>
+<title>Nghĩa Barber</title>
 
-  <style>
+<style>
 
-    *{
-      box-sizing:border-box;
-    }
+*{
+  box-sizing:border-box;
+}
 
-    body{
-      margin:0;
-      background:#0d0d0d;
-      color:#fff;
-      font-family:Arial,sans-serif;
-    }
+body{
+  margin:0;
+  background:#0d0d0d;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
 
-    button,
-    input{
-      font-family:inherit;
-    }
+button,
+input,
+select{
+  font-family:inherit;
+}
 
-    .login-box{
-      width:min(90%,400px);
-      margin:80px auto;
-      padding:25px;
-      background:#181818;
-      border-radius:18px;
-      box-shadow:0 10px 40px rgba(0,0,0,.5);
-    }
+button{
+  cursor:pointer;
+}
 
-    h1{
-      text-align:center;
-      margin-top:0;
-    }
+.login-box{
+  width:min(90%,400px);
+  margin:80px auto;
+  padding:25px;
+  background:#181818;
+  border-radius:18px;
+  box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
 
-    input{
-      width:100%;
-      padding:14px;
-      margin:8px 0;
-      border:1px solid #333;
-      border-radius:10px;
-      background:#222;
-      color:#fff;
-      font-size:16px;
-    }
+h1{
+  text-align:center;
+  margin-top:0;
+}
 
-    button{
-      width:100%;
-      padding:14px;
-      margin-top:10px;
-      border:0;
-      border-radius:10px;
-      background:#fff;
-      color:#111;
-      font-size:16px;
-      font-weight:bold;
-      cursor:pointer;
-    }
+input,
+select{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:1px solid #333;
+  border-radius:10px;
+  background:#222;
+  color:#fff;
+  font-size:16px;
+}
 
-    button:active{
-      transform:scale(.98);
-    }
+button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border:0;
+  border-radius:10px;
+  background:#fff;
+  color:#111;
+  font-size:16px;
+  font-weight:bold;
+}
 
-    button:disabled{
-      opacity:.5;
-      cursor:not-allowed;
-    }
+button:active{
+  transform:scale(.98);
+}
 
-    #app{
-      display:none;
-      padding-bottom:40px;
-    }
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
 
-    .top{
-      padding:20px;
-      background:#181818;
-      border-bottom:1px solid #333;
-    }
+#app{
+  display:none;
+  padding-bottom:40px;
+}
 
-    .top h2{
-      margin:0 0 5px;
-    }
+.top{
+  padding:20px;
+  background:#181818;
+  border-bottom:1px solid #333;
+}
 
-    .top p{
-      margin:0;
-      color:#aaa;
-    }
+.top h2{
+  margin:0 0 5px;
+}
 
-    #nav{
-      display:none;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
-      padding:15px;
-    }
+.top p{
+  margin:0;
+  color:#aaa;
+}
 
-    #nav button{
-      margin:0;
-      background:#202020;
-      color:#fff;
-      border:1px solid #333;
-    }
+#nav{
+  display:none;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  padding:15px;
+}
 
-    .page{
-      display:none;
-      padding:15px;
-    }
+#nav button{
+  margin:0;
+  background:#202020;
+  color:#fff;
+  border:1px solid #333;
+}
 
-    .page.active{
-      display:block;
-    }
+.page{
+  display:none;
+  padding:15px;
+}
 
-    .card{
-      background:#181818;
-      padding:18px;
-      margin-bottom:15px;
-      border-radius:15px;
-      border:1px solid #292929;
-    }
+.page.active{
+  display:block;
+}
 
-    .card h3{
-      margin-top:0;
-    }
+.card{
+  background:#181818;
+  padding:18px;
+  margin-bottom:15px;
+  border-radius:15px;
+  border:1px solid #292929;
+}
 
-    .logout{
-      background:#b00020 !important;
-      color:#fff !important;
-    }
+.card h3{
+  margin-top:0;
+}
 
-    .danger{
-      background:#b00020 !important;
-      color:#fff !important;
-    }
+.logout{
+  background:#b00020 !important;
+  color:#fff !important;
+}
 
-    .secondary{
-      background:#292929 !important;
-      color:#fff !important;
-    }
+.danger{
+  background:#b00020 !important;
+  color:#fff !important;
+}
 
-    .success{
-      color:#7cff9b;
-    }
+.secondary{
+  background:#292929 !important;
+  color:#fff !important;
+}
 
-    .muted{
-      color:#999;
-    }
+.success{
+  color:#7cff9b;
+}
 
-    .money{
-      font-size:20px;
-      font-weight:bold;
-    }
+.muted{
+  color:#999;
+}
 
-    .service-card{
-      cursor:pointer;
-    }
+.money{
+  font-size:20px;
+  font-weight:bold;
+}
 
-    .service-card:active{
-      transform:scale(.99);
-    }
+.service-card{
+  cursor:pointer;
+}
 
-    .service-actions{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-    }
+.service-card:active{
+  transform:scale(.99);
+}
 
-    .service-actions button{
-      margin-top:8px;
-    }
+.service-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
 
-    .stat-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
+.service-actions button{
+  margin-top:8px;
+}
 
-    .stat{
-      background:#202020;
-      padding:15px;
-      border-radius:12px;
-      border:1px solid #333;
-    }
+.stat-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
 
-    .stat small{
-      display:block;
-      color:#999;
-      margin-bottom:5px;
-    }
+.stat{
+  background:#202020;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid #333;
+}
 
-    .stat strong{
-      font-size:18px;
-    }
+.stat small{
+  display:block;
+  color:#999;
+  margin-bottom:5px;
+}
 
-    .employee-report{
-      margin-top:10px;
-    }
+.stat strong{
+  font-size:18px;
+}
 
-    .empty{
-      text-align:center;
-      color:#999;
-      padding:20px;
-    }
+.employee-report{
+  margin-top:10px;
+}
 
-    @media(max-width:500px){
+.empty{
+  text-align:center;
+  color:#999;
+  padding:20px;
+}
 
-      .stat-grid{
-        grid-template-columns:1fr;
-      }
+@media(max-width:500px){
 
-    }
+  .stat-grid{
+    grid-template-columns:1fr;
+  }
 
-  </style>
+}
+
+</style>
 
 </head>
 
@@ -240,8 +245,7 @@
 
     <h1>💈 Nghĩa Barber</h1>
 
-    <p
-      style="text-align:center;color:#aaa;">
+    <p style="text-align:center;color:#aaa;">
       Đăng nhập hệ thống
     </p>
 
@@ -295,19 +299,19 @@
     <button
       id="navEmployees"
       type="button"
-      onclick="show('employees',this)">
+      onclick="show('employees')">
       👥 Nhân viên
     </button>
 
     <button
       type="button"
-      onclick="show('services',this)">
+      onclick="show('services')">
       ✂️ Dịch vụ
     </button>
 
     <button
       type="button"
-      onclick="show('money',this)">
+      onclick="show('money')">
       💰 Thu chi
     </button>
 
@@ -359,14 +363,9 @@
     </div>
 
 
-    <div
-      id="employeeList">
-    </div>
+    <div id="employeeList"></div>
 
-
-    <div
-      id="employeeReportBox">
-    </div>
+    <div id="employeeReportBox"></div>
 
   </div>
 
@@ -411,9 +410,7 @@
     </div>
 
 
-    <div
-      id="serviceList">
-    </div>
+    <div id="serviceList"></div>
 
   </div>
 
@@ -493,18 +490,7 @@
         type="number"
         placeholder="Số tiền">
 
-      <select
-        id="moneyType"
-        style="
-          width:100%;
-          padding:14px;
-          margin:8px 0;
-          border:1px solid #333;
-          border-radius:10px;
-          background:#222;
-          color:#fff;
-          font-size:16px;
-        ">
+      <select id="moneyType">
 
         <option value="thu">
           Thu
@@ -529,9 +515,7 @@
 
       <h3>📋 Giao dịch hôm nay</h3>
 
-      <div
-        id="moneyList">
-      </div>
+      <div id="moneyList"></div>
 
     </div>
 
@@ -540,14 +524,11 @@
 
       <h3>✂️ Dịch vụ đã thực hiện tháng này</h3>
 
-      <div
-        id="serviceRecordList">
-      </div>
+      <div id="serviceRecordList"></div>
 
     </div>
 
   </div>
-
 
 </section>
 
@@ -639,42 +620,6 @@ function money(value){
 
 
 // ============================
-// NGÀY HÔM NAY
-// ============================
-
-function todayStart(){
-
-  const d =
-    new Date();
-
-  d.setHours(
-    0,0,0,0
-  );
-
-  return d.toISOString();
-
-}
-
-
-// ============================
-// ĐẦU THÁNG
-// ============================
-
-function monthStart(){
-
-  const d =
-    new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      1
-    );
-
-  return d.toISOString();
-
-}
-
-
-// ============================
 // ĐĂNG NHẬP
 // ============================
 
@@ -703,7 +648,9 @@ async function login(){
   }
 
 
+  // ==========================
   // CHỦ
+  // ==========================
 
   if(
     (u === "chủ" || u === "chu") &&
@@ -724,7 +671,9 @@ async function login(){
   }
 
 
+  // ==========================
   // NHÂN VIÊN
+  // ==========================
 
   if(!checkSupabase()) return;
 
@@ -747,10 +696,6 @@ async function login(){
 
 
   if(result.error){
-
-    console.error(
-      result.error
-    );
 
     alert(
       "Không thể kiểm tra tài khoản:\n\n" +
@@ -800,12 +745,10 @@ function openApp(){
     .style.display =
     "none";
 
-
   document
     .getElementById("app")
     .style.display =
     "block";
-
 
   document
     .getElementById("nav")
@@ -818,12 +761,10 @@ function openApp(){
       "navEmployees"
     );
 
-
   const employeeManagement =
     document.getElementById(
       "employeeManagement"
     );
-
 
   const serviceManagement =
     document.getElementById(
@@ -833,7 +774,9 @@ function openApp(){
 
   if(currentEmployee){
 
+    // ========================
     // NHÂN VIÊN
+    // ========================
 
     employeeButton.style.display =
       "none";
@@ -844,13 +787,13 @@ function openApp(){
     serviceManagement.style.display =
       "none";
 
-    show(
-      "services"
-    );
+    show("services");
 
   }else{
 
+    // ========================
     // CHỦ
+    // ========================
 
     employeeButton.style.display =
       "block";
@@ -861,9 +804,7 @@ function openApp(){
     serviceManagement.style.display =
       "block";
 
-    show(
-      "services"
-    );
+    show("services");
 
   }
 
@@ -883,33 +824,27 @@ function openApp(){
 
 function logout(){
 
-  currentEmployee =
-    null;
-
+  currentEmployee = null;
 
   document
     .getElementById("app")
     .style.display =
     "none";
 
-
   document
     .getElementById("login")
     .style.display =
     "block";
-
 
   document
     .getElementById("user")
     .value =
     "";
 
-
   document
     .getElementById("pass")
     .value =
     "";
-
 
   document
     .getElementById("hello")
@@ -929,9 +864,7 @@ function show(id){
     .querySelectorAll(".page")
     .forEach(
       page =>
-        page.classList.remove(
-          "active"
-        )
+        page.classList.remove("active")
     );
 
 
@@ -941,9 +874,7 @@ function show(id){
 
   if(page){
 
-    page.classList.add(
-      "active"
-    );
+    page.classList.add("active");
 
   }
 
@@ -1005,16 +936,14 @@ async function loadEmployees(){
 
   if(result.error){
 
-    console.error(
-      result.error
-    );
-
     box.innerHTML =
       "<div class='card'>" +
-      "Không tải được danh sách nhân viên.<br><br>" +
+      "<h3>❌ Lỗi tải nhân viên</h3>" +
+      "<p>" +
       escapeHtml(
         result.error.message
       ) +
+      "</p>" +
       "</div>";
 
     return;
@@ -1025,8 +954,10 @@ async function loadEmployees(){
   box.innerHTML = "";
 
 
-  if(!result.data ||
-     result.data.length === 0){
+  if(
+    !result.data ||
+    result.data.length === 0
+  ){
 
     box.innerHTML =
       "<div class='card empty'>" +
@@ -1045,7 +976,6 @@ async function loadEmployees(){
         document.createElement(
           "div"
         );
-
 
       item.className =
         "card";
@@ -1069,7 +999,7 @@ async function loadEmployees(){
         "type='button' " +
         "onclick='showEmployeeReport(" +
         employee.id +
-        ", " +
+        "," +
         JSON.stringify(
           employee.Name
         ) +
@@ -1107,27 +1037,21 @@ async function addEmployee(){
 
   const name =
     document
-      .getElementById(
-        "employeeName"
-      )
+      .getElementById("employeeName")
       .value
       .trim();
 
 
   const username =
     document
-      .getElementById(
-        "employeeUsername"
-      )
+      .getElementById("employeeUsername")
       .value
       .trim();
 
 
   const password =
     document
-      .getElementById(
-        "employeePassword"
-      )
+      .getElementById("employeePassword")
       .value;
 
 
@@ -1172,12 +1096,11 @@ async function addEmployee(){
       .from("employees")
       .insert([
         {
-          "Name":name,
-          username:username,
-          password:password
+          "Name": name,
+          username: username,
+          password: password
         }
-      ])
-      .select();
+      ]);
 
 
   if(result.error){
@@ -1185,10 +1108,6 @@ async function addEmployee(){
     alert(
       "LỖI THÊM NHÂN VIÊN:\n\n" +
       result.error.message
-    );
-
-    console.error(
-      result.error
     );
 
     return;
@@ -1202,23 +1121,15 @@ async function addEmployee(){
 
 
   document
-    .getElementById(
-      "employeeName"
-    )
+    .getElementById("employeeName")
     .value = "";
 
-
   document
-    .getElementById(
-      "employeeUsername"
-    )
+    .getElementById("employeeUsername")
     .value = "";
 
-
   document
-    .getElementById(
-      "employeePassword"
-    )
+    .getElementById("employeePassword")
     .value = "";
 
 
@@ -1264,7 +1175,9 @@ async function showEmployeeReport(
   const result =
     await supabaseClient
       .from("Service_records")
-      .select("*")
+      .select(
+        "id, created_at, employee_name, service_name, price, quantity, commission"
+      )
       .eq(
         "employee_name",
         employeeName
@@ -1281,10 +1194,12 @@ async function showEmployeeReport(
 
     box.innerHTML =
       "<div class='card'>" +
-      "Không tải được báo cáo.<br><br>" +
+      "<h3>❌ Lỗi báo cáo</h3>" +
+      "<p>" +
       escapeHtml(
         result.error.message
       ) +
+      "</p>" +
       "</div>";
 
     return;
@@ -1300,26 +1215,9 @@ async function showEmployeeReport(
     new Date();
 
 
-  const today =
-    now.toDateString();
-
-
-  const thisMonth =
-    now.getMonth();
-
-
-  const thisYear =
-    now.getFullYear();
-
-
-  let todayTotal =
-    0;
-
-  let monthTotal =
-    0;
-
-  let monthCommission =
-    0;
+  let todayTotal = 0;
+  let monthTotal = 0;
+  let monthCommission = 0;
 
 
   records.forEach(
@@ -1347,22 +1245,21 @@ async function showEmployeeReport(
 
 
       if(
-        d.toDateString() === today
+        d.toDateString() ===
+        now.toDateString()
       ){
 
-        todayTotal +=
-          price;
+        todayTotal += price;
 
       }
 
 
       if(
-        d.getMonth() === thisMonth &&
-        d.getFullYear() === thisYear
+        d.getMonth() === now.getMonth() &&
+        d.getFullYear() === now.getFullYear()
       ){
 
-        monthTotal +=
-          price;
+        monthTotal += price;
 
         monthCommission +=
           commission;
@@ -1408,7 +1305,9 @@ async function showEmployeeReport(
 
     "</div>" +
 
-    "<h3 style='margin-top:20px;'>📋 Chi tiết</h3>";
+    "<h3 style='margin-top:20px;'>" +
+    "📋 Chi tiết" +
+    "</h3>";
 
 
   if(records.length === 0){
@@ -1429,7 +1328,26 @@ async function showEmployeeReport(
           );
 
 
+        const price =
+          Number(
+            record.price || 0
+          );
+
+
+        const commission =
+          Number(
+            record.commission || 0
+          );
+
+
+        const percent =
+          price > 0
+            ? (commission / price) * 100
+            : 0;
+
+
         html +=
+
           "<div class='card'>" +
 
           "<strong>✂️ " +
@@ -1446,24 +1364,25 @@ async function showEmployeeReport(
 
           "<p>💵 Giá: " +
           money(
+            price *
             Number(
-              record.price || 0
+              record.quantity || 1
             )
           ) +
           "</p>" +
 
           "<p>👤 % nhân viên: " +
-          escapeHtml(
-            String(
-              record.commission_percent ||
-              ""
-            )
+          percent.toLocaleString(
+            "vi-VN",
+            {
+              maximumFractionDigits:2
+            }
           ) +
           "%</p>" +
 
           "<p>💰 Nhân viên nhận: " +
           money(
-            record.commission
+            commission
           ) +
           "</p>" +
 
@@ -1475,8 +1394,7 @@ async function showEmployeeReport(
   }
 
 
-  html +=
-    "</div>";
+  html += "</div>";
 
 
   box.innerHTML =
@@ -1509,10 +1427,18 @@ async function loadServices(){
   if(!checkSupabase()) return;
 
 
+  box.innerHTML =
+    "<div class='card empty'>" +
+    "⏳ Đang tải dịch vụ..." +
+    "</div>";
+
+
   const result =
     await supabaseClient
       .from("Service")
-      .select("*")
+      .select(
+        "id, name, price, employee_percent, created_at, active, description, sort_order"
+      )
       .order(
         "id",
         {
@@ -1532,7 +1458,7 @@ async function loadServices(){
     box.innerHTML =
       "<div class='card'>" +
 
-      "<h3>❌ Lỗi tải dịch vụ</h3>" +
+      "<h3>❌ Không tải được dịch vụ</h3>" +
 
       "<p>" +
       escapeHtml(
@@ -1600,6 +1526,10 @@ async function loadServices(){
 
       if(currentEmployee){
 
+        // ========================
+        // NHÂN VIÊN
+        // ========================
+
         item.onclick =
           function(){
 
@@ -1608,6 +1538,7 @@ async function loadServices(){
             );
 
           };
+
 
         item.innerHTML =
 
@@ -1623,7 +1554,9 @@ async function loadServices(){
 
           "<p>👤 Bạn nhận: " +
           money(
-            price * percent / 100
+            price *
+            percent /
+            100
           ) +
           "</p>" +
 
@@ -1632,6 +1565,10 @@ async function loadServices(){
           "</p>";
 
       }else{
+
+        // ========================
+        // CHỦ
+        // ========================
 
         item.innerHTML =
 
@@ -1702,9 +1639,7 @@ async function addService(){
 
   const name =
     document
-      .getElementById(
-        "serviceName"
-      )
+      .getElementById("serviceName")
       .value
       .trim();
 
@@ -1712,9 +1647,7 @@ async function addService(){
   const price =
     Number(
       document
-        .getElementById(
-          "servicePrice"
-        )
+        .getElementById("servicePrice")
         .value
     );
 
@@ -1722,9 +1655,7 @@ async function addService(){
   const employeePercent =
     Number(
       document
-        .getElementById(
-          "servicePercent"
-        )
+        .getElementById("servicePercent")
         .value
     );
 
@@ -1793,10 +1724,6 @@ async function addService(){
       result.error.message
     );
 
-    console.error(
-      result.error
-    );
-
     return;
 
   }
@@ -1808,23 +1735,15 @@ async function addService(){
 
 
   document
-    .getElementById(
-      "serviceName"
-    )
+    .getElementById("serviceName")
     .value = "";
 
-
   document
-    .getElementById(
-      "servicePrice"
-    )
+    .getElementById("servicePrice")
     .value = "";
 
-
   document
-    .getElementById(
-      "servicePercent"
-    )
+    .getElementById("servicePercent")
     .value = "";
 
 
@@ -2091,6 +2010,19 @@ async function recordService(service){
   if(!ok) return;
 
 
+  /*
+    Service_records CHỈ dùng đúng
+    các cột đã có trong database:
+
+    id
+    created_at
+    employee_name
+    service_name
+    price
+    quantity
+    commission
+  */
+
   const result =
     await supabaseClient
       .from("Service_records")
@@ -2109,56 +2041,19 @@ async function recordService(service){
             1,
 
           commission:
-            commission,
-
-          commission_percent:
-            percent
+            commission
         }
       ]);
 
 
   if(result.error){
 
-    /*
-      Một số database hiện tại có thể
-      chưa có cột commission_percent.
-      Nếu vậy thử lưu lại chỉ với
-      các cột gốc.
-    */
+    alert(
+      "Không thể ghi nhận dịch vụ:\n\n" +
+      result.error.message
+    );
 
-    const fallback =
-      await supabaseClient
-        .from("Service_records")
-        .insert([
-          {
-            employee_name:
-              currentEmployee.Name,
-
-            service_name:
-              service.name,
-
-            price:
-              price,
-
-            quantity:
-              1,
-
-            commission:
-              commission
-          }
-        ]);
-
-
-    if(fallback.error){
-
-      alert(
-        "Không thể ghi nhận dịch vụ:\n\n" +
-        fallback.error.message
-      );
-
-      return;
-
-    }
+    return;
 
   }
 
@@ -2184,7 +2079,6 @@ async function loadMoney(){
 
   if(!checkSupabase()) return;
 
-
   await loadMoneySummary();
 
   await loadManualMoney();
@@ -2199,13 +2093,6 @@ async function loadMoney(){
 // ============================
 
 async function loadMoneySummary(){
-
-  const today =
-    todayStart();
-
-  const month =
-    monthStart();
-
 
   let query =
     supabaseClient
@@ -2245,21 +2132,14 @@ async function loadMoneySummary(){
     result.data || [];
 
 
-  let todayRevenue =
-    0;
-
-  let monthRevenue =
-    0;
-
-  let todayCommission =
-    0;
-
-  let monthCommission =
-    0;
-
-
   const now =
     new Date();
+
+
+  let todayRevenue = 0;
+  let monthRevenue = 0;
+  let todayCommission = 0;
+  let monthCommission = 0;
 
 
   records.forEach(
@@ -2291,8 +2171,7 @@ async function loadMoneySummary(){
         now.toDateString()
       ){
 
-        todayRevenue +=
-          price;
+        todayRevenue += price;
 
         todayCommission +=
           commission;
@@ -2307,8 +2186,7 @@ async function loadMoneySummary(){
           now.getFullYear()
       ){
 
-        monthRevenue +=
-          price;
+        monthRevenue += price;
 
         monthCommission +=
           commission;
@@ -2320,43 +2198,27 @@ async function loadMoneySummary(){
 
 
   document
-    .getElementById(
-      "todayRevenue"
-    )
+    .getElementById("todayRevenue")
     .textContent =
-    money(
-      todayRevenue
-    );
+    money(todayRevenue);
 
 
   document
-    .getElementById(
-      "monthRevenue"
-    )
+    .getElementById("monthRevenue")
     .textContent =
-    money(
-      monthRevenue
-    );
+    money(monthRevenue);
 
 
   document
-    .getElementById(
-      "todayCommission"
-    )
+    .getElementById("todayCommission")
     .textContent =
-    money(
-      todayCommission
-    );
+    money(todayCommission);
 
 
   document
-    .getElementById(
-      "monthCommission"
-    )
+    .getElementById("monthCommission")
     .textContent =
-    money(
-      monthCommission
-    );
+    money(monthCommission);
 
 }
 
@@ -2493,9 +2355,7 @@ async function addMoney(){
 
   const note =
     document
-      .getElementById(
-        "moneyNote"
-      )
+      .getElementById("moneyNote")
       .value
       .trim();
 
@@ -2503,18 +2363,14 @@ async function addMoney(){
   const amount =
     Number(
       document
-        .getElementById(
-          "moneyAmount"
-        )
+        .getElementById("moneyAmount")
         .value
     );
 
 
   const type =
     document
-      .getElementById(
-        "moneyType"
-      )
+      .getElementById("moneyType")
       .value;
 
 
@@ -2576,16 +2432,11 @@ async function addMoney(){
 
 
   document
-    .getElementById(
-      "moneyNote"
-    )
+    .getElementById("moneyNote")
     .value = "";
 
-
   document
-    .getElementById(
-      "moneyAmount"
-    )
+    .getElementById("moneyAmount")
     .value = "";
 
 
@@ -2612,7 +2463,9 @@ async function loadServiceRecords(){
   let query =
     supabaseClient
       .from("Service_records")
-      .select("*")
+      .select(
+        "id, created_at, employee_name, service_name, price, quantity, commission"
+      )
       .order(
         "created_at",
         {
@@ -2651,7 +2504,7 @@ async function loadServiceRecords(){
   }
 
 
-  const month =
+  const now =
     new Date();
 
 
@@ -2665,11 +2518,12 @@ async function loadServiceRecords(){
               record.created_at
             );
 
+
           return (
             d.getMonth() ===
-              month.getMonth() &&
+              now.getMonth() &&
             d.getFullYear() ===
-              month.getFullYear()
+              now.getFullYear()
           );
 
         }
@@ -2710,6 +2564,21 @@ async function loadServiceRecords(){
         );
 
 
+      const price =
+        Number(
+          record.price || 0
+        ) *
+        Number(
+          record.quantity || 1
+        );
+
+
+      const commission =
+        Number(
+          record.commission || 0
+        );
+
+
       item.innerHTML =
 
         "<h3>✂️ " +
@@ -2731,20 +2600,11 @@ async function loadServiceRecords(){
         "</p>" +
 
         "<p>💵 Giá: " +
-        money(
-          Number(
-            record.price || 0
-          ) *
-          Number(
-            record.quantity || 1
-          )
-        ) +
+        money(price) +
         "</p>" +
 
         "<p>💰 Nhân viên nhận: " +
-        money(
-          record.commission
-        ) +
+        money(commission) +
         "</p>";
 
       box.appendChild(
@@ -2778,7 +2638,6 @@ function escapeHtml(text){
   return div.innerHTML;
 
 }
-
 
 </script>
 
