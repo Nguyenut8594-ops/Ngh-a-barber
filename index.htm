@@ -675,10 +675,7 @@ async function loadServices(){
   const { data, error } =
     await supabaseClient
       .from("Service")
-      .select("*")
-      .order("sort_order", {
-        ascending: true
-      });
+      .select("*");
 
   if(error){
 
