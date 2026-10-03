@@ -396,8 +396,8 @@
     // ============================
     // ĐĂNG NHẬP
     // ============================
-
-    function login(){
+    let currentEmployee = null;
+    async function login(){
 
       const u =
         document.getElementById("user").value.trim();
@@ -410,8 +410,9 @@
         (u === "chủ" || u === "chu") &&
         p === "1234"
       ){
+        currentEmployee = null;
 
-        document.getElementById(
+         document.getElementById(
           "hello"
         ).textContent =
           "Chủ tiệm";
@@ -422,31 +423,39 @@
       }
 
 
-      if(
-        u === "nv1" &&
-        p === "1234"
-      ){
+      if(u !== "chủ" && u !== "chu"){
 
-        document.getElementById(
-          "hello"
-        ).textContent =
-          "Nhân viên An";
+  const { data, error } =
+    await supabaseClient
+      .from("employees")
+      .select('id, "Name", username, password')
+      .eq("username", u)
+      .eq("password", p)
+      .single();
 
-        openApp();
+  if(error || !data){
 
-        return;
-      }
+    alert("Tài khoản hoặc mật khẩu chưa đúng.");
+    return;
+  }
 
+  currentEmployee = data;
 
-      alert(
-        "Tài khoản hoặc mật khẩu chưa đúng.\n\n" +
-        "Bản mẫu:\n" +
-        "chủ / 1234\n" +
-        "nv1 / 1234"
-      );
+  document.getElementById(
+    "hello"
+  ).textContent =
+    "Nhân viên " + data.Name;
 
-    }
+  openApp();
 
+  return;
+}
+alert(
+  "Tài khoản hoặc mật khẩu chưa đúng.\n\n" +
+  "Chủ: chủ / 1234"
+);
+
+}
 
     // ============================
     // MỞ ỨNG DỤNG
@@ -689,7 +698,114 @@ async function addService(){
 
   loadServices();
 }
-    
+ async function recordService(service){
+
+  if(!currentEmployee){
+
+    alert(
+      "Chức năng này dành cho nhân viên."
+    );
+
+    return;
+  }
+
+  const price =
+    Number(service.price);
+
+  const percent =
+    Number(service.employee_percent);
+
+  const employeeAmount =
+    price * percent / 100;
+
+  const ownerAmount =
+    price - employeeAmount;
+
+
+  const { error } =
+    await supabaseClient
+      .from("service_records")
+      .insert([
+        {
+          employee_id: currentEmployee.id,
+          employee_name: currentEmployee.Name,
+          service_name: service.name,
+          service_price: price,
+          employee_percent: percent,
+          employee_amount: employeeAmount,
+          owner_amount: ownerAmount
+        }
+      ]);
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Không thể ghi nhận dịch vụ:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  const { error: moneyError } =
+    await supabaseClient
+      .from("money_records")
+      .insert([
+        {
+          note:
+            service.name +
+            " - " +
+            currentEmployee.Name,
+
+          amount: employeeAmount,
+
+          type: "chi",
+
+          employee_id:
+            currentEmployee.id,
+
+          employee_name:
+            currentEmployee.Name,
+
+          employee_percent:
+            percent
+        }
+      ]);
+
+
+  if(moneyError){
+
+    console.error(moneyError);
+
+    alert(
+      "Đã ghi dịch vụ nhưng chưa ghi được phần Thu chi:\n" +
+      moneyError.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "Đã ghi nhận dịch vụ!\n\n" +
+    service.name +
+    "\n" +
+    "Giá: " +
+    price.toLocaleString("vi-VN") +
+    " đ\n" +
+    "Nhân viên nhận: " +
+    employeeAmount.toLocaleString("vi-VN") +
+    " đ\n" +
+    "Chủ nhận: " +
+    ownerAmount.toLocaleString("vi-VN") +
+    " đ"
+  );
+
+} 
 async function loadServices(){
 
   const box =
@@ -726,9 +842,15 @@ async function loadServices(){
   data.forEach(service => {
 
     const item =
-      document.createElement("div");
+      document.createElement("button");
+
+    item.type = "button";
 
     item.className = "card";
+
+    item.style.width = "100%";
+    item.style.textAlign = "left";
+    item.style.cursor = "pointer";
 
     item.innerHTML =
       "<h3>" +
@@ -737,11 +859,13 @@ async function loadServices(){
 
       "<p>💵 " +
       Number(service.price).toLocaleString("vi-VN") +
-      " đ</p>" +
+      " đ</p>";
 
-      "<p>👤 Nhân viên: " +
-      Number(service.employee_percent) +
-      "%</p>";
+    item.onclick = function(){
+
+      recordService(service);
+
+    };
 
     box.appendChild(item);
 
