@@ -583,7 +583,7 @@ try{
 
 let currentEmployee = null;
 
-let currentServices = [];
+let currentservices = [];
 
 
 // ============================
@@ -811,7 +811,7 @@ function openApp(){
 
   loadEmployees();
 
-  loadServices();
+  loadservices();
 
   loadMoney();
 
@@ -881,7 +881,7 @@ function show(id){
 
   if(id === "services"){
 
-    loadServices();
+    loadservices();
 
   }
 
@@ -1413,7 +1413,7 @@ async function showEmployeeReport(
 // DỊCH VỤ
 // ============================
 
-async function loadServices(){
+async function loadservices(){
 
   const box =
     document.getElementById(
@@ -1473,7 +1473,7 @@ async function loadServices(){
   }
 
 
-  currentServices =
+  currentservices =
     result.data || [];
 
 
@@ -1481,7 +1481,7 @@ async function loadServices(){
 
 
   const services =
-    currentServices.filter(
+    currentservices.filter(
       service =>
         service.active !== false
     );
@@ -1747,7 +1747,7 @@ async function addService(){
     .value = "";
 
 
-  loadServices();
+  loadservices();
 
 }
 
@@ -1770,7 +1770,7 @@ async function editService(id){
 
 
   const service =
-    currentServices.find(
+    currentservices.find(
       item =>
         String(item.id) ===
         String(id)
@@ -1883,7 +1883,7 @@ async function editService(id){
   );
 
 
-  loadServices();
+  loadservices();
 
 }
 
@@ -1906,7 +1906,7 @@ async function deleteService(id){
 
 
   const service =
-    currentServices.find(
+    currentservices.find(
       item =>
         String(item.id) ===
         String(id)
@@ -1954,7 +1954,7 @@ async function deleteService(id){
   );
 
 
-  loadServices();
+  loadservices();
 
 }
 
