@@ -285,7 +285,55 @@
 
     <!-- DỊCH VỤ -->
 
-    <div
+ function openApp(){
+
+  document.getElementById(
+    "login"
+  ).style.display =
+    "none";
+
+  document.getElementById(
+    "app"
+  ).style.display =
+    "block";
+
+  document.getElementById(
+    "nav"
+  ).style.display =
+    "grid";
+
+
+  const employeeButton =
+    document.getElementById(
+      "navEmployees"
+    );
+
+
+  if(currentEmployee){
+
+    // =========================
+    // NHÂN VIÊN
+    // =========================
+
+    employeeButton.style.display =
+      "none";
+
+  }else{
+
+    // =========================
+    // CHỦ
+    // =========================
+
+    employeeButton.style.display =
+      "block";
+
+  }
+
+
+  loadEmployees();
+  loadServices();
+
+}
       id="services"
       class="page">
 
@@ -458,23 +506,53 @@ alert(
 
     function openApp(){
 
-      document.getElementById(
-        "login"
-      ).style.display =
-        "none";
+  document.getElementById(
+    "login"
+  ).style.display =
+    "none";
 
-      document.getElementById(
-        "app"
-      ).style.display =
-        "block";
+  document.getElementById(
+    "app"
+  ).style.display =
+    "block";
 
-      document.getElementById(
-        "nav"
-      ).style.display =
-        "grid";
-loadEmployees();
- loadServices();
-    }
+  document.getElementById(
+    "nav"
+  ).style.display =
+    "grid";
+
+
+  const employeeButton =
+    document.getElementById(
+      "navEmployees"
+    );
+
+
+  if(currentEmployee){
+
+    // =========================
+    // NHÂN VIÊN
+    // =========================
+
+    employeeButton.style.display =
+      "none";
+
+  }else{
+
+    // =========================
+    // CHỦ
+    // =========================
+
+    employeeButton.style.display =
+      "block";
+
+  }
+
+
+  loadEmployees();
+  loadServices();
+
+}
 
 
     // ============================
