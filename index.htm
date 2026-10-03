@@ -586,58 +586,6 @@ function openApp(){
     // ============================
     // NHÂN VIÊN
     // ============================
-
-async function loadEmployees(){
-
-  const box =
-    document.getElementById("employeeList");
-
-  if(!box) return;
-
-  const { data, error } =
-    await supabaseClient
-      .from("employees")
-      .select('id, "Name", created_at')
-      .order("created_at", {
-        ascending: false
-      });
-
-  if(error){
-
-    console.error(error);
-
-    box.innerHTML =
-      "<div class='card'>" +
-      "Không tải được danh sách nhân viên." +
-      "</div>";
-
-    return;
-  }
-
-  box.innerHTML = "";
-
-  data.forEach(employee => {
-
-    const item =
-      document.createElement("div");
-
-    item.className = "card";
-
-    item.innerHTML =
-      "<h3>👤 " +
-      escapeHtml(employee.Name) +
-      "</h3>" +
-
-      "<p>ID: " +
-      escapeHtml(employee.id) +
-      "</p>";
-
-    box.appendChild(item);
-
-  });
-
-}
-
 async function addEmployee(){
 
   const name =
@@ -675,11 +623,21 @@ async function addEmployee(){
 
   if(error){
 
-    console.error(error);
+    console.error(
+      "LỖI THÊM NHÂN VIÊN:",
+      error
+    );
 
     alert(
-      "Không thể thêm nhân viên:\n" +
-      error.message
+      "LỖI THÊM NHÂN VIÊN:\n\n" +
+      "Code: " +
+      (error.code || "") +
+      "\n\n" +
+      "Message: " +
+      (error.message || "") +
+      "\n\n" +
+      "Details: " +
+      (error.details || "")
     );
 
     return;
@@ -691,6 +649,10 @@ async function addEmployee(){
 
   document.getElementById(
     "employeeName"
+  ).value = "";
+
+  document.getElementById(
+    "employeePhone"
   ).value = "";
 
   loadEmployees();
