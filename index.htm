@@ -283,64 +283,7 @@
     </div>
 
 
-    <!-- DỊCH VỤ -->
-
-
-    // =========================
-    // NHÂN VIÊN
-    // =========================
-
-    employeeButton.style.display =
-      "none";
-
-  }else{
-
-    // =========================
-    // CHỦ
-    // =========================
-
-    employeeButton.style.display =
-      "block";
-
-  }
-
-
-  loadEmployees();
-  loadServices();
-
-}
-      id="services"
-      class="page">
-
-      <div class="card">
-
-        <h3>✂️ Quản lý dịch vụ</h3>
-
-        <input
-          id="serviceName"
-          type="text"
-          placeholder="Tên dịch vụ"
-        >
-
-        <input
-          id="servicePrice"
-          type="number"
-          placeholder="Giá tiền"
-        >
-
-        <button
-          type="button"
-          onclick="addService()">
-          + Thêm dịch vụ
-        </button>
-
-      </div>
-
-      <div
-        id="serviceList">
-      </div>
-
-    </div>
+    
 <!-- DỊCH VỤ -->
 
 <div
@@ -362,7 +305,13 @@
       type="number"
       placeholder="Giá tiền"
     >
-
+<input
+  id="servicePercent"
+  type="number"
+  placeholder="% nhân viên"
+  min="0"
+  max="100"
+>  
     <button
       type="button"
       onclick="addService()">
@@ -379,24 +328,39 @@
 
     <!-- THU CHI -->
 
-    <div
-      id="money"
-      class="page">
+<div
+  id="money"
+  class="page">
 
-      <div class=o
-        <button
-          type="button"
-          onclick="addMoney()">
-          + Thêm khoản tiền
-        </button>
+  <div class="card">
 
-      </div>
+    <h3>💰 Quản lý thu chi</h3>
 
-      <div
-        id="moneyList">
-      </div>
+    <input
+      id="moneyNote"
+      type="text"
+      placeholder="Nội dung thu/chi"
+    >
 
-    </div>
+    <input
+      id="moneyAmount"
+      type="number"
+      placeholder="Số tiền"
+    >
+
+    <button
+      type="button"
+      onclick="addMoney()">
+      + Thêm khoản tiền
+    </button>
+
+  </div>
+
+  <div
+    id="moneyList">
+  </div>
+
+</div>
 
   </section>
 
@@ -513,7 +477,7 @@ alert(
     // MỞ ỨNG DỤNG
     // ============================
 
-    function openApp(){
+function openApp(){
 
   document.getElementById(
     "login"
@@ -539,19 +503,13 @@ alert(
 
   if(currentEmployee){
 
-    // =========================
-    // NHÂN VIÊN
-    // =========================
-
+    // Nhân viên không được quản lý nhân viên
     employeeButton.style.display =
       "none";
 
   }else{
 
-    // =========================
-    // CHỦ
-    // =========================
-
+    // Chủ được quản lý nhân viên
     employeeButton.style.display =
       "block";
 
@@ -560,6 +518,7 @@ alert(
 
   loadEmployees();
   loadServices();
+  loadMoney();
 
 }
 
@@ -567,9 +526,11 @@ alert(
     // ============================
     // ĐĂNG XUẤT
     // ============================
+    
 
     function logout(){
-
+      currentEmployee = null;
+      
       document.getElementById(
         "app"
       ).style.display =
@@ -625,6 +586,7 @@ alert(
     // ============================
     // NHÂN VIÊN
     // ============================
+
 async function loadEmployees(){
 
   const box =
@@ -635,7 +597,7 @@ async function loadEmployees(){
   const { data, error } =
     await supabaseClient
       .from("employees")
-      .select("id, name, created_at")
+      .select('id, "Name", created_at')
       .order("created_at", {
         ascending: false
       });
@@ -645,7 +607,9 @@ async function loadEmployees(){
     console.error(error);
 
     box.innerHTML =
-      "<div class='card'>Không tải được danh sách nhân viên.</div>";
+      "<div class='card'>" +
+      "Không tải được danh sách nhân viên." +
+      "</div>";
 
     return;
   }
@@ -661,8 +625,9 @@ async function loadEmployees(){
 
     item.innerHTML =
       "<h3>👤 " +
-      escapeHtml(employee.name) +
+      escapeHtml(employee.Name) +
       "</h3>" +
+
       "<p>ID: " +
       escapeHtml(employee.id) +
       "</p>";
@@ -672,18 +637,29 @@ async function loadEmployees(){
   });
 
 }
-    async function addEmployee(){
+
+async function addEmployee(){
 
   const name =
-    document.getElementById("employeeName").value.trim();
+    document.getElementById(
+      "employeeName"
+    ).value.trim();
 
   if(!name){
-    alert("Vui lòng nhập tên nhân viên.");
+
+    alert(
+      "Vui lòng nhập tên nhân viên."
+    );
+
     return;
   }
 
   if(!supabaseClient){
-    alert("Chưa kết nối được Supabase.");
+
+    alert(
+      "Chưa kết nối được Supabase."
+    );
+
     return;
   }
 
@@ -692,7 +668,7 @@ async function loadEmployees(){
       .from("employees")
       .insert([
         {
-          name: name
+          "Name": name
         }
       ])
       .select();
@@ -709,86 +685,354 @@ async function loadEmployees(){
     return;
   }
 
-  alert("Đã thêm nhân viên!");
+  alert(
+    "Đã thêm nhân viên!"
+  );
 
   document.getElementById(
     "employeeName"
   ).value = "";
 
   loadEmployees();
+
 }
-
-
     // ============================
     // DỊCH VỤ
     // ============================
+    async function loadServices(){
 
+  const box =
+    document.getElementById("serviceList");
+
+  if(!box) return;
+
+  const { data, error } =
+    await supabaseClient
+      .from("Service")
+      .select("*")
+      .eq("active", true)
+      .order("sort_order", {
+        ascending: true
+      });
+
+  if(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      "<div class='card'>" +
+      "Không tải được danh sách dịch vụ." +
+      "</div>";
+
+    return;
+  }
+
+  box.innerHTML = "";
+
+  data.forEach(service => {
+
+    const item =
+      document.createElement("div");
+
+    item.className = "card";
+
+    item.innerHTML =
+      "<h3>✂️ " +
+      escapeHtml(service.name) +
+      "</h3>" +
+
+      "<p>💵 Giá: " +
+      Number(service.price || 0)
+        .toLocaleString("vi-VN") +
+      " đ</p>" +
+
+      "<p>👤 Nhân viên: " +
+      Number(service.employee_percent || 0) +
+      "%</p>";
+
+    box.appendChild(item);
+
+  });
+
+}
+async function addService(){
+
+  const name =
+    document.getElementById(
+      "serviceName"
+    ).value.trim();
+
+  const price =
+    Number(
+      document.getElementById(
+        "servicePrice"
+      ).value
+    );
+
+  const employeePercent =
+    Number(
+      document.getElementById(
+        "servicePercent"
+      ).value
+    );
+
+
+  if(!name){
+
+    alert("Vui lòng nhập tên dịch vụ.");
+
+    return;
+  }
+
+
+  if(!price || price <= 0){
+
+    alert("Vui lòng nhập giá dịch vụ.");
+
+    return;
+  }
+
+
+  if(
+    isNaN(employeePercent) ||
+    employeePercent < 0 ||
+    employeePercent > 100
+  ){
+
+    alert(
+      "Vui lòng nhập % nhân viên từ 0 đến 100."
+    );
+
+    return;
+  }
+
+
+  if(!supabaseClient){
+
+    alert("Chưa kết nối được Supabase.");
+
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("Service")
+      .insert([
+        {
+          name: name,
+          price: price,
+          employee_percent: employeePercent,
+          active: true
+        }
+      ]);
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Không thể thêm dịch vụ:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert("Đã thêm dịch vụ!");
+
+
+  document.getElementById(
+    "serviceName"
+  ).value = "";
+
+  document.getElementById(
+    "servicePrice"
+  ).value = "";
+
+  document.getElementById(
+    "servicePercent"
+  ).value = "";
+
+
+  loadServices();
+
+}
 
     // ============================
     // THU CHI
     // ============================
+    async function loadMoney(){
 
-    function addMoney(){
+  const box =
 
-      const note =
-        document.getElementById(
-          "moneyNote"
-        ).value.trim();
+    document.getElementById(
 
-      const amount =
-        document.getElementById(
-          "moneyAmount"
-        ).value;
+      "moneyList"
 
+    );
 
-      if(!note){
+  if(!box) return;
 
-        alert(
-          "Vui lòng nhập nội dung."
-        );
+  const { data, error } =
 
-        return;
-      }
+    await supabaseClient
 
+      .from("Money")
 
-      const box =
-        document.getElementById(
-          "moneyList"
-        );
+      .select("*")
 
+      .order("created_at", {
 
-      const item =
-        document.createElement(
-          "div"
-        );
+        ascending: false
 
-      item.className =
-        "card";
+      });
 
+  if(error){
 
-      item.innerHTML =
-        "<h3>" +
-        escapeHtml(note) +
-        "</h3>" +
-        "<p>💵 " +
-        Number(amount || 0).toLocaleString(
-          "vi-VN"
-        ) +
-        " đ</p>";
+    console.error(error);
 
+    box.innerHTML =
 
-      box.appendChild(item);
+      "<div class='card'>" +
 
+      "Không tải được dữ liệu thu chi." +
 
-      document.getElementById(
-        "moneyNote"
-      ).value = "";
+      "</div>";
 
+    return;
+
+  }
+
+  box.innerHTML = "";
+
+  data.forEach(record => {
+
+    const item =
+
+      document.createElement("div");
+
+    item.className =
+
+      "card";
+
+    item.innerHTML =
+
+      "<h3>💰 " +
+
+      escapeHtml(record.note || "") +
+
+      "</h3>" +
+
+      "<p>💵 " +
+
+      Number(record.amount || 0)
+
+        .toLocaleString("vi-VN") +
+
+      " đ</p>" +
+
+      "<p>📌 Loại: " +
+
+      escapeHtml(record.type || "") +
+
+      "</p>";
+
+    box.appendChild(item);
+
+  });
+
+}
+async function addMoney(){
+
+  const note =
+    document.getElementById(
+      "moneyNote"
+    ).value.trim();
+
+  const amount =
+    Number(
       document.getElementById(
         "moneyAmount"
-      ).value = "";
+      ).value
+    );
 
-    }
+
+  if(!note){
+
+    alert(
+      "Vui lòng nhập nội dung."
+    );
+
+    return;
+  }
+
+
+  if(!amount || amount <= 0){
+
+    alert(
+      "Vui lòng nhập số tiền hợp lệ."
+    );
+
+    return;
+  }
+
+
+  if(!supabaseClient){
+
+    alert(
+      "Chưa kết nối được Supabase."
+    );
+
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("Money")
+      .insert([
+        {
+          type: "thu",
+          amount: amount,
+          note: note
+        }
+      ]);
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Không thể lưu khoản tiền:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "Đã lưu khoản tiền!"
+  );
+
+
+  document.getElementById(
+    "moneyNote"
+  ).value = "";
+
+  document.getElementById(
+    "moneyAmount"
+  ).value = "";
+
+
+  loadMoney();
+
+}
+    
 
 
     // ============================
