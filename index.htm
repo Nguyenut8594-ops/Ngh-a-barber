@@ -285,31 +285,6 @@
 
     <!-- DỊCH VỤ -->
 
- function openApp(){
-
-  document.getElementById(
-    "login"
-  ).style.display =
-    "none";
-
-  document.getElementById(
-    "app"
-  ).style.display =
-    "block";
-
-  document.getElementById(
-    "nav"
-  ).style.display =
-    "grid";
-
-
-  const employeeButton =
-    document.getElementById(
-      "navEmployees"
-    );
-
-
-  if(currentEmployee){
 
     // =========================
     // NHÂN VIÊN
@@ -366,7 +341,41 @@
       </div>
 
     </div>
+<!-- DỊCH VỤ -->
 
+<div
+  id="services"
+  class="page">
+
+  <div class="card">
+
+    <h3>✂️ Quản lý dịch vụ</h3>
+
+    <input
+      id="serviceName"
+      type="text"
+      placeholder="Tên dịch vụ"
+    >
+
+    <input
+      id="servicePrice"
+      type="number"
+      placeholder="Giá tiền"
+    >
+
+    <button
+      type="button"
+      onclick="addService()">
+      + Thêm dịch vụ
+    </button>
+
+  </div>
+
+  <div
+    id="serviceList">
+  </div>
+
+</div>
 
     <!-- THU CHI -->
 
