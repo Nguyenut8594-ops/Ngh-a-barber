@@ -2484,6 +2484,29 @@ async function loadServiceRecords(){
         money(commission) +
 
         "</p>";
+      // ============================
+// NÚT XÓA - CHỈ CHỦ THẤY
+// ============================
+
+if(!currentEmployee){
+
+  item.innerHTML +=
+    "<button " +
+    "onclick=\"deleteServiceRecord('" +
+    record.id +
+    "')\" " +
+    "style=\"margin-top:10px;" +
+    "background:#c62828;" +
+    "color:white;" +
+    "border:none;" +
+    "padding:10px 16px;" +
+    "border-radius:8px;" +
+    "font-size:15px;\"" +
+    ">" +
+    "🗑️ Xóa" +
+    "</button>";
+
+}
 
       // ============================
 
