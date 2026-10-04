@@ -2269,50 +2269,74 @@ async function addmoney(){
 // ============================
 // DỊCH VỤ ĐÃ THỰC HIỆN
 // ============================
-
 async function loadServiceRecords(){
 
   const box =
+
     document.getElementById(
+
       "serviceRecordList"
+
     );
 
   if(!box) return;
 
   let query =
+
     supabaseClient
+
       .from("service_records")
+
       .select(
+
         "id, created_at, employee_name, service_name, price, quantity, commission"
+
       )
+
       .order(
+
         "created_at",
+
         {
+
           ascending:false
+
         }
+
       );
 
   if(currentEmployee){
 
     query =
+
       query.eq(
+
         "employee_name",
+
         currentEmployee.Name
+
       );
 
   }
 
   const result =
+
     await query;
 
   if(result.error){
 
     box.innerHTML =
+
       "<div class='empty'>" +
+
       "Không tải được lịch sử dịch vụ.<br><br>" +
+
       escapeHtml(
+
         result.error.message
+
       ) +
+
       "</div>";
 
     return;
@@ -2320,33 +2344,49 @@ async function loadServiceRecords(){
   }
 
   const now =
+
     new Date();
 
   const records =
+
     (result.data || [])
+
       .filter(
+
         record => {
 
           const d =
+
             new Date(
+
               record.created_at
+
             );
 
           return (
+
             d.getMonth() ===
+
               now.getMonth() &&
+
             d.getFullYear() ===
+
               now.getFullYear()
+
           );
 
         }
+
       );
 
   if(records.length === 0){
 
     box.innerHTML =
+
       "<div class='empty'>" +
+
       "Tháng này chưa có dịch vụ." +
+
       "</div>";
 
     return;
@@ -2356,70 +2396,203 @@ async function loadServiceRecords(){
   box.innerHTML = "";
 
   records.forEach(
+
     record => {
 
       const item =
+
         document.createElement(
+
           "div"
+
         );
 
       item.className =
+
         "card";
 
       const d =
+
         new Date(
+
           record.created_at
+
         );
 
       const price =
+
         Number(
+
           record.price || 0
+
         ) *
+
         Number(
+
           record.quantity || 1
+
         );
 
       const commission =
+
         Number(
+
           record.commission || 0
+
         );
 
       item.innerHTML =
 
         "<h3>✂️ " +
+
         escapeHtml(
+
           record.service_name
+
         ) +
+
         "</h3>" +
 
         "<p>👤 " +
+
         escapeHtml(
+
           record.employee_name
+
         ) +
+
         "</p>" +
 
         "<p>📅 " +
+
         d.toLocaleString(
+
           "vi-VN"
+
         ) +
+
         "</p>" +
 
         "<p>💵 Giá: " +
+
         money(price) +
+
         "</p>" +
 
         "<p>💰 Nhân viên nhận: " +
+
         money(commission) +
+
         "</p>";
 
+      // ============================
+
+      // NÚT XÓA - CHỈ CHỦ MỚI THẤY
+
+      // ============================
+
+      if(!currentEmployee){
+
+        const deleteButton =
+
+          document.createElement(
+
+            "button"
+
+          );
+
+        deleteButton.textContent =
+
+          "🗑️ Xóa";
+
+        deleteButton.style.marginTop =
+
+          "10px";
+
+        deleteButton.onclick =
+
+          async function(){
+
+            const confirmDelete =
+
+              confirm(
+
+                "Bạn có chắc muốn xóa dịch vụ này không?"
+
+              );
+
+            if(!confirmDelete) return;
+
+            const result =
+
+              await supabaseClient
+
+                .from(
+
+                  "service_records"
+
+                )
+
+                .delete()
+
+                .eq(
+
+                  "id",
+
+                  record.id
+
+                );
+
+            if(result.error){
+
+              alert(
+
+                "❌ Không thể xóa dịch vụ!\n\n" +
+
+                result.error.message
+
+              );
+
+              return;
+
+            }
+
+            alert(
+
+              "✅ Đã xóa dịch vụ!"
+
+            );
+
+            // Tải lại doanh thu
+
+            await loadmoneySummary();
+
+            // Tải lại danh sách
+
+            await loadServiceRecords();
+
+          };
+
+        item.appendChild(
+
+          deleteButton
+
+        );
+
+      }
+
       box.appendChild(
+
         item
+
       );
 
     }
+
   );
 
 }
+
 
 // ============================
 // BẢO VỆ HTML
