@@ -1427,7 +1427,7 @@ async function loadservices(){
 
   const result =
     await supabaseClient
-      .from("service_records")
+      .from("service")
       .select(
         "id, name, price, employee_percent, created_at, active, description, sort_order"
       )
@@ -1689,7 +1689,7 @@ async function addService(){
 
   const result =
     await supabaseClient
-      .from("service_records")
+      .from("service")
       .insert([
         {
           name:name,
@@ -1837,7 +1837,7 @@ async function editService(id){
 
   const result =
     await supabaseClient
-      .from("service_records")
+      .from("service")
       .update({
         name:newName.trim(),
         price:newPrice,
@@ -1913,7 +1913,7 @@ async function deleteService(id){
 
   const result =
     await supabaseClient
-      .from("service_records")
+      .from("service")
       .delete()
       .eq(
         "id",
@@ -2211,7 +2211,7 @@ async function loadManualMoney(){
 
   const result =
     await supabaseClient
-      .from("Money")
+      .from("money")
       .select("*")
       .order(
         "created_at",
@@ -2375,7 +2375,7 @@ async function addMoney(){
 
   const result =
     await supabaseClient
-      .from("Money")
+      .from("money")
       .insert([
         {
           type:type,
