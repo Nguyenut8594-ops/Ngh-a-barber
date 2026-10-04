@@ -1865,9 +1865,83 @@ async function loadmoney(){
 
   if(!checkSupabase()) return;
 
+  // ==========================
+
+  // NHÂN VIÊN
+
+  // ==========================
+
+  if(currentEmployee){
+
+    // Nhân viên không được thêm
+
+    // hoặc xem các khoản thu/chi thủ công
+
+    const manualBox =
+
+      document.getElementById(
+
+        "manualmoneyBox"
+
+      );
+
+    if(manualBox){
+
+      manualBox.style.display =
+
+        "none";
+
+    }
+
+    const moneyList =
+
+      document.getElementById(
+
+        "moneyList"
+
+      );
+
+    if(moneyList){
+
+      moneyList.innerHTML =
+
+        "";
+
+    }
+
+  }else{
+
+    // ==========================
+
+    // CHỦ
+
+    // ==========================
+
+    const manualBox =
+
+      document.getElementById(
+
+        "manualmoneyBox"
+
+      );
+
+    if(manualBox){
+
+      manualBox.style.display =
+
+        "block";
+
+    }
+
+    await loadManualmoney();
+
+  }
+
+  // Doanh thu dịch vụ
+
   await loadmoneySummary();
 
-  await loadManualmoney();
+  // Dịch vụ đã thực hiện
 
   await loadServiceRecords();
 
