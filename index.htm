@@ -1689,7 +1689,7 @@ async function addService(){
 
   const result =
     await supabaseClient
-      .from("service")
+      .from("services")
       .insert([
         {
           name:name,
