@@ -2074,31 +2074,49 @@ async function loadmoneySummary(){
 async function loadManualmoney(){
 
   const box =
+
     document.getElementById(
+
       "moneyList"
+
     );
 
   if(!box) return;
 
   const result =
+
     await supabaseClient
+
       .from("money")
+
       .select("*")
+
       .order(
+
         "created_at",
+
         {
+
           ascending:false
+
         }
+
       );
 
   if(result.error){
 
     box.innerHTML =
+
       "<div class='empty'>" +
+
       "Không tải được dữ liệu thu chi.<br><br>" +
+
       escapeHtml(
+
         result.error.message
+
       ) +
+
       "</div>";
 
     return;
@@ -2106,24 +2124,37 @@ async function loadManualmoney(){
   }
 
   const today =
+
     new Date()
+
       .toDateString();
 
   const records =
+
     (result.data || [])
+
       .filter(
+
         record =>
+
           new Date(
+
             record.created_at
+
           ).toDateString() ===
+
           today
+
       );
 
   if(records.length === 0){
 
     box.innerHTML =
+
       "<div class='empty'>" +
+
       "Hôm nay chưa có khoản thu/chi thủ công." +
+
       "</div>";
 
     return;
@@ -2133,51 +2164,202 @@ async function loadManualmoney(){
   box.innerHTML = "";
 
   records.forEach(
+
     record => {
 
       const item =
+
         document.createElement(
+
           "div"
+
         );
 
       item.className =
+
         "card";
 
       const sign =
+
         record.type === "chi"
+
           ? "-"
+
           : "+";
 
       item.innerHTML =
 
         "<h3>💰 " +
+
         escapeHtml(
+
           record.note || ""
+
         ) +
+
         "</h3>" +
 
         "<p class='money'>" +
+
         sign +
+
         money(
+
           record.amount
+
         ) +
+
         "</p>" +
 
         "<p class='muted'>" +
+
         "Loại: " +
+
         escapeHtml(
+
           record.type || ""
+
         ) +
+
         "</p>";
 
+      // ============================
+
+      // NÚT XÓA GIAO DỊCH
+
+      // ============================
+
+      const deleteButton =
+
+        document.createElement(
+
+          "button"
+
+        );
+
+      deleteButton.type =
+
+        "button";
+
+      deleteButton.textContent =
+
+        "🗑️ Xóa giao dịch";
+
+      deleteButton.className =
+
+        "danger";
+
+      deleteButton.onclick =
+
+        function(){
+
+          deleteManualmoney(
+
+            record.id
+
+          );
+
+        };
+
+      item.appendChild(
+
+        deleteButton
+
+      );
+
       box.appendChild(
+
         item
+
       );
 
     }
+
   );
 
 }
+
+// ============================
+
+// XÓA GIAO DỊCH THU CHI
+
+// ============================
+
+async function deleteManualmoney(id){
+
+  // Nhân viên không được xóa
+
+  if(currentEmployee){
+
+    alert(
+
+      "Nhân viên không có quyền xóa giao dịch."
+
+    );
+
+    return;
+
+  }
+
+  if(!checkSupabase()) return;
+
+  const ok =
+
+    confirm(
+
+      "Bạn có chắc muốn xóa giao dịch này không?"
+
+    );
+
+  if(!ok) return;
+
+  const result =
+
+    await supabaseClient
+
+      .from("money")
+
+      .delete()
+
+      .eq(
+
+        "id",
+
+        id
+
+      );
+
+  if(result.error){
+
+    alert(
+
+      "❌ Không thể xóa giao dịch!\n\n" +
+
+      result.error.message
+
+    );
+
+    return;
+
+  }
+
+  alert(
+
+    "✅ Đã xóa giao dịch!"
+
+  );
+
+  // Cập nhật lại danh sách
+
+  await loadManualmoney();
+
+  // Cập nhật lại tổng tiền
+
+  await loadmoneySummary();
+
+}
+
+
 
 // ============================
 // THÊM KHOẢN THU CHI
