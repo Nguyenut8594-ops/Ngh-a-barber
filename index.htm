@@ -1427,7 +1427,7 @@ async function loadservices(){
 
   const result =
     await supabaseClient
-      .from("service")
+      .from("seẻvices")
       .select(
         "id, name, price, employee_percent, created_at, active, description, sort_order"
       )
@@ -1837,7 +1837,7 @@ async function editService(id){
 
   const result =
     await supabaseClient
-      .from("service")
+      .from("seẻvices")
       .update({
         name:newName.trim(),
         price:newPrice,
@@ -1913,7 +1913,7 @@ async function deleteService(id){
 
   const result =
     await supabaseClient
-      .from("service")
+      .from("seẻvices")
       .delete()
       .eq(
         "id",
