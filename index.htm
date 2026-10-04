@@ -1427,9 +1427,9 @@ async function loadservices(){
 
   const result =
     await supabaseClient
-      .from("seẻvices")
+      .from("services")
       .select(
-        "id, name, price, employee_percent, created_at, active, description, sort_order"
+        "id, name, price, employee_percent, active"
       )
       .order(
         "id",
@@ -1442,7 +1442,7 @@ async function loadservices(){
   if(result.error){
 
     console.error(
-      "LỖI SERVICE:",
+      "LỖI SERVICES:",
       result.error
     );
 
@@ -1731,7 +1731,7 @@ async function addService(){
     .value = "";
 
 
-  loadservices();
+  await loadservices();
 
 }
 
@@ -1837,7 +1837,7 @@ async function editService(id){
 
   const result =
     await supabaseClient
-      .from("seẻvices")
+      .from("services")
       .update({
         name:newName.trim(),
         price:newPrice,
@@ -1867,7 +1867,7 @@ async function editService(id){
   );
 
 
-  loadservices();
+  await loadservices();
 
 }
 
@@ -1913,7 +1913,7 @@ async function deleteService(id){
 
   const result =
     await supabaseClient
-      .from("seẻvices")
+      .from("services")
       .delete()
       .eq(
         "id",
@@ -1938,7 +1938,7 @@ async function deleteService(id){
   );
 
 
-  loadservices();
+  await loadservices();
 
 }
 
