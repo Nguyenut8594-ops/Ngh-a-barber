@@ -2269,74 +2269,53 @@ async function addmoney(){
 // ============================
 // DỊCH VỤ ĐÃ THỰC HIỆN
 // ============================
+
 async function loadServiceRecords(){
 
   const box =
-
     document.getElementById(
-
       "serviceRecordList"
-
     );
 
   if(!box) return;
 
+  if(!checkSupabase()) return;
+
   let query =
-
     supabaseClient
-
       .from("service_records")
-
       .select(
-
         "id, created_at, employee_name, service_name, price, quantity, commission"
-
       )
-
       .order(
-
         "created_at",
-
         {
-
           ascending:false
-
         }
-
       );
 
+  // Nhân viên chỉ xem dịch vụ của mình
   if(currentEmployee){
 
     query =
-
       query.eq(
-
         "employee_name",
-
         currentEmployee.Name
-
       );
 
   }
 
   const result =
-
     await query;
 
   if(result.error){
 
     box.innerHTML =
-
       "<div class='empty'>" +
-
       "Không tải được lịch sử dịch vụ.<br><br>" +
-
       escapeHtml(
-
         result.error.message
-
       ) +
-
       "</div>";
 
     return;
@@ -2344,49 +2323,33 @@ async function loadServiceRecords(){
   }
 
   const now =
-
     new Date();
 
   const records =
-
     (result.data || [])
-
       .filter(
-
         record => {
 
           const d =
-
             new Date(
-
               record.created_at
-
             );
 
           return (
-
             d.getMonth() ===
-
               now.getMonth() &&
-
             d.getFullYear() ===
-
               now.getFullYear()
-
           );
 
         }
-
       );
 
   if(records.length === 0){
 
     box.innerHTML =
-
       "<div class='empty'>" +
-
       "Tháng này chưa có dịch vụ." +
-
       "</div>";
 
     return;
@@ -2396,223 +2359,163 @@ async function loadServiceRecords(){
   box.innerHTML = "";
 
   records.forEach(
-
     record => {
 
       const item =
-
         document.createElement(
-
           "div"
-
         );
 
       item.className =
-
         "card";
 
       const d =
-
         new Date(
-
           record.created_at
-
         );
 
       const price =
-
         Number(
-
           record.price || 0
-
         ) *
-
         Number(
-
           record.quantity || 1
-
         );
 
       const commission =
-
         Number(
-
           record.commission || 0
-
         );
 
       item.innerHTML =
 
         "<h3>✂️ " +
-
         escapeHtml(
-
           record.service_name
-
         ) +
-
         "</h3>" +
 
         "<p>👤 " +
-
         escapeHtml(
-
           record.employee_name
-
         ) +
-
         "</p>" +
 
         "<p>📅 " +
-
         d.toLocaleString(
-
           "vi-VN"
-
         ) +
-
         "</p>" +
 
         "<p>💵 Giá: " +
-
         money(price) +
-
         "</p>" +
 
         "<p>💰 Nhân viên nhận: " +
-
         money(commission) +
-
         "</p>";
-      // ============================
-// NÚT XÓA - CHỈ CHỦ THẤY
-// ============================
-
-if(!currentEmployee){
-
-  item.innerHTML +=
-    "<button " +
-    "onclick=\"deleteServiceRecord('" +
-    record.id +
-    "')\" " +
-    "style=\"margin-top:10px;" +
-    "background:#c62828;" +
-    "color:white;" +
-    "border:none;" +
-    "padding:10px 16px;" +
-    "border-radius:8px;" +
-    "font-size:15px;\"" +
-    ">" +
-    "🗑️ Xóa" +
-    "</button>";
-
-}
 
       // ============================
-
-      // NÚT XÓA - CHỈ CHỦ MỚI THẤY
-
+      // CHỈ CHỦ MỚI CÓ NÚT XÓA
       // ============================
 
       if(!currentEmployee){
 
         const deleteButton =
-
           document.createElement(
-
             "button"
-
           );
 
-        deleteButton.textContent =
+        deleteButton.type =
+          "button";
 
+        deleteButton.textContent =
           "🗑️ Xóa";
 
-        deleteButton.style.marginTop =
-
-          "10px";
+        deleteButton.className =
+          "danger";
 
         deleteButton.onclick =
+          function(){
 
-          async function(){
-
-            const confirmDelete =
-
-              confirm(
-
-                "Bạn có chắc muốn xóa dịch vụ này không?"
-
-              );
-
-            if(!confirmDelete) return;
-
-            const result =
-
-              await supabaseClient
-
-                .from(
-
-                  "service_records"
-
-                )
-
-                .delete()
-
-                .eq(
-
-                  "id",
-
-                  record.id
-
-                );
-
-            if(result.error){
-
-              alert(
-
-                "❌ Không thể xóa dịch vụ!\n\n" +
-
-                result.error.message
-
-              );
-
-              return;
-
-            }
-
-            alert(
-
-              "✅ Đã xóa dịch vụ!"
-
+            deleteServiceRecord(
+              record.id
             );
-
-            // Tải lại doanh thu
-
-            await loadmoneySummary();
-
-            // Tải lại danh sách
-
-            await loadServiceRecords();
 
           };
 
         item.appendChild(
-
           deleteButton
-
         );
 
       }
 
       box.appendChild(
-
         item
-
       );
 
     }
-
   );
+
+}
+
+
+// ============================
+// XÓA DỊCH VỤ ĐÃ THỰC HIỆN
+// ============================
+
+async function deleteServiceRecord(id){
+
+  // Nhân viên không được xóa
+  if(currentEmployee){
+
+    alert(
+      "Nhân viên không có quyền xóa dịch vụ."
+    );
+
+    return;
+
+  }
+
+  if(!checkSupabase()) return;
+
+  const ok =
+    confirm(
+      "Bạn có chắc muốn xóa dịch vụ này không?\n\n" +
+      "Doanh thu và tiền nhân viên của dịch vụ này cũng sẽ được cập nhật lại."
+    );
+
+  if(!ok) return;
+
+  const result =
+    await supabaseClient
+      .from("service_records")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+  if(result.error){
+
+    alert(
+      "❌ Không thể xóa dịch vụ!\n\n" +
+      result.error.message
+    );
+
+    return;
+
+  }
+
+  alert(
+    "✅ Đã xóa dịch vụ!"
+  );
+
+  // Cập nhật lại doanh thu
+  await loadmoneySummary();
+
+  // Cập nhật lại danh sách
+  await loadServiceRecords();
 
 }
 
