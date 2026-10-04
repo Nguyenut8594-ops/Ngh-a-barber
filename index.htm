@@ -826,6 +826,10 @@ function show(id){
 // NHÂN VIÊN
 // ============================
 
+// ============================
+// DANH SÁCH NHÂN VIÊN
+// ============================
+
 async function loadEmployees(){
 
   if(!checkSupabase()) return;
@@ -894,6 +898,7 @@ async function loadEmployees(){
         "card";
 
       item.innerHTML =
+
         "<h3>👤 " +
         escapeHtml(
           employee.Name
@@ -917,6 +922,20 @@ async function loadEmployees(){
         ) +
         ")'>" +
         "📊 Xem doanh thu" +
+        "</button>" +
+
+        "<button " +
+        "type='button' " +
+        "class='danger' " +
+        "style='margin-top:8px;' " +
+        "onclick='deleteEmployee(" +
+        employee.id +
+        "," +
+        JSON.stringify(
+          employee.Name
+        ) +
+        ")'>" +
+        "🗑️ Xóa nhân viên" +
         "</button>";
 
       box.appendChild(
@@ -925,6 +944,67 @@ async function loadEmployees(){
 
     }
   );
+
+}
+
+
+// ============================
+// XÓA NHÂN VIÊN
+// ============================
+
+async function deleteEmployee(
+  id,
+  name
+){
+
+  // Chỉ Chủ mới được xóa
+  if(currentEmployee){
+
+    alert(
+      "❌ Nhân viên không có quyền xóa nhân viên."
+    );
+
+    return;
+
+  }
+
+  if(!checkSupabase()) return;
+
+  const ok =
+    confirm(
+      "Bạn có chắc muốn xóa nhân viên \"" +
+      name +
+      "\" không?"
+    );
+
+  if(!ok) return;
+
+  const result =
+    await supabaseClient
+      .from("employees")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+  if(result.error){
+
+    alert(
+      "❌ Không thể xóa nhân viên!\n\n" +
+      result.error.message
+    );
+
+    return;
+
+  }
+
+  alert(
+    "✅ Đã xóa nhân viên " +
+    name
+  );
+
+  await loadEmployees();
 
 }
 
