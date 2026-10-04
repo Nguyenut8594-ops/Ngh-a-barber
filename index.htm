@@ -231,9 +231,7 @@ button:disabled{
 
 </head>
 
-
 <body>
-
 
 <!-- =========================
      ĐĂNG NHẬP
@@ -271,7 +269,6 @@ button:disabled{
 
 </section>
 
-
 <!-- =========================
      ỨNG DỤNG
 ========================== -->
@@ -288,7 +285,6 @@ button:disabled{
     </p>
 
   </div>
-
 
   <!-- =========================
        MENU
@@ -323,7 +319,6 @@ button:disabled{
     </button>
 
   </div>
-
 
   <!-- =========================
        NHÂN VIÊN
@@ -362,13 +357,11 @@ button:disabled{
 
     </div>
 
-
     <div id="employeeList"></div>
 
     <div id="employeeReportBox"></div>
 
   </div>
-
 
   <!-- =========================
        DỊCH VỤ
@@ -409,11 +402,9 @@ button:disabled{
 
     </div>
 
-
     <div id="serviceList"></div>
 
   </div>
-
 
   <!-- =========================
        THU CHI
@@ -430,49 +421,28 @@ button:disabled{
       <div class="stat-grid">
 
         <div class="stat">
-
           <small>Doanh thu hôm nay</small>
-
-          <strong id="todayRevenue">
-            0 đ
-          </strong>
-
+          <strong id="todayRevenue">0 đ</strong>
         </div>
 
         <div class="stat">
-
           <small>Doanh thu tháng này</small>
-
-          <strong id="monthRevenue">
-            0 đ
-          </strong>
-
+          <strong id="monthRevenue">0 đ</strong>
         </div>
 
         <div class="stat">
-
           <small>Tiền nhân viên hôm nay</small>
-
-          <strong id="todayCommission">
-            0 đ
-          </strong>
-
+          <strong id="todayCommission">0 đ</strong>
         </div>
 
         <div class="stat">
-
           <small>Tiền nhân viên tháng này</small>
-
-          <strong id="monthCommission">
-            0 đ
-          </strong>
-
+          <strong id="monthCommission">0 đ</strong>
         </div>
 
       </div>
 
     </div>
-
 
     <div
       id="manualmoneyBox"
@@ -510,7 +480,6 @@ button:disabled{
 
     </div>
 
-
     <div class="card">
 
       <h3>📋 Giao dịch hôm nay</h3>
@@ -518,7 +487,6 @@ button:disabled{
       <div id="moneyList"></div>
 
     </div>
-
 
     <div class="card">
 
@@ -532,16 +500,13 @@ button:disabled{
 
 </section>
 
-
 <!-- =========================
      SUPABASE
 ========================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
-
 
 // ============================
 // SUPABASE
@@ -576,7 +541,6 @@ try{
 
 }
 
-
 // ============================
 // BIẾN HỆ THỐNG
 // ============================
@@ -584,7 +548,6 @@ try{
 let currentEmployee = null;
 
 let currentservices = [];
-
 
 // ============================
 // KIỂM TRA SUPABASE
@@ -606,7 +569,6 @@ function checkSupabase(){
 
 }
 
-
 // ============================
 // ĐỊNH DẠNG TIỀN
 // ============================
@@ -617,7 +579,6 @@ function money(value){
     .toLocaleString("vi-VN") + " đ";
 
 }
-
 
 // ============================
 // ĐĂNG NHẬP
@@ -636,7 +597,6 @@ async function login(){
       .getElementById("pass")
       .value;
 
-
   if(!u || !p){
 
     alert(
@@ -647,10 +607,7 @@ async function login(){
 
   }
 
-
-  // ==========================
   // CHỦ
-  // ==========================
 
   if(
     (u === "chủ" || u === "chu") &&
@@ -670,13 +627,9 @@ async function login(){
 
   }
 
-
-  // ==========================
   // NHÂN VIÊN
-  // ==========================
 
   if(!checkSupabase()) return;
-
 
   const result =
     await supabaseClient
@@ -694,7 +647,6 @@ async function login(){
       )
       .maybeSingle();
 
-
   if(result.error){
 
     alert(
@@ -706,7 +658,6 @@ async function login(){
 
   }
 
-
   if(!result.data){
 
     alert(
@@ -717,10 +668,8 @@ async function login(){
 
   }
 
-
   currentEmployee =
     result.data;
-
 
   document
     .getElementById("hello")
@@ -728,11 +677,9 @@ async function login(){
     "Nhân viên " +
     result.data.Name;
 
-
   openApp();
 
 }
-
 
 // ============================
 // MỞ ỨNG DỤNG
@@ -755,7 +702,6 @@ function openApp(){
     .style.display =
     "grid";
 
-
   const employeeButton =
     document.getElementById(
       "navEmployees"
@@ -770,7 +716,6 @@ function openApp(){
     document.getElementById(
       "serviceManagement"
     );
-
 
   if(currentEmployee){
 
@@ -800,15 +745,11 @@ function openApp(){
 
   }
 
-
   loadEmployees();
-
   loadservices();
-
   loadmoney();
 
 }
-
 
 // ============================
 // ĐĂNG XUẤT
@@ -845,7 +786,6 @@ function logout(){
 
 }
 
-
 // ============================
 // CHUYỂN TRANG
 // ============================
@@ -859,10 +799,8 @@ function show(id){
         page.classList.remove("active")
     );
 
-
   const page =
     document.getElementById(id);
-
 
   if(page){
 
@@ -870,29 +808,19 @@ function show(id){
 
   }
 
-
   if(id === "services"){
-
     loadservices();
-
   }
-
 
   if(id === "money"){
-
     loadmoney();
-
   }
 
-
   if(id === "employees"){
-
     loadEmployees();
-
   }
 
 }
-
 
 // ============================
 // NHÂN VIÊN
@@ -902,15 +830,12 @@ async function loadEmployees(){
 
   if(!checkSupabase()) return;
 
-
   const box =
     document.getElementById(
       "employeeList"
     );
 
-
   if(!box) return;
-
 
   const result =
     await supabaseClient
@@ -924,7 +849,6 @@ async function loadEmployees(){
           ascending:false
         }
       );
-
 
   if(result.error){
 
@@ -942,9 +866,7 @@ async function loadEmployees(){
 
   }
 
-
   box.innerHTML = "";
-
 
   if(
     !result.data ||
@@ -960,7 +882,6 @@ async function loadEmployees(){
 
   }
 
-
   result.data.forEach(
     employee => {
 
@@ -971,7 +892,6 @@ async function loadEmployees(){
 
       item.className =
         "card";
-
 
       item.innerHTML =
         "<h3>👤 " +
@@ -999,7 +919,6 @@ async function loadEmployees(){
         "📊 Xem doanh thu" +
         "</button>";
 
-
       box.appendChild(
         item
       );
@@ -1008,7 +927,6 @@ async function loadEmployees(){
   );
 
 }
-
 
 // ============================
 // THÊM NHÂN VIÊN
@@ -1026,13 +944,11 @@ async function addEmployee(){
 
   }
 
-
   const name =
     document
       .getElementById("employeeName")
       .value
       .trim();
-
 
   const username =
     document
@@ -1040,12 +956,10 @@ async function addEmployee(){
       .value
       .trim();
 
-
   const password =
     document
       .getElementById("employeePassword")
       .value;
-
 
   if(!name){
 
@@ -1057,7 +971,6 @@ async function addEmployee(){
 
   }
 
-
   if(!username){
 
     alert(
@@ -1067,7 +980,6 @@ async function addEmployee(){
     return;
 
   }
-
 
   if(!password){
 
@@ -1079,9 +991,7 @@ async function addEmployee(){
 
   }
 
-
   if(!checkSupabase()) return;
-
 
   const result =
     await supabaseClient
@@ -1094,7 +1004,6 @@ async function addEmployee(){
         }
       ]);
 
-
   if(result.error){
 
     alert(
@@ -1106,11 +1015,9 @@ async function addEmployee(){
 
   }
 
-
   alert(
     "Đã thêm nhân viên!"
   );
-
 
   document
     .getElementById("employeeName")
@@ -1124,11 +1031,9 @@ async function addEmployee(){
     .getElementById("employeePassword")
     .value = "";
 
-
   loadEmployees();
 
 }
-
 
 // ============================
 // BÁO CÁO NHÂN VIÊN
@@ -1140,29 +1045,22 @@ async function showEmployeeReport(
 ){
 
   if(currentEmployee){
-
     return;
-
   }
-
 
   const box =
     document.getElementById(
       "employeeReportBox"
     );
 
-
   if(!box) return;
-
 
   box.innerHTML =
     "<div class='card'>" +
     "⏳ Đang tải báo cáo..." +
     "</div>";
 
-
   if(!checkSupabase()) return;
-
 
   const result =
     await supabaseClient
@@ -1181,7 +1079,6 @@ async function showEmployeeReport(
         }
       );
 
-
   if(result.error){
 
     box.innerHTML =
@@ -1198,19 +1095,15 @@ async function showEmployeeReport(
 
   }
 
-
   const records =
     result.data || [];
-
 
   const now =
     new Date();
 
-
   let todayTotal = 0;
   let monthTotal = 0;
   let monthCommission = 0;
-
 
   records.forEach(
     record => {
@@ -1220,7 +1113,6 @@ async function showEmployeeReport(
           record.created_at
         );
 
-
       const price =
         Number(
           record.price || 0
@@ -1229,12 +1121,10 @@ async function showEmployeeReport(
           record.quantity || 1
         );
 
-
       const commission =
         Number(
           record.commission || 0
         );
-
 
       if(
         d.toDateString() ===
@@ -1244,7 +1134,6 @@ async function showEmployeeReport(
         todayTotal += price;
 
       }
-
 
       if(
         d.getMonth() === now.getMonth() &&
@@ -1260,7 +1149,6 @@ async function showEmployeeReport(
 
     }
   );
-
 
   let html =
 
@@ -1301,7 +1189,6 @@ async function showEmployeeReport(
     "📋 Chi tiết" +
     "</h3>";
 
-
   if(records.length === 0){
 
     html +=
@@ -1319,24 +1206,20 @@ async function showEmployeeReport(
             record.created_at
           );
 
-
         const price =
           Number(
             record.price || 0
           );
-
 
         const commission =
           Number(
             record.commission || 0
           );
 
-
         const percent =
           price > 0
             ? (commission / price) * 100
             : 0;
-
 
         html +=
 
@@ -1385,13 +1268,10 @@ async function showEmployeeReport(
 
   }
 
-
   html += "</div>";
-
 
   box.innerHTML =
     html;
-
 
   box.scrollIntoView({
     behavior:"smooth",
@@ -1399,7 +1279,6 @@ async function showEmployeeReport(
   });
 
 }
-
 
 // ============================
 // DỊCH VỤ
@@ -1412,18 +1291,16 @@ async function loadservices(){
       "serviceList"
     );
 
-
   if(!box) return;
 
-
   if(!checkSupabase()) return;
-
 
   box.innerHTML =
     "<div class='card empty'>" +
     "⏳ Đang tải dịch vụ..." +
     "</div>";
 
+  // ĐÃ SỬA: services
 
   const result =
     await supabaseClient
@@ -1438,14 +1315,12 @@ async function loadservices(){
         }
       );
 
-
   if(result.error){
 
     console.error(
-      "LỖI SERVICES:",
+      "LỖI SERVICE:",
       result.error
     );
-
 
     box.innerHTML =
       "<div class='card'>" +
@@ -1464,20 +1339,16 @@ async function loadservices(){
 
   }
 
-
   currentservices =
     result.data || [];
 
-
   box.innerHTML = "";
-
 
   const services =
     currentservices.filter(
       service =>
         service.active !== false
     );
-
 
   if(services.length === 0){
 
@@ -1490,7 +1361,6 @@ async function loadservices(){
 
   }
 
-
   services.forEach(
     service => {
 
@@ -1499,22 +1369,18 @@ async function loadservices(){
           "div"
         );
 
-
       item.className =
         "card service-card";
-
 
       const percent =
         Number(
           service.employee_percent || 0
         );
 
-
       const price =
         Number(
           service.price || 0
         );
-
 
       if(currentEmployee){
 
@@ -1526,7 +1392,6 @@ async function loadservices(){
             );
 
           };
-
 
         item.innerHTML =
 
@@ -1593,7 +1458,6 @@ async function loadservices(){
 
       }
 
-
       box.appendChild(
         item
       );
@@ -1602,7 +1466,6 @@ async function loadservices(){
   );
 
 }
-
 
 // ============================
 // THÊM DỊCH VỤ
@@ -1620,13 +1483,11 @@ async function addService(){
 
   }
 
-
   const name =
     document
       .getElementById("serviceName")
       .value
       .trim();
-
 
   const price =
     Number(
@@ -1635,14 +1496,12 @@ async function addService(){
         .value
     );
 
-
   const employeePercent =
     Number(
       document
         .getElementById("servicePercent")
         .value
     );
-
 
   if(!name){
 
@@ -1653,7 +1512,6 @@ async function addService(){
     return;
 
   }
-
 
   if(
     !price ||
@@ -1667,7 +1525,6 @@ async function addService(){
     return;
 
   }
-
 
   if(
     isNaN(employeePercent) ||
@@ -1683,9 +1540,7 @@ async function addService(){
 
   }
 
-
   if(!checkSupabase()) return;
-
 
   const result =
     await supabaseClient
@@ -1700,7 +1555,6 @@ async function addService(){
         }
       ]);
 
-
   if(result.error){
 
     alert(
@@ -1712,11 +1566,9 @@ async function addService(){
 
   }
 
-
   alert(
     "Đã thêm dịch vụ!"
   );
-
 
   document
     .getElementById("serviceName")
@@ -1730,11 +1582,9 @@ async function addService(){
     .getElementById("servicePercent")
     .value = "";
 
-
-  await loadservices();
+  loadservices();
 
 }
-
 
 // ============================
 // SỬA DỊCH VỤ
@@ -1752,14 +1602,12 @@ async function editService(id){
 
   }
 
-
   const service =
     currentservices.find(
       item =>
         String(item.id) ===
         String(id)
     );
-
 
   if(!service){
 
@@ -1771,17 +1619,14 @@ async function editService(id){
 
   }
 
-
   const newName =
     prompt(
       "Tên dịch vụ:",
       service.name
     );
 
-
   if(newName === null)
     return;
-
 
   const newPriceText =
     prompt(
@@ -1789,10 +1634,8 @@ async function editService(id){
       service.price
     );
 
-
   if(newPriceText === null)
     return;
-
 
   const newPercentText =
     prompt(
@@ -1800,22 +1643,18 @@ async function editService(id){
       service.employee_percent
     );
 
-
   if(newPercentText === null)
     return;
-
 
   const newPrice =
     Number(
       newPriceText
     );
 
-
   const newPercent =
     Number(
       newPercentText
     );
-
 
   if(
     !newName.trim() ||
@@ -1834,6 +1673,7 @@ async function editService(id){
 
   }
 
+  // ĐÃ SỬA: services
 
   const result =
     await supabaseClient
@@ -1849,7 +1689,6 @@ async function editService(id){
         id
       );
 
-
   if(result.error){
 
     alert(
@@ -1861,16 +1700,13 @@ async function editService(id){
 
   }
 
-
   alert(
     "Đã sửa dịch vụ!"
   );
 
-
-  await loadservices();
+  loadservices();
 
 }
-
 
 // ============================
 // XÓA DỊCH VỤ
@@ -1888,7 +1724,6 @@ async function deleteService(id){
 
   }
 
-
   const service =
     currentservices.find(
       item =>
@@ -1896,9 +1731,7 @@ async function deleteService(id){
         String(id)
     );
 
-
   if(!service) return;
-
 
   const ok =
     confirm(
@@ -1907,9 +1740,9 @@ async function deleteService(id){
       "?"
     );
 
-
   if(!ok) return;
 
+  // ĐÃ SỬA: services
 
   const result =
     await supabaseClient
@@ -1919,7 +1752,6 @@ async function deleteService(id){
         "id",
         id
       );
-
 
   if(result.error){
 
@@ -1932,16 +1764,13 @@ async function deleteService(id){
 
   }
 
-
   alert(
     "Đã xóa dịch vụ!"
   );
 
-
-  await loadservices();
+  loadservices();
 
 }
-
 
 // ============================
 // GHI NHẬN DỊCH VỤ
@@ -1950,32 +1779,25 @@ async function deleteService(id){
 async function recordService(service){
 
   if(!currentEmployee){
-
     return;
-
   }
 
-
   if(!checkSupabase()) return;
-
 
   const price =
     Number(
       service.price || 0
     );
 
-
   const percent =
     Number(
       service.employee_percent || 0
     );
 
-
   const commission =
     price *
     percent /
     100;
-
 
   const ok =
     confirm(
@@ -1990,9 +1812,7 @@ async function recordService(service){
       money(commission)
     );
 
-
   if(!ok) return;
-
 
   const result =
     await supabaseClient
@@ -2016,7 +1836,6 @@ async function recordService(service){
         }
       ]);
 
-
   if(result.error){
 
     alert(
@@ -2028,7 +1847,6 @@ async function recordService(service){
 
   }
 
-
   alert(
     "Đã ghi nhận dịch vụ!\n\n" +
     service.name +
@@ -2036,11 +1854,9 @@ async function recordService(service){
     money(commission)
   );
 
-
   loadmoney();
 
 }
-
 
 // ============================
 // THU CHI
@@ -2058,7 +1874,6 @@ async function loadmoney(){
 
 }
 
-
 // ============================
 // TỔNG DOANH THU
 // ============================
@@ -2072,7 +1887,6 @@ async function loadmoneySummary(){
         "price, quantity, commission, created_at"
       );
 
-
   if(currentEmployee){
 
     query =
@@ -2083,10 +1897,8 @@ async function loadmoneySummary(){
 
   }
 
-
   const result =
     await query;
-
 
   if(result.error){
 
@@ -2098,20 +1910,16 @@ async function loadmoneySummary(){
 
   }
 
-
   const records =
     result.data || [];
 
-
   const now =
     new Date();
-
 
   let todayRevenue = 0;
   let monthRevenue = 0;
   let todayCommission = 0;
   let monthCommission = 0;
-
 
   records.forEach(
     record => {
@@ -2121,7 +1929,6 @@ async function loadmoneySummary(){
           record.created_at
         );
 
-
       const price =
         Number(
           record.price || 0
@@ -2130,12 +1937,10 @@ async function loadmoneySummary(){
           record.quantity || 1
         );
 
-
       const commission =
         Number(
           record.commission || 0
         );
-
 
       if(
         d.toDateString() ===
@@ -2148,7 +1953,6 @@ async function loadmoneySummary(){
           commission;
 
       }
-
 
       if(
         d.getMonth() ===
@@ -2167,24 +1971,20 @@ async function loadmoneySummary(){
     }
   );
 
-
   document
     .getElementById("todayRevenue")
     .textContent =
     money(todayRevenue);
-
 
   document
     .getElementById("monthRevenue")
     .textContent =
     money(monthRevenue);
 
-
   document
     .getElementById("todayCommission")
     .textContent =
     money(todayCommission);
-
 
   document
     .getElementById("monthCommission")
@@ -2192,7 +1992,6 @@ async function loadmoneySummary(){
     money(monthCommission);
 
 }
-
 
 // ============================
 // THU CHI THỦ CÔNG
@@ -2205,9 +2004,7 @@ async function loadManualmoney(){
       "moneyList"
     );
 
-
   if(!box) return;
-
 
   const result =
     await supabaseClient
@@ -2219,7 +2016,6 @@ async function loadManualmoney(){
           ascending:false
         }
       );
-
 
   if(result.error){
 
@@ -2235,11 +2031,9 @@ async function loadManualmoney(){
 
   }
 
-
   const today =
     new Date()
       .toDateString();
-
 
   const records =
     (result.data || [])
@@ -2250,7 +2044,6 @@ async function loadManualmoney(){
           ).toDateString() ===
           today
       );
-
 
   if(records.length === 0){
 
@@ -2263,9 +2056,7 @@ async function loadManualmoney(){
 
   }
 
-
   box.innerHTML = "";
-
 
   records.forEach(
     record => {
@@ -2275,16 +2066,13 @@ async function loadManualmoney(){
           "div"
         );
 
-
       item.className =
         "card";
-
 
       const sign =
         record.type === "chi"
           ? "-"
           : "+";
-
 
       item.innerHTML =
 
@@ -2317,7 +2105,6 @@ async function loadManualmoney(){
 
 }
 
-
 // ============================
 // THÊM KHOẢN THU CHI
 // ============================
@@ -2330,7 +2117,6 @@ async function addmoney(){
       .value
       .trim();
 
-
   const amount =
     Number(
       document
@@ -2338,12 +2124,10 @@ async function addmoney(){
         .value
     );
 
-
   const type =
     document
       .getElementById("moneyType")
       .value;
-
 
   if(!note){
 
@@ -2354,7 +2138,6 @@ async function addmoney(){
     return;
 
   }
-
 
   if(
     !amount ||
@@ -2369,9 +2152,7 @@ async function addmoney(){
 
   }
 
-
   if(!checkSupabase()) return;
-
 
   const result =
     await supabaseClient
@@ -2384,7 +2165,6 @@ async function addmoney(){
         }
       ]);
 
-
   if(result.error){
 
     alert(
@@ -2396,11 +2176,9 @@ async function addmoney(){
 
   }
 
-
   alert(
     "Đã lưu khoản tiền!"
   );
-
 
   document
     .getElementById("moneyNote")
@@ -2410,11 +2188,9 @@ async function addmoney(){
     .getElementById("moneyAmount")
     .value = "";
 
-
   loadmoney();
 
 }
-
 
 // ============================
 // DỊCH VỤ ĐÃ THỰC HIỆN
@@ -2427,9 +2203,7 @@ async function loadServiceRecords(){
       "serviceRecordList"
     );
 
-
   if(!box) return;
-
 
   let query =
     supabaseClient
@@ -2444,7 +2218,6 @@ async function loadServiceRecords(){
         }
       );
 
-
   if(currentEmployee){
 
     query =
@@ -2455,10 +2228,8 @@ async function loadServiceRecords(){
 
   }
 
-
   const result =
     await query;
-
 
   if(result.error){
 
@@ -2474,10 +2245,8 @@ async function loadServiceRecords(){
 
   }
 
-
   const now =
     new Date();
-
 
   const records =
     (result.data || [])
@@ -2489,7 +2258,6 @@ async function loadServiceRecords(){
               record.created_at
             );
 
-
           return (
             d.getMonth() ===
               now.getMonth() &&
@@ -2499,7 +2267,6 @@ async function loadServiceRecords(){
 
         }
       );
-
 
   if(records.length === 0){
 
@@ -2512,9 +2279,7 @@ async function loadServiceRecords(){
 
   }
 
-
   box.innerHTML = "";
-
 
   records.forEach(
     record => {
@@ -2524,16 +2289,13 @@ async function loadServiceRecords(){
           "div"
         );
 
-
       item.className =
         "card";
-
 
       const d =
         new Date(
           record.created_at
         );
-
 
       const price =
         Number(
@@ -2543,12 +2305,10 @@ async function loadServiceRecords(){
           record.quantity || 1
         );
 
-
       const commission =
         Number(
           record.commission || 0
         );
-
 
       item.innerHTML =
 
@@ -2587,7 +2347,6 @@ async function loadServiceRecords(){
 
 }
 
-
 // ============================
 // BẢO VỆ HTML
 // ============================
@@ -2599,12 +2358,10 @@ function escapeHtml(text){
       "div"
     );
 
-
   div.textContent =
     String(
       text ?? ""
     );
-
 
   return div.innerHTML;
 
