@@ -475,7 +475,7 @@ button:disabled{
 
 
     <div
-      id="manualMoneyBox"
+      id="manualmoneyBox"
       class="card">
 
       <h3>💵 Thêm khoản thu / chi</h3>
@@ -504,7 +504,7 @@ button:disabled{
 
       <button
         type="button"
-        onclick="addMoney()">
+        onclick="addmoney()">
         + Lưu khoản tiền
       </button>
 
@@ -805,7 +805,7 @@ function openApp(){
 
   loadservices();
 
-  loadMoney();
+  loadmoney();
 
 }
 
@@ -880,7 +880,7 @@ function show(id){
 
   if(id === "money"){
 
-    loadMoney();
+    loadmoney();
 
   }
 
@@ -2037,7 +2037,7 @@ async function recordService(service){
   );
 
 
-  loadMoney();
+  loadmoney();
 
 }
 
@@ -2046,13 +2046,13 @@ async function recordService(service){
 // THU CHI
 // ============================
 
-async function loadMoney(){
+async function loadmoney(){
 
   if(!checkSupabase()) return;
 
-  await loadMoneySummary();
+  await loadmoneySummary();
 
-  await loadManualMoney();
+  await loadManualmoney();
 
   await loadServiceRecords();
 
@@ -2063,7 +2063,7 @@ async function loadMoney(){
 // TỔNG DOANH THU
 // ============================
 
-async function loadMoneySummary(){
+async function loadmoneySummary(){
 
   let query =
     supabaseClient
@@ -2198,7 +2198,7 @@ async function loadMoneySummary(){
 // THU CHI THỦ CÔNG
 // ============================
 
-async function loadManualMoney(){
+async function loadManualmoney(){
 
   const box =
     document.getElementById(
@@ -2322,7 +2322,7 @@ async function loadManualMoney(){
 // THÊM KHOẢN THU CHI
 // ============================
 
-async function addMoney(){
+async function addmoney(){
 
   const note =
     document
@@ -2411,7 +2411,7 @@ async function addMoney(){
     .value = "";
 
 
-  loadMoney();
+  loadmoney();
 
 }
 
