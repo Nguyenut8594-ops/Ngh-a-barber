@@ -788,7 +788,6 @@ function show(id){
 // ============================
 // NHÂN VIÊN
 // ============================
-
 // ============================
 // DANH SÁCH NHÂN VIÊN
 // ============================
@@ -808,10 +807,10 @@ async function loadEmployees(){
     await supabaseClient
       .from("employees")
       .select(
-        'id, "Name", username, created_at'
+        'id, "Name", username, employee_percent, "Created_at"'
       )
       .order(
-        "created_at",
+        "Created_at",
         {
           ascending:false
         }
@@ -875,6 +874,15 @@ async function loadEmployees(){
         ) +
         "</p>" +
 
+        "<p class='muted'>" +
+        "💰 % nhân viên: " +
+        escapeHtml(
+          String(
+            employee.employee_percent ?? 50
+          )
+        ) +
+        "%</p>" +
+
         "<button " +
         "type='button' " +
         "onclick='showEmployeeReport(" +
@@ -886,20 +894,23 @@ async function loadEmployees(){
         ")'>" +
         "📊 Xem doanh thu" +
         "</button>" +
+
         "<button " +
-"type='button' " +
-"class='secondary' " +
-"style='margin-top:8px;' " +
-"onclick='resetEmployeeServices(" +
-employee.id +
-"," +
-JSON.stringify(
-  employee.Name
-) +
-")'>" +
-"🔄 Reset dịch vụ của " +
-escapeHtml(employee.Name) +
-"</button>" +
+        "type='button' " +
+        "class='secondary' " +
+        "style='margin-top:8px;' " +
+        "onclick='resetEmployeeServices(" +
+        employee.id +
+        "," +
+        JSON.stringify(
+          employee.Name
+        ) +
+        ")'>" +
+        "🔄 Reset dịch vụ của " +
+        escapeHtml(
+          employee.Name
+        ) +
+        "</button>" +
 
         "<button " +
         "type='button' " +
