@@ -851,10 +851,10 @@ async function loadEmployees(){
     await supabaseClient
       .from("employees")
       .select(
-        'id, "Name", username, employee_percent, "Created_at"'
+        'id, "Name", username, employee_percent, "created_at"'
       )
       .order(
-        "Created_at",
+        "created_at",
         {
           ascending:false
         }
