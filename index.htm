@@ -642,7 +642,7 @@ async function login(){
     await supabaseClient
       .from("employees")
       .select(
-        'id, "Name", username, password'
+        'id, "Name", username, password, employee_percent'
       )
       .eq(
         "username",
