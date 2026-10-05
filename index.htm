@@ -985,7 +985,7 @@ async function deleteEmployee(
 
 }
 
-// ============================
+ // ============================
 // THÊM NHÂN VIÊN
 // ============================
 
@@ -1018,6 +1018,13 @@ async function addEmployee(){
       .getElementById("employeePassword")
       .value;
 
+  const percent =
+    Number(
+      document
+        .getElementById("employeePercent")
+        .value
+    );
+
   if(!name){
 
     alert(
@@ -1048,6 +1055,20 @@ async function addEmployee(){
 
   }
 
+  if(
+    isNaN(percent) ||
+    percent < 0 ||
+    percent > 100
+  ){
+
+    alert(
+      "Vui lòng nhập % nhân viên từ 0 đến 100."
+    );
+
+    return;
+
+  }
+
   if(!checkSupabase()) return;
 
   const result =
@@ -1057,7 +1078,8 @@ async function addEmployee(){
         {
           "Name": name,
           username: username,
-          password: password
+          password: password,
+          employee_percent: percent
         }
       ]);
 
@@ -1086,6 +1108,10 @@ async function addEmployee(){
 
   document
     .getElementById("employeePassword")
+    .value = "";
+
+  document
+    .getElementById("employeePercent")
     .value = "";
 
   loadEmployees();
