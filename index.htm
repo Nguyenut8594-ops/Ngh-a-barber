@@ -923,6 +923,20 @@ async function loadEmployees(){
         ")'>" +
         "📊 Xem doanh thu" +
         "</button>" +
+        "<button " +
+"type='button' " +
+"class='secondary' " +
+"style='margin-top:8px;' " +
+"onclick='resetEmployeeServices(" +
+employee.id +
+"," +
+JSON.stringify(
+  employee.Name
+) +
+")'>" +
+"🔄 Reset dịch vụ của " +
+escapeHtml(employee.Name) +
+"</button>" +
 
         "<button " +
         "type='button' " +
@@ -1357,6 +1371,170 @@ async function showEmployeeReport(
     behavior:"smooth",
     block:"start"
   });
+
+}
+  // ============================
+// RESET DỊCH VỤ CỦA RIÊNG NHÂN VIÊN
+// ============================
+
+async function resetEmployeeServices(
+  employeeId,
+  employeeName
+){
+
+  // Chỉ Chủ mới được reset
+  if(currentEmployee){
+
+    alert(
+      "❌ Nhân viên không có quyền reset."
+    );
+
+    return;
+
+  }
+
+  if(!checkSupabase()) return;
+
+  // Lấy các dịch vụ của riêng nhân viên này
+  const checkResult =
+    await supabaseClient
+      .from("service_records")
+      .select(
+        "id, price, quantity, commission"
+      )
+      .eq(
+        "employee_name",
+        employeeName
+      );
+
+  if(checkResult.error){
+
+    alert(
+      "❌ Không thể kiểm tra dịch vụ của " +
+      employeeName +
+      ":\n\n" +
+      checkResult.error.message
+    );
+
+    return;
+
+  }
+
+  const records =
+    checkResult.data || [];
+
+  if(records.length === 0){
+
+    alert(
+      "ℹ️ " +
+      employeeName +
+      " hiện chưa có dịch vụ nào để Reset."
+    );
+
+    return;
+
+  }
+
+  // Tính tổng trước khi Reset
+  let totalRevenue = 0;
+  let totalCommission = 0;
+
+  records.forEach(
+    record => {
+
+      totalRevenue +=
+        Number(record.price || 0) *
+        Number(record.quantity || 1);
+
+      totalCommission +=
+        Number(record.commission || 0);
+
+    }
+  );
+
+  const ok =
+    confirm(
+      "⚠️ RESET DỊCH VỤ\n\n" +
+
+      "Nhân viên: " +
+      employeeName +
+
+      "\nSố lượt dịch vụ: " +
+      records.length +
+
+      "\nDoanh thu: " +
+      money(totalRevenue) +
+
+      "\nTiền % nhân viên: " +
+      money(totalCommission) +
+
+      "\n\nChỉ xóa dịch vụ đã thực hiện của " +
+      employeeName +
+
+      ".\n\nDanh sách dịch vụ Chủ tạo sẽ KHÔNG bị xóa." +
+
+      "\n\nDịch vụ của nhân viên khác cũng KHÔNG bị xóa." +
+
+      "\n\nBạn có chắc muốn Reset không?"
+    );
+
+  if(!ok) return;
+
+  // XÓA RIÊNG DỊCH VỤ CỦA NHÂN VIÊN NÀY
+  const result =
+    await supabaseClient
+      .from("service_records")
+      .delete()
+      .eq(
+        "employee_name",
+        employeeName
+      );
+
+  if(result.error){
+
+    alert(
+      "❌ Không thể Reset dịch vụ của " +
+      employeeName +
+      ":\n\n" +
+      result.error.message
+    );
+
+    return;
+
+  }
+
+  alert(
+    "✅ Đã Reset thành công!\n\n" +
+
+    employeeName +
+
+    "\nĐã xóa: " +
+    records.length +
+    " lượt dịch vụ" +
+
+    "\nTiền % đã Reset: " +
+    money(totalCommission) +
+
+    "\n\nDanh sách dịch vụ Chủ tạo vẫn còn nguyên."
+  );
+
+  // Xóa báo cáo đang mở
+  const reportBox =
+    document.getElementById(
+      "employeeReportBox"
+    );
+
+  if(reportBox){
+
+    reportBox.innerHTML = "";
+
+  }
+
+  // Cập nhật lại tiền
+  await loadmoneySummary();
+
+  // Cập nhật lại lịch sử dịch vụ
+  await loadServiceRecords();
 
 }
 
