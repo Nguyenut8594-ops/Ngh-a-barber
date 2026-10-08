@@ -884,6 +884,30 @@ async function loadEmployees(){
   }
 
   box.innerHTML = "";
+  const moneyEmployee =
+  document.getElementById("moneyEmployee");
+
+if(moneyEmployee){
+
+  moneyEmployee.innerHTML =
+    "<option value=''>" +
+    "-- Chọn nhân viên --" +
+    "</option>";
+
+  result.data.forEach(
+    employee => {
+
+      moneyEmployee.innerHTML +=
+        "<option value='" +
+        escapeHtml(employee.Name) +
+        "'>" +
+        escapeHtml(employee.Name) +
+        "</option>";
+
+    }
+  );
+
+}
 
   if(
     !result.data ||
@@ -2981,6 +3005,11 @@ async function addmoney(){
     document
       .getElementById("moneyType")
       .value;
+  
+  const employeeName =
+  document
+    .getElementById("moneyEmployee")
+    .value;
 
   if(!note){
 
@@ -3014,7 +3043,8 @@ async function addmoney(){
         {
           type:type,
           amount:amount,
-          note:note
+          note:note,
+          employee_name:employeeName
         }
       ]);
 
