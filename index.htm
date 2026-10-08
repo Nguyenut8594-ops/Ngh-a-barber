@@ -1240,6 +1240,7 @@ async function showEmployeeReport(
     new Date();
 
   let todayTotal = 0;
+  let todayCommission = 0;
   let monthTotal = 0;
   let monthCommission = 0;
 
@@ -1271,6 +1272,9 @@ async function showEmployeeReport(
 
         todayTotal += price;
 
+        todayCommission += commission;
+
+
       }
 
       if(
@@ -1296,16 +1300,23 @@ async function showEmployeeReport(
     escapeHtml(
       employeeName
     ) +
-    "</h3>" +
+   "</h3>" +
 
-    "<div class='stat-grid'>" +
+"<div class='stat-grid'>" +
 
-    "<div class='stat'>" +
-    "<small>Doanh thu hôm nay</small>" +
-    "<strong>" +
-    money(todayTotal) +
-    "</strong>" +
-    "</div>" +
+"<div class='stat'>" +
+"<small>Doanh thu hôm nay</small>" +
+"<strong>" +
+money(todayTotal) +
+"</strong>" +
+"</div>" +
+
+"<div class='stat'>" +
+"<small>Tiền nhân viên hôm nay</small>" +
+"<strong>" +
+money(todayCommission) +
+"</strong>" +
+"</div>" +
 
     "<div class='stat'>" +
     "<small>Doanh thu tháng</small>" +
