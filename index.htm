@@ -2247,9 +2247,7 @@ async function loadmoney(){
 
     if(moneyList){
 
-      moneyList.innerHTML =
-
-        "";
+      await loadEmployeeMoney();
 
     }
 
@@ -2368,7 +2366,7 @@ async function loadmoneySummary(){
 
       .select(
 
-        "type, amount, created_at"
+        "type, amount, employee_name, created_at"
 
       );
 
@@ -2511,6 +2509,9 @@ async function loadmoneySummary(){
   moneyRecords.forEach(
 
     record => {
+      if(record.employee_name){
+  return;
+}
 
       const d =
 
@@ -2683,6 +2684,119 @@ async function loadmoneySummary(){
     .textContent =
 
     money(monthCommission);
+
+}
+  // ============================
+// TIỀN ỨNG CỦA NHÂN VIÊN
+// ============================
+
+async function loadEmployeeMoney(){
+
+  if(!currentEmployee) return;
+
+  const box =
+    document.getElementById(
+      "moneyList"
+    );
+
+  if(!box) return;
+
+  const result =
+    await supabaseClient
+      .from("money")
+      .select(
+        "id, created_at, employee_name, note, amount, type"
+      )
+      .eq(
+        "employee_name",
+        currentEmployee.Name
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+  if(result.error){
+
+    box.innerHTML =
+      "<div class='empty'>" +
+      "Không tải được khoản tiền của bạn.<br><br>" +
+      escapeHtml(
+        result.error.message
+      ) +
+      "</div>";
+
+    return;
+
+  }
+
+  const records =
+    result.data || [];
+
+  if(records.length === 0){
+
+    box.innerHTML =
+      "<div class='empty'>" +
+      "Chưa có khoản tiền nào." +
+      "</div>";
+
+    return;
+
+  }
+
+  box.innerHTML = "";
+
+  records.forEach(
+    record => {
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "card";
+
+      const sign =
+        record.type === "chi"
+          ? "-"
+          : "+";
+
+      const date =
+        new Date(
+          record.created_at
+        );
+
+      item.innerHTML =
+
+        "<h3>💰 " +
+        escapeHtml(
+          record.note || ""
+        ) +
+        "</h3>" +
+
+        "<p class='money'>" +
+        sign +
+        money(
+          record.amount
+        ) +
+        "</p>" +
+
+        "<p class='muted'>" +
+        "📅 " +
+        date.toLocaleString(
+          "vi-VN"
+        ) +
+        "</p>";
+
+      box.appendChild(
+        item
+      );
+
+    }
+  );
 
 }
 
