@@ -597,6 +597,30 @@ function money(value){
 // ============================
 // ĐĂNG NHẬP
 // ============================
+  function checkRememberLogin(){
+
+  const savedUser =
+    localStorage.getItem("nghiaBarberUser");
+
+  const savedPass =
+    localStorage.getItem("nghiaBarberPass");
+
+  if(savedUser && savedPass){
+
+    document
+      .getElementById("user")
+      .value =
+      savedUser;
+
+    document
+      .getElementById("pass")
+      .value =
+      savedPass;
+
+  }
+
+}
+  checkRememberLogin();
 
 async function login(){
 
@@ -620,6 +644,15 @@ async function login(){
     return;
 
   }
+  localStorage.setItem(
+  "nghiaBarberUser",
+  u
+);
+
+localStorage.setItem(
+  "nghiaBarberPass",
+  p
+);
 
   // CHỦ
 
