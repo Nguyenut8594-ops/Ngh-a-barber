@@ -1496,165 +1496,169 @@ money(todayCommission) +
 // RESET DỊCH VỤ CỦA RIÊNG NHÂN VIÊN
 // ============================
 
+// ============================
+// RESET DỊCH VỤ VÀ TIỀN ỨNG CỦA NHÂN VIÊN
+// ============================
+
 async function resetEmployeeServices(
   employeeId,
   employeeName
 ){
 
-  // Chỉ Chủ mới được reset
+  // Chỉ Chủ mới được Reset
   if(currentEmployee){
-
-    alert(
-      "❌ Nhân viên không có quyền reset."
-    );
-
+    alert("Nhân viên không có quyền Reset.");
     return;
-
   }
 
   if(!checkSupabase()) return;
 
-  // Lấy các dịch vụ của riêng nhân viên này
+  // Lấy dịch vụ của nhân viên
   const checkResult =
     await supabaseClient
       .from("service_records")
-      .select(
-        "id, price, quantity, commission"
-      )
-      .eq(
-        "employee_name",
-        employeeName
-      );
+      .select("id, price, quantity, commission")
+      .eq("employee_name", employeeName);
 
   if(checkResult.error){
-
     alert(
-      "❌ Không thể kiểm tra dịch vụ của " +
-      employeeName +
-      ":\n\n" +
+      "Không thể kiểm tra dịch vụ:\n\n" +
       checkResult.error.message
     );
-
     return;
-
   }
 
-  const records =
-    checkResult.data || [];
+  const records = checkResult.data || [];
 
-  if(records.length === 0){
+  // Lấy các khoản thu chi của nhân viên
+  const moneyResult =
+    await supabaseClient
+      .from("money")
+      .select("id, note, amount, type")
+      .eq("employee_name", employeeName);
 
+  if(moneyResult.error){
     alert(
-      "ℹ️ " +
-      employeeName +
-      " hiện chưa có dịch vụ nào để Reset."
+      "Không thể kiểm tra tiền ứng:\n\n" +
+      moneyResult.error.message
+    );
+    return;
+  }
+
+  // Chỉ chọn khoản có nội dung chứa "ứng tiền"
+  const advanceRecords =
+    (moneyResult.data || []).filter(record =>
+      String(record.note || "")
+        .toLowerCase()
+        .includes("ứng tiền")
     );
 
+  if(
+    records.length === 0 &&
+    advanceRecords.length === 0
+  ){
+    alert(
+      employeeName +
+      " không có dịch vụ hoặc khoản ứng tiền để Reset."
+    );
     return;
-
   }
 
-  // Tính tổng trước khi Reset
+  // Tính tổng dịch vụ
   let totalRevenue = 0;
   let totalCommission = 0;
 
-  records.forEach(
-    record => {
+  records.forEach(record => {
+    totalRevenue +=
+      Number(record.price || 0) *
+      Number(record.quantity || 1);
 
-      totalRevenue +=
-        Number(record.price || 0) *
-        Number(record.quantity || 1);
+    totalCommission +=
+      Number(record.commission || 0);
+  });
 
-      totalCommission +=
-        Number(record.commission || 0);
+  // Tính tổng tiền ứng
+  let totalAdvance = 0;
 
-    }
+  advanceRecords.forEach(record => {
+    totalAdvance += Number(record.amount || 0);
+  });
+
+  const ok = confirm(
+    "⚠️ RESET TUẦN\n\n" +
+    "Nhân viên: " + employeeName +
+    "\nSố lượt dịch vụ: " + records.length +
+    "\nDoanh thu: " + money(totalRevenue) +
+    "\nTiền hoa hồng: " + money(totalCommission) +
+    "\nSố khoản ứng tiền: " + advanceRecords.length +
+    "\nTổng tiền ứng: " + money(totalAdvance) +
+    "\n\nChỉ xóa dịch vụ đã thực hiện và các khoản " +
+    "có nội dung chứa 'ứng tiền' của nhân viên này." +
+    "\nKhông xóa danh sách dịch vụ đã tạo." +
+    "\nKhông xóa giao dịch của nhân viên khác." +
+    "\n\nBạn có chắc muốn Reset không?"
   );
-
-  const ok =
-    confirm(
-      "⚠️ RESET DỊCH VỤ\n\n" +
-
-      "Nhân viên: " +
-      employeeName +
-
-      "\nSố lượt dịch vụ: " +
-      records.length +
-
-      "\nDoanh thu: " +
-      money(totalRevenue) +
-
-      "\nTiền % nhân viên: " +
-      money(totalCommission) +
-
-      "\n\nChỉ xóa dịch vụ đã thực hiện của " +
-      employeeName +
-
-      ".\n\nDanh sách dịch vụ Chủ tạo sẽ KHÔNG bị xóa." +
-
-      "\n\nDịch vụ của nhân viên khác cũng KHÔNG bị xóa." +
-
-      "\n\nBạn có chắc muốn Reset không?"
-    );
 
   if(!ok) return;
 
-  // XÓA RIÊNG DỊCH VỤ CỦA NHÂN VIÊN NÀY
-  const result =
-    await supabaseClient
-      .from("service_records")
-      .delete()
-      .eq(
-        "employee_name",
-        employeeName
+  // Xóa dịch vụ đã thực hiện của riêng nhân viên
+  if(records.length > 0){
+
+    const deleteServices =
+      await supabaseClient
+        .from("service_records")
+        .delete()
+        .eq("employee_name", employeeName);
+
+    if(deleteServices.error){
+      alert(
+        "Không thể Reset dịch vụ:\n\n" +
+        deleteServices.error.message
       );
+      return;
+    }
+  }
 
-  if(result.error){
+  // Xóa các khoản ứng tiền của riêng nhân viên
+  if(advanceRecords.length > 0){
 
-    alert(
-      "❌ Không thể Reset dịch vụ của " +
-      employeeName +
-      ":\n\n" +
-      result.error.message
-    );
+    const advanceIds =
+      advanceRecords.map(record => record.id);
 
-    return;
+    const deleteAdvances =
+      await supabaseClient
+        .from("money")
+        .delete()
+        .in("id", advanceIds);
 
+    if(deleteAdvances.error){
+      alert(
+        "Dịch vụ đã Reset nhưng tiền ứng chưa xóa được.\n\n" +
+        deleteAdvances.error.message
+      );
+      await loadmoney();
+      return;
+    }
   }
 
   alert(
-    "✅ Đã Reset thành công!\n\n" +
-
-    employeeName +
-
-    "\nĐã xóa: " +
-    records.length +
-    " lượt dịch vụ" +
-
-    "\nTiền % đã Reset: " +
-    money(totalCommission) +
-
-    "\n\nDanh sách dịch vụ Chủ tạo vẫn còn nguyên."
+    "✅ Reset thành công!\n\n" +
+    "Nhân viên: " + employeeName +
+    "\nDịch vụ đã xóa: " + records.length +
+    "\nTiền hoa hồng đã Reset: " + money(totalCommission) +
+    "\nKhoản ứng tiền đã xóa: " + advanceRecords.length +
+    "\nTổng tiền ứng đã xóa: " + money(totalAdvance) +
+    "\n\nDanh sách dịch vụ do Chủ tạo vẫn được giữ nguyên."
   );
 
-  // Xóa báo cáo đang mở
   const reportBox =
-    document.getElementById(
-      "employeeReportBox"
-    );
+    document.getElementById("employeeReportBox");
 
   if(reportBox){
-
     reportBox.innerHTML = "";
-
   }
 
-  // Cập nhật lại tiền
-  await loadmoneySummary();
-
-  // Cập nhật lại lịch sử dịch vụ
-  await loadServiceRecords();
-
+  await loadmoney();
 }
 
 // ============================
