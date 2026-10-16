@@ -1,3506 +1,1057 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
-
 <head>
-
-<meta charset="utf-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<meta
-  name="theme-color"
-  content="#111111">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nghĩa Barber</title>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  background:#0d0d0d;
-  color:#fff;
-  font-family:Arial,sans-serif;
-}
-
-button,
-input,
-select{
-  font-family:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.login-box{
-  width:min(90%,400px);
-  margin:80px auto;
-  padding:25px;
-  background:#181818;
-  border-radius:18px;
-  box-shadow:0 10px 40px rgba(0,0,0,.5);
-}
-
-h1{
-  text-align:center;
-  margin-top:0;
-}
-
-input,
-select{
-  width:100%;
-  padding:14px;
-  margin:8px 0;
-  border:1px solid #333;
-  border-radius:10px;
-  background:#222;
-  color:#fff;
-  font-size:16px;
-}
-
-button{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  border:0;
-  border-radius:10px;
-  background:#fff;
-  color:#111;
-  font-size:16px;
-  font-weight:bold;
-}
-
-button:active{
-  transform:scale(.98);
-}
-
-button:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-
-#app{
-  display:none;
-  padding-bottom:40px;
-}
-
-.top{
-  padding:20px;
-  background:#181818;
-  border-bottom:1px solid #333;
-}
-
-.top h2{
-  margin:0 0 5px;
-}
-
-.top p{
-  margin:0;
-  color:#aaa;
-}
-
-#nav{
-  display:none;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  padding:15px;
-}
-
-#nav button{
-  margin:0;
-  background:#202020;
-  color:#fff;
-  border:1px solid #333;
-}
-
-.page{
-  display:none;
-  padding:15px;
-}
-
-.page.active{
-  display:block;
-}
-
-.card{
-  background:#181818;
-  padding:18px;
-  margin-bottom:15px;
-  border-radius:15px;
-  border:1px solid #292929;
-}
-
-.card h3{
-  margin-top:0;
-}
-
-.logout{
-  background:#b00020 !important;
-  color:#fff !important;
-}
-
-.danger{
-  background:#b00020 !important;
-  color:#fff !important;
-}
-
-.secondary{
-  background:#292929 !important;
-  color:#fff !important;
-}
-
-.success{
-  color:#7cff9b;
-}
-
-.muted{
-  color:#999;
-}
-
-.money{
-  font-size:20px;
-  font-weight:bold;
-}
-
-.service-card{
-  cursor:pointer;
-}
-
-.service-card:active{
-  transform:scale(.99);
-}
-
-.service-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-
-.service-actions button{
-  margin-top:8px;
-}
-
-.stat-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.stat{
-  background:#202020;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #333;
-}
-
-.stat small{
-  display:block;
-  color:#999;
-  margin-bottom:5px;
-}
-
-.stat strong{
-  font-size:18px;
-}
-
-.employee-report{
-  margin-top:10px;
-}
-
-.empty{
-  text-align:center;
-  color:#999;
-  padding:20px;
-}
-
-@media(max-width:500px){
-
-  .stat-grid{
-    grid-template-columns:1fr;
-  }
-
-}
-
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#101114;color:#f5f5f5;font-family:Arial,sans-serif;padding:16px}
+h1,h2,h3{margin-top:0}
+h1{color:#e4bd70;text-align:center}
+h2{font-size:21px;color:#e4bd70}
+h3{font-size:17px}
+button,input,select{font:inherit}
+button{border:0;border-radius:9px;padding:11px 14px;background:#d9ad55;color:#171717;font-weight:bold;cursor:pointer;margin:3px 2px}
+button.secondary{background:#34363d;color:#fff}
+button.danger{background:#9d3737;color:#fff}
+input,select{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #41434b;border-radius:8px;background:#1c1e23;color:#fff}
+label{display:block;color:#ddd;font-size:14px;margin-top:7px}
+.card{background:#1a1c21;border:1px solid #30323a;border-radius:13px;padding:15px;margin:12px 0}
+.login-box{max-width:440px;margin:8vh auto}
+.page{display:none}
+.page.active{display:block}
+nav{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin:14px 0}
+nav button{flex:1;min-width:75px}
+.muted{color:#aaa;font-size:13px}
+.gold{color:#e4bd70}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.row>*{max-width:100%}
+.stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stat{background:#25272e;border-radius:10px;padding:13px}
+.stat strong{display:block;color:#e4bd70;font-size:19px;margin-top:7px;overflow-wrap:anywhere}
+.service-card{background:#25272e;border-radius:10px;padding:13px;margin:9px 0}
+.service-actions{display:flex;flex-wrap:wrap;gap:4px}
+.service-actions button{flex:1}
+hr{border:0;border-top:1px solid #383a42;margin:14px 0}
+.small-input{max-width:120px}
+.percent-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#25272e;padding:12px;border-radius:9px;margin:9px 0}
+.percent-row .service-info{flex:1;min-width:0}
+.percent-row input{max-width:115px;margin:0}
+.hidden{display:none!important}
+@media(min-width:650px){body{max-width:900px;margin:auto}.stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
-
 </head>
-
 <body>
 
-<!-- =========================
-     ĐĂNG NHẬP
-========================== -->
-
-<section id="login">
-
-  <div class="login-box">
-
-    <h1>💈 Nghĩa Barber</h1>
-
-    <p style="text-align:center;color:#aaa;">
-      Đăng nhập hệ thống
-    </p>
-
-    <input
-      id="user"
-      type="text"
-      placeholder="Tên đăng nhập"
-      autocomplete="username">
-
-    <input
-      id="pass"
-      type="password"
-      placeholder="Mật khẩu"
-      autocomplete="current-password">
-
-    <button
-      type="button"
-      onclick="login()">
-      Đăng nhập
-    </button>
-
-  </div>
-
+<section id="login" class="login-box card">
+  <h1>💈 Nghĩa Barber</h1>
+  <p class="muted" style="text-align:center">Đăng nhập hệ thống</p>
+  <label for="loginUser">Tên đăng nhập</label>
+  <input id="loginUser" autocomplete="username" placeholder="Nhập tên đăng nhập">
+  <label for="loginPass">Mật khẩu</label>
+  <input id="loginPass" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu">
+  <label><input id="rememberLogin" type="checkbox" style="width:auto"> Ghi nhớ đăng nhập</label>
+  <button style="width:100%" onclick="login()">Đăng nhập</button>
+  <p id="loginMessage" class="muted"></p>
 </section>
 
-<!-- =========================
-     ỨNG DỤNG
-========================== -->
+<section id="app" class="hidden">
+  <h1>💈 Nghĩa Barber</h1>
+  <p id="welcome" style="text-align:center" class="gold"></p>
+  <nav>
+    <button id="navEmployees" onclick="show('employees')">Nhân viên</button>
+    <button onclick="show('services')">Dịch vụ</button>
+    <button onclick="show('money')">Thu chi</button>
+    <button class="secondary" onclick="logout()">Đăng xuất</button>
+  </nav>
 
-<section id="app">
+  <section id="employees" class="page">
+    <div id="employeeManagement" class="card">
+      <h2>Thêm nhân viên</h2>
+      <label for="employeeName">Tên nhân viên</label>
+      <input id="employeeName" placeholder="Ví dụ: Tỷ barber">
+      <label for="employeeUsername">Tên đăng nhập</label>
+      <input id="employeeUsername" placeholder="Tạo tên đăng nhập">
+      <label for="employeePassword">Mật khẩu</label>
+      <input id="employeePassword" type="password" placeholder="Tạo mật khẩu">
+      <button onclick="addEmployee()">+ Thêm nhân viên</button>
+    </div>
+    <h2>Danh sách nhân viên</h2>
+    <div id="employeeList"><p class="muted">Đang tải...</p></div>
+    <div id="employeePercentEditor"></div>
+    <div id="employeeReportBox"></div>
+  </section>
 
-  <div class="top">
+  <section id="services" class="page active">
+    <div id="serviceManagement" class="card">
+      <h2>Thêm dịch vụ</h2>
+      <label for="serviceName">Tên dịch vụ</label>
+      <input id="serviceName" placeholder="Ví dụ: Cắt tóc nam">
+      <label for="servicePrice">Giá dịch vụ (đ)</label>
+      <input id="servicePrice" type="number" min="0" step="1000" placeholder="Ví dụ: 50000">
+      <button onclick="addService()">+ Thêm dịch vụ</button>
+    </div>
+    <h2>Danh sách dịch vụ</h2>
+    <p id="serviceHint" class="muted"></p>
+    <div id="serviceList"><p class="muted">Đang tải...</p></div>
+  </section>
 
-    <h2>💈 Nghĩa Barber</h2>
-
-    <p>
-      Xin chào:
-      <strong id="hello"></strong>
-    </p>
-
-  </div>
-
-  <!-- =========================
-       MENU
-  ========================== -->
-
-  <div id="nav">
-
-    <button
-      id="navEmployees"
-      type="button"
-      onclick="show('employees')">
-      👥 Nhân viên
-    </button>
-
-    <button
-      type="button"
-      onclick="show('services')">
-      ✂️ Dịch vụ
-    </button>
-
-    <button
-      type="button"
-      onclick="show('money')">
-      💰 Thu chi
-    </button>
-
-    <button
-      type="button"
-      class="logout"
-      onclick="logout()">
-      🚪 Đăng xuất
-    </button>
-
-  </div>
-
-  <!-- =========================
-       NHÂN VIÊN
-  ========================== -->
-<div
-  id="employees"
-  class="page">
-
-  <div
-    id="employeeManagement"
-    class="card">
-
-    <h3>👥 Thêm nhân viên</h3>
-
-    <input
-      id="employeeName"
-      type="text"
-      placeholder="Tên nhân viên">
-
-    <input
-      id="employeeUsername"
-      type="text"
-      placeholder="Tên đăng nhập">
-
-    <input
-      id="employeePassword"
-      type="password"
-      placeholder="Mật khẩu">
-
-    <input
-      id="employeePercent"
-      type="number"
-      min="0"
-      max="100"
-      placeholder="% nhân viên">
-
-    <button
-      type="button"
-      onclick="addEmployee()">
-      + Thêm nhân viên
-    </button>
-
-  </div>
-
-  <div id="employeeList"></div>
-
-  <div id="employeeReportBox"></div>
-
-</div>
-
-
-  <!-- =========================
-       DỊCH VỤ
-  ========================== -->
-
-  <div
-    id="services"
-    class="page">
-
-    <div
-      id="serviceManagement"
-      class="card">
-
-      <h3>✂️ Quản lý dịch vụ</h3>
-
-      <input
-        id="serviceName"
-        type="text"
-        placeholder="Tên dịch vụ">
-
-      <input
-        id="servicePrice"
-        type="number"
-        placeholder="Giá tiền">
-
-      <input
-        id="servicePercent"
-        type="number"
-        placeholder="% nhân viên"
-        min="0"
-        max="100">
-
-      <button
-        type="button"
-        onclick="addService()">
-        + Thêm dịch vụ
-      </button>
-
+  <section id="money" class="page">
+    <div class="stat-grid">
+      <div class="stat">Doanh thu hôm nay<strong id="todayRevenue">0 đ</strong></div>
+      <div class="stat">Doanh thu tháng<strong id="monthRevenue">0 đ</strong></div>
+      <div class="stat">Tiền % hôm nay<strong id="todayCommission">0 đ</strong></div>
+      <div class="stat">Tiền % tháng<strong id="monthCommission">0 đ</strong></div>
     </div>
 
-    <div id="serviceList"></div>
-
-  </div>
-
-  <!-- =========================
-       THU CHI
-  ========================== -->
-
-  <div
-    id="money"
-    class="page">
-
-    <div class="card">
-
-      <h3>💰 Tổng quan</h3>
-
-      <div class="stat-grid">
-
-        <div class="stat">
-          <small>Doanh thu hôm nay</small>
-          <strong id="todayRevenue">0 đ</strong>
-        </div>
-
-        <div class="stat">
-          <small>Doanh thu tháng này</small>
-          <strong id="monthRevenue">0 đ</strong>
-        </div>
-
-        <div class="stat">
-          <small>Tiền nhân viên hôm nay</small>
-          <strong id="todayCommission">0 đ</strong>
-        </div>
-
-        <div class="stat">
-          <small>Tiền nhân viên tháng này</small>
-          <strong id="monthCommission">0 đ</strong>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div
-      id="manualmoneyBox"
-      class="card">
-
-      <h3>💵 Thêm khoản thu / chi</h3>
+    <div id="manualMoneyForm" class="card">
+      <h2>Thêm khoản thu / chi</h2>
+      <label for="moneyEmployee">Nhân viên liên quan (nếu có)</label>
       <select id="moneyEmployee">
-
-  <option value="">
-    -- Chọn nhân viên --
-  </option>
-
-</select>
-
-      <input
-        id="moneyNote"
-        type="text"
-        placeholder="Nội dung">
-
-      <input
-        id="moneyAmount"
-        type="number"
-        placeholder="Số tiền">
-
-      <select id="moneyType">
-
-        <option value="thu">
-          Thu
-        </option>
-
-        <option value="chi">
-          Chi
-        </option>
-
+        <option value="">Không chọn nhân viên</option>
       </select>
-
-      <button
-        type="button"
-        onclick="addmoney()">
-        + Lưu khoản tiền
-      </button>
-
+      <label for="moneyNote">Nội dung</label>
+      <input id="moneyNote" placeholder="Ví dụ: ứng tiền">
+      <label for="moneyAmount">Số tiền (đ)</label>
+      <input id="moneyAmount" type="number" min="0" step="1000" placeholder="Nhập số tiền">
+      <label for="moneyType">Loại giao dịch</label>
+      <select id="moneyType">
+        <option value="Thu">Thu</option>
+        <option value="Chi">Chi</option>
+      </select>
+      <button onclick="addmoney()">Lưu giao dịch</button>
     </div>
 
-    <div class="card">
+    <div id="employeeMoneyBox" class="card hidden">
+      <h2>Khoản thu chi của bạn</h2>
+      <div id="employeeMoneyList"></div>
+    </div>
 
-      <h3>📋 Giao dịch hôm nay</h3>
-
+    <div id="manualMoneyListBox" class="card">
+      <h2>Giao dịch hôm nay</h2>
       <div id="moneyList"></div>
-
     </div>
 
     <div class="card">
-
-      <h3>✂️ Dịch vụ đã thực hiện tháng này</h3>
-
+      <h2>Dịch vụ đã thực hiện tháng này</h2>
       <div id="serviceRecordList"></div>
-
     </div>
-
-  </div>
-
+  </section>
 </section>
-
-<!-- =========================
-     SUPABASE
-========================== -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
-// ============================
-// SUPABASE
-// ============================
-
-const SUPABASE_URL =
-  "https://nwnbwhgxeidbclpywzpe.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_as-NhQ3Bzc9WL4rza6latg_eUNCOP9r";
+const SUPABASE_URL = "https://nwnbwhgxeidbclpywzpe.supabase.co";
+const SUPABASE_KEY = "sb_publishable_as-NhQ3Bzc9WL4rza6latg_eUNCOP9r";
 
 let supabaseClient = null;
-
-try{
-
-  if(typeof supabase !== "undefined"){
-
-    supabaseClient =
-      supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
-
-  }
-
-}catch(error){
-
-  console.error(
-    "Lỗi Supabase:",
-    error
-  );
-
-}
-
-// ============================
-// BIẾN HỆ THỐNG
-// ============================
-
 let currentEmployee = null;
-
 let currentservices = [];
 
-// ============================
-// KIỂM TRA SUPABASE
-// ============================
-
 function checkSupabase(){
-
-  if(!supabaseClient){
-
-    alert(
-      "Chưa kết nối được Supabase."
-    );
-
+  if(!window.supabase){
+    alert("Supabase chưa tải được. Kiểm tra kết nối mạng rồi thử lại.");
     return false;
-
   }
-
+  if(!supabaseClient){
+    supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  }
   return true;
-
 }
-
-// ============================
-// ĐỊNH DẠNG TIỀN
-// ============================
 
 function money(value){
-
-  return Number(value || 0)
-    .toLocaleString("vi-VN") + " đ";
-
+  return Number(value||0).toLocaleString("vi-VN")+" đ";
 }
 
-// ============================
-// ĐĂNG NHẬP
-// ============================
-  function checkRememberLogin(){
+function escapeHtml(value){
+  const div=document.createElement("div");
+  div.textContent=String(value??"");
+  return div.innerHTML;
+}
 
-  const savedUser =
-    localStorage.getItem("nghiaBarberUser");
+function jsArg(value){
+  return JSON.stringify(String(value??"")).replace(/'/g,"\\u0027");
+}
 
-  const savedPass =
-    localStorage.getItem("nghiaBarberPass");
+function localDateKey(date){
+  const d=new Date(date);
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
 
-  if(savedUser && savedPass){
+function sameMonth(date){
+  const d=new Date(date), now=new Date();
+  return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+}
 
-    document
-      .getElementById("user")
-      .value =
-      savedUser;
-
-    document
-      .getElementById("pass")
-      .value =
-      savedPass;
-
+function checkRememberLogin(){
+  const user=localStorage.getItem("nghiaBarberUser");
+  const pass=localStorage.getItem("nghiaBarberPass");
+  if(user && pass){
+    document.getElementById("loginUser").value=user;
+    document.getElementById("loginPass").value=pass;
+    document.getElementById("rememberLogin").checked=true;
   }
-
 }
-  checkRememberLogin();
 
 async function login(){
-
-  const u =
-    document
-      .getElementById("user")
-      .value
-      .trim();
-
-  const p =
-    document
-      .getElementById("pass")
-      .value;
-
-  if(!u || !p){
-
-    alert(
-      "Vui lòng nhập tên đăng nhập và mật khẩu."
-    );
-
+  if(!checkSupabase())return;
+  const u=document.getElementById("loginUser").value.trim();
+  const p=document.getElementById("loginPass").value;
+  const msg=document.getElementById("loginMessage");
+  msg.textContent="Đang đăng nhập...";
+  if(!u||!p){
+    msg.textContent="Bạn nhập tên đăng nhập và mật khẩu nhé.";
     return;
-
   }
-  localStorage.setItem(
-  "nghiaBarberUser",
-  u
-);
 
-localStorage.setItem(
-  "nghiaBarberPass",
-  p
-);
-
-  // CHỦ
-
-  if(
-    (u === "nghia" || u === "chu") &&
-    p === "1994"
-  ){
-
-    currentEmployee = null;
-
-    document
-      .getElementById("hello")
-      .textContent =
-      "Chủ tiệm";
-
+  if((u.toLowerCase()==="nghia"||u.toLowerCase()==="chu")&&p==="1994"){
+    currentEmployee=null;
+    saveLoginChoice(u,p);
     openApp();
-
     return;
-
   }
 
-  // NHÂN VIÊN
+  const {data,error}=await supabaseClient
+    .from("employees")
+    .select('id, "Name", username, password')
+    .eq("username",u)
+    .eq("password",p)
+    .maybeSingle();
 
-  if(!checkSupabase()) return;
-
-  const result =
-    await supabaseClient
-      .from("employees")
-      .select(
-        'id, "Name", username, password, employee_percent'
-      )
-      .eq(
-        "username",
-        u
-      )
-      .eq(
-        "password",
-        p
-      )
-      .maybeSingle();
-
-  if(result.error){
-
-    alert(
-      "Không thể kiểm tra tài khoản:\n\n" +
-      result.error.message
-    );
-
+  if(error){
+    console.error(error);
+    msg.textContent="Lỗi đăng nhập: "+error.message;
     return;
-
   }
-
-  if(!result.data){
-
-    alert(
-      "Tài khoản hoặc mật khẩu chưa đúng."
-    );
-
+  if(!data){
+    msg.textContent="Tên đăng nhập hoặc mật khẩu không đúng.";
     return;
-
   }
-
-  currentEmployee =
-    result.data;
-
-  document
-    .getElementById("hello")
-    .textContent =
-    "Nhân viên " +
-    result.data.Name;
-
+  currentEmployee=data;
+  saveLoginChoice(u,p);
   openApp();
-
 }
 
-// ============================
-// MỞ ỨNG DỤNG
-// ============================
+function saveLoginChoice(user,pass){
+  if(document.getElementById("rememberLogin").checked){
+    localStorage.setItem("nghiaBarberUser",user);
+    localStorage.setItem("nghiaBarberPass",pass);
+  }else{
+    localStorage.removeItem("nghiaBarberUser");
+    localStorage.removeItem("nghiaBarberPass");
+  }
+}
 
 function openApp(){
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("welcome").textContent=
+    currentEmployee?"Xin chào, "+currentEmployee.Name:"Xin chào, Chủ Nghĩa";
 
-  document
-    .getElementById("login")
-    .style.display =
-    "none";
-
-  document
-    .getElementById("app")
-    .style.display =
-    "block";
-
-  document
-    .getElementById("nav")
-    .style.display =
-    "grid";
-
-  const employeeButton =
-    document.getElementById(
-      "navEmployees"
-    );
-
-  const employeeManagement =
-    document.getElementById(
-      "employeeManagement"
-    );
-
-  const serviceManagement =
-    document.getElementById(
-      "serviceManagement"
-    );
-
-  if(currentEmployee){
-
-    employeeButton.style.display =
-      "none";
-
-    employeeManagement.style.display =
-      "none";
-
-    serviceManagement.style.display =
-      "none";
-
-    show("services");
-
-  }else{
-
-    employeeButton.style.display =
-      "block";
-
-    employeeManagement.style.display =
-      "block";
-
-    serviceManagement.style.display =
-      "block";
-
-    show("services");
-
-  }
-
+  const isOwner=!currentEmployee;
+  document.getElementById("navEmployees").classList.toggle("hidden",!isOwner);
+  document.getElementById("employeeManagement").classList.toggle("hidden",!isOwner);
+  document.getElementById("serviceManagement").classList.toggle("hidden",!isOwner);
+  document.getElementById("manualMoneyForm").classList.toggle("hidden",!isOwner);
+  document.getElementById("manualMoneyListBox").classList.toggle("hidden",!isOwner);
+  document.getElementById("employeeMoneyBox").classList.toggle("hidden",isOwner);
+  document.getElementById("employeePercentEditor").innerHTML="";
+  document.getElementById("employeeReportBox").innerHTML="";
+  show("services");
   loadEmployees();
   loadservices();
   loadmoney();
-
 }
-
-// ============================
-// ĐĂNG XUẤT
-// ============================
 
 function logout(){
-
-  currentEmployee = null;
-
-  document
-    .getElementById("app")
-    .style.display =
-    "none";
-
-  document
-    .getElementById("login")
-    .style.display =
-    "block";
-
-  document
-    .getElementById("user")
-    .value =
-    "";
-
-  document
-    .getElementById("pass")
-    .value =
-    "";
-
-  document
-    .getElementById("hello")
-    .textContent =
-    "";
-
+  currentEmployee=null;
+  currentservices=[];
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("loginMessage").textContent="";
+  document.getElementById("employeePercentEditor").innerHTML="";
+  document.getElementById("employeeReportBox").innerHTML="";
 }
-
-// ============================
-// CHUYỂN TRANG
-// ============================
 
 function show(id){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(
-      page =>
-        page.classList.remove("active")
-    );
-
-  const page =
-    document.getElementById(id);
-
-  if(page){
-
-    page.classList.add("active");
-
-  }
-
-  if(id === "services"){
-    loadservices();
-  }
-
-  if(id === "money"){
-    loadmoney();
-  }
-
-  if(id === "employees"){
-    loadEmployees();
-  }
-
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="services")loadservices();
+  if(id==="money")loadmoney();
+  if(id==="employees"&&!currentEmployee)loadEmployees();
 }
+  async function loadEmployees(){
+  if(!checkSupabase()||currentEmployee)return;
+  const list=document.getElementById("employeeList");
+  const {data,error}=await supabaseClient
+    .from("employees")
+    .select('id, "Name", username, created_at')
+    .order("created_at",{ascending:true});
 
-// ============================
-// NHÂN VIÊN
-// ============================
-// ============================
-// DANH SÁCH NHÂN VIÊN
-// ============================
-
-async function loadEmployees(){
-
-  if(!checkSupabase()) return;
-
-  const box =
-    document.getElementById(
-      "employeeList"
-    );
-
-  if(!box) return;
-
-  const result =
-    await supabaseClient
-      .from("employees")
-      .select(
-        'id, "Name", username, employee_percent, "created_at"'
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-  if(result.error){
-
-    box.innerHTML =
-      "<div class='card'>" +
-      "<h3>❌ Lỗi tải nhân viên</h3>" +
-      "<p>" +
-      escapeHtml(
-        result.error.message
-      ) +
-      "</p>" +
-      "</div>";
-
+  if(error){
+    list.innerHTML='<p class="muted">Không tải được nhân viên: '+escapeHtml(error.message)+'</p>';
     return;
-
   }
 
-  box.innerHTML = "";
-  const moneyEmployee =
-  document.getElementById("moneyEmployee");
+  const select=document.getElementById("moneyEmployee");
+  const oldValue=select.value;
+  select.innerHTML='<option value="">Không chọn nhân viên</option>';
+  (data||[]).forEach(e=>{
+    select.insertAdjacentHTML("beforeend",
+      `<option value="${escapeHtml(e.Name)}">${escapeHtml(e.Name)}</option>`);
+  });
+  if(oldValue)select.value=oldValue;
 
-if(moneyEmployee){
+  if(!data||!data.length){
+    list.innerHTML='<div class="card">Chưa có nhân viên nào.</div>';
+    return;
+  }
 
-  moneyEmployee.innerHTML =
-    "<option value=''>" +
-    "-- Chọn nhân viên --" +
-    "</option>";
-
-  result.data.forEach(
-    employee => {
-
-      moneyEmployee.innerHTML +=
-        "<option value='" +
-        escapeHtml(employee.Name) +
-        "'>" +
-        escapeHtml(employee.Name) +
-        "</option>";
-
-    }
-  );
-
+  list.innerHTML=data.map(e=>`
+    <div class="card">
+      <h3>${escapeHtml(e.Name)}</h3>
+      <p class="muted">Tên đăng nhập: ${escapeHtml(e.username)}</p>
+      <button onclick='openEmployeePercentages(${jsArg(e.id)},${jsArg(e.Name)})'>
+        💰 Cài % nhân viên theo dịch vụ
+      </button>
+      <div class="service-actions">
+        <button class="secondary" onclick='showEmployeeReport(${jsArg(e.id)},${jsArg(e.Name)})'>Xem doanh thu</button>
+        <button class="secondary" onclick='resetEmployeeServices(${jsArg(e.id)},${jsArg(e.Name)})'>Reset dịch vụ</button>
+        <button class="danger" onclick='deleteEmployee(${jsArg(e.id)},${jsArg(e.Name)})'>Xóa nhân viên</button>
+      </div>
+    </div>
+  `).join("");
 }
-
-  if(
-    !result.data ||
-    result.data.length === 0
-  ){
-
-    box.innerHTML =
-      "<div class='card empty'>" +
-      "Chưa có nhân viên." +
-      "</div>";
-
-    return;
-
-  }
-
-  result.data.forEach(
-    employee => {
-
-      const item =
-        document.createElement(
-          "div"
-        );
-
-      item.className =
-        "card";
-
-      item.innerHTML =
-
-        "<h3>👤 " +
-        escapeHtml(
-          employee.Name
-        ) +
-        "</h3>" +
-
-        "<p class='muted'>" +
-        "Tên đăng nhập: " +
-        escapeHtml(
-          employee.username
-        ) +
-        "</p>" +
-
-        "<p class='muted'>" +
-        "💰 % nhân viên: " +
-        escapeHtml(
-          String(
-            employee.employee_percent ?? 50
-          )
-        ) +
-        "%</p>" +
-
-        "<button " +
-        "type='button' " +
-        "onclick='showEmployeeReport(" +
-        employee.id +
-        "," +
-        JSON.stringify(
-          employee.Name
-        ) +
-        ")'>" +
-        "📊 Xem doanh thu" +
-        "</button>" +
-
-        "<button " +
-        "type='button' " +
-        "class='secondary' " +
-        "style='margin-top:8px;' " +
-        "onclick='resetEmployeeServices(" +
-        employee.id +
-        "," +
-        JSON.stringify(
-          employee.Name
-        ) +
-        ")'>" +
-        "🔄 Reset dịch vụ của " +
-        escapeHtml(
-          employee.Name
-        ) +
-        "</button>" +
-
-        "<button " +
-        "type='button' " +
-        "class='danger' " +
-        "style='margin-top:8px;' " +
-        "onclick='deleteEmployee(" +
-        employee.id +
-        "," +
-        JSON.stringify(
-          employee.Name
-        ) +
-        ")'>" +
-        "🗑️ Xóa nhân viên" +
-        "</button>";
-
-      box.appendChild(
-        item
-      );
-
-    }
-  );
-
-}
-
-
-// ============================
-// XÓA NHÂN VIÊN
-// ============================
-
-async function deleteEmployee(
-  id,
-  name
-){
-
-  // Chỉ Chủ mới được xóa
-  if(currentEmployee){
-
-    alert(
-      "❌ Nhân viên không có quyền xóa nhân viên."
-    );
-
-    return;
-
-  }
-
-  if(!checkSupabase()) return;
-
-  const ok =
-    confirm(
-      "Bạn có chắc muốn xóa nhân viên \"" +
-      name +
-      "\" không?"
-    );
-
-  if(!ok) return;
-
-  const result =
-    await supabaseClient
-      .from("employees")
-      .delete()
-      .eq(
-        "id",
-        id
-      );
-
-  if(result.error){
-
-    alert(
-      "❌ Không thể xóa nhân viên!\n\n" +
-      result.error.message
-    );
-
-    return;
-
-  }
-
-  alert(
-    "✅ Đã xóa nhân viên " +
-    name
-  );
-
-  await loadEmployees();
-
-}
-
- // ============================
-// THÊM NHÂN VIÊN
-// ============================
 
 async function addEmployee(){
+  if(currentEmployee)return;
+  const name=document.getElementById("employeeName").value.trim();
+  const username=document.getElementById("employeeUsername").value.trim();
+  const password=document.getElementById("employeePassword").value;
 
-  if(currentEmployee){
-
-    alert(
-      "Nhân viên không có quyền thêm nhân viên."
-    );
-
+  if(!name||!username||!password){
+    alert("Bạn nhập đủ tên nhân viên, tên đăng nhập và mật khẩu nhé.");
     return;
-
   }
 
-  const name =
-    document
-      .getElementById("employeeName")
-      .value
-      .trim();
+  const {error}=await supabaseClient.from("employees").insert({
+    "Name":name,
+    username:username,
+    password:password
+  });
 
-  const username =
-    document
-      .getElementById("employeeUsername")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("employeePassword")
-      .value;
-
-  const percent =
-    Number(
-      document
-        .getElementById("employeePercent")
-        .value
-    );
-
-  if(!name){
-
-    alert(
-      "Vui lòng nhập tên nhân viên."
-    );
-
+  if(error){
+    alert("Thêm nhân viên không thành công: "+error.message);
     return;
-
   }
 
-  if(!username){
-
-    alert(
-      "Vui lòng nhập tên đăng nhập."
-    );
-
-    return;
-
-  }
-
-  if(!password){
-
-    alert(
-      "Vui lòng nhập mật khẩu."
-    );
-
-    return;
-
-  }
-
-  if(
-    isNaN(percent) ||
-    percent < 0 ||
-    percent > 100
-  ){
-
-    alert(
-      "Vui lòng nhập % nhân viên từ 0 đến 100."
-    );
-
-    return;
-
-  }
-
-  if(!checkSupabase()) return;
-
-  const result =
-    await supabaseClient
-      .from("employees")
-      .insert([
-        {
-          "Name": name,
-          username: username,
-          password: password,
-          employee_percent: percent
-        }
-      ]);
-
-  if(result.error){
-
-    alert(
-      "LỖI THÊM NHÂN VIÊN:\n\n" +
-      result.error.message
-    );
-
-    return;
-
-  }
-
-  alert(
-    "Đã thêm nhân viên!"
-  );
-
-  document
-    .getElementById("employeeName")
-    .value = "";
-
-  document
-    .getElementById("employeeUsername")
-    .value = "";
-
-  document
-    .getElementById("employeePassword")
-    .value = "";
-
-  document
-    .getElementById("employeePercent")
-    .value = "";
-
+  document.getElementById("employeeName").value="";
+  document.getElementById("employeeUsername").value="";
+  document.getElementById("employeePassword").value="";
+  alert("Đã thêm nhân viên.");
   loadEmployees();
-
 }
 
-// ============================
-// BÁO CÁO NHÂN VIÊN
-// ============================
+async function deleteEmployee(employeeId,employeeName){
+  if(currentEmployee)return;
+  if(!confirm("Bạn chắc chắn muốn xóa nhân viên "+employeeName+"?"))return;
 
-async function showEmployeeReport(
-  employeeId,
-  employeeName
-){
-
-  if(currentEmployee){
+  const {error}=await supabaseClient.from("employees").delete().eq("id",employeeId);
+  if(error){
+    alert("Không xóa được nhân viên: "+error.message);
     return;
   }
 
-  const box =
-    document.getElementById(
-      "employeeReportBox"
-    );
-
-  if(!box) return;
-
-  box.innerHTML =
-    "<div class='card'>" +
-    "⏳ Đang tải báo cáo..." +
-    "</div>";
-
-  if(!checkSupabase()) return;
-
-  const result =
-    await supabaseClient
-      .from("service_records")
-      .select(
-        "id, created_at, employee_name, service_name, price, quantity, commission"
-      )
-      .eq(
-        "employee_name",
-        employeeName
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-  if(result.error){
-
-    box.innerHTML =
-      "<div class='card'>" +
-      "<h3>❌ Lỗi báo cáo</h3>" +
-      "<p>" +
-      escapeHtml(
-        result.error.message
-      ) +
-      "</p>" +
-      "</div>";
-
-    return;
-
-  }
-
-  const records =
-    result.data || [];
-
-  const now =
-    new Date();
-
-  let todayTotal = 0;
-  let todayCommission = 0;
-  let monthTotal = 0;
-  let monthCommission = 0;
-
-  records.forEach(
-    record => {
-
-      const d =
-        new Date(
-          record.created_at
-        );
-
-      const price =
-        Number(
-          record.price || 0
-        ) *
-        Number(
-          record.quantity || 1
-        );
-
-      const commission =
-        Number(
-          record.commission || 0
-        );
-
-      if(
-        d.toDateString() ===
-        now.toDateString()
-      ){
-
-        todayTotal += price;
-
-        todayCommission += commission;
-
-
-      }
-
-      if(
-        d.getMonth() === now.getMonth() &&
-        d.getFullYear() === now.getFullYear()
-      ){
-
-        monthTotal += price;
-
-        monthCommission +=
-          commission;
-
-      }
-
-    }
-  );
-
-  let html =
-
-    "<div class='card employee-report'>" +
-
-    "<h3>📊 " +
-    escapeHtml(
-      employeeName
-    ) +
-   "</h3>" +
-
-"<div class='stat-grid'>" +
-
-"<div class='stat'>" +
-"<small>Doanh thu hôm nay</small>" +
-"<strong>" +
-money(todayTotal) +
-"</strong>" +
-"</div>" +
-
-"<div class='stat'>" +
-"<small>Tiền nhân viên hôm nay</small>" +
-"<strong>" +
-money(todayCommission) +
-"</strong>" +
-"</div>" +
-
-    "<div class='stat'>" +
-    "<small>Doanh thu tháng</small>" +
-    "<strong>" +
-    money(monthTotal) +
-    "</strong>" +
-    "</div>" +
-
-    "<div class='stat'>" +
-    "<small>Tiền nhân viên tháng</small>" +
-    "<strong>" +
-    money(monthCommission) +
-    "</strong>" +
-    "</div>" +
-
-    "</div>" +
-
-    "<h3 style='margin-top:20px;'>" +
-    "📋 Chi tiết" +
-    "</h3>";
-
-  if(records.length === 0){
-
-    html +=
-      "<p class='empty'>" +
-      "Chưa có dịch vụ nào." +
-      "</p>";
-
-  }else{
-
-    records.forEach(
-      record => {
-
-        const d =
-          new Date(
-            record.created_at
-          );
-
-        const price =
-          Number(
-            record.price || 0
-          );
-
-        const commission =
-          Number(
-            record.commission || 0
-          );
-
-        const percent =
-          price > 0
-            ? (commission / price) * 100
-            : 0;
-
-        html +=
-
-          "<div class='card'>" +
-
-          "<strong>✂️ " +
-          escapeHtml(
-            record.service_name
-          ) +
-          "</strong>" +
-
-          "<p>📅 " +
-          d.toLocaleString(
-            "vi-VN"
-          ) +
-          "</p>" +
-
-          "<p>💵 Giá: " +
-          money(
-            price *
-            Number(
-              record.quantity || 1
-            )
-          ) +
-          "</p>" +
-
-          "<p>👤 % nhân viên: " +
-          percent.toLocaleString(
-            "vi-VN",
-            {
-              maximumFractionDigits:2
-            }
-          ) +
-          "%</p>" +
-
-          "<p>💰 Nhân viên nhận: " +
-          money(
-            commission
-          ) +
-          "</p>" +
-
-          "</div>";
-
-      }
-    );
-
-  }
-
-  html += "</div>";
-
-  box.innerHTML =
-    html;
-
-  box.scrollIntoView({
-    behavior:"smooth",
-    block:"start"
-  });
-
+  document.getElementById("employeePercentEditor").innerHTML="";
+  alert("Đã xóa nhân viên.");
+  loadEmployees();
 }
-  // ============================
-// RESET DỊCH VỤ CỦA RIÊNG NHÂN VIÊN
-// ============================
 
-// ============================
-// RESET DỊCH VỤ VÀ TIỀN ỨNG CỦA NHÂN VIÊN
-// ============================
+async function openEmployeePercentages(employeeId,employeeName){
+  if(currentEmployee)return;
+  const box=document.getElementById("employeePercentEditor");
+  box.innerHTML='<div class="card">Đang tải danh sách dịch vụ...</div>';
+  box.scrollIntoView({behavior:"smooth",block:"start"});
 
-async function resetEmployeeServices(
-  employeeId,
-  employeeName
-){
+  const [servicesResult,percentResult]=await Promise.all([
+    supabaseClient.from("services")
+      .select("id, name, price, active")
+      .order("id",{ascending:true}),
+    supabaseClient.from("employee_service_percentages")
+      .select("service_id, employee_percent")
+      .eq("employee_id",String(employeeId))
+  ]);
 
-  // Chỉ Chủ mới được Reset
-  if(currentEmployee){
-    alert("Nhân viên không có quyền Reset.");
+  if(servicesResult.error){
+    box.innerHTML='<div class="card">Lỗi tải dịch vụ: '+escapeHtml(servicesResult.error.message)+'</div>';
+    return;
+  }
+  if(percentResult.error){
+    box.innerHTML='<div class="card">Lỗi tải % nhân viên: '+escapeHtml(percentResult.error.message)+'</div>';
     return;
   }
 
-  if(!checkSupabase()) return;
-
-  // Lấy dịch vụ của nhân viên
-  const checkResult =
-    await supabaseClient
-      .from("service_records")
-      .select("id, price, quantity, commission")
-      .eq("employee_name", employeeName);
-
-  if(checkResult.error){
-    alert(
-      "Không thể kiểm tra dịch vụ:\n\n" +
-      checkResult.error.message
-    );
-    return;
-  }
-
-  const records = checkResult.data || [];
-
-  // Lấy các khoản thu chi của nhân viên
-  const moneyResult =
-    await supabaseClient
-      .from("money")
-      .select("id, note, amount, type")
-      .eq("employee_name", employeeName);
-
-  if(moneyResult.error){
-    alert(
-      "Không thể kiểm tra tiền ứng:\n\n" +
-      moneyResult.error.message
-    );
-    return;
-  }
-
-  // Chỉ chọn khoản có nội dung chứa "ứng tiền"
-  const advanceRecords =
-    (moneyResult.data || []).filter(record =>
-      String(record.note || "")
-        .toLowerCase()
-        .includes("ứng tiền")
-    );
-
-  if(
-    records.length === 0 &&
-    advanceRecords.length === 0
-  ){
-    alert(
-      employeeName +
-      " không có dịch vụ hoặc khoản ứng tiền để Reset."
-    );
-    return;
-  }
-
-  // Tính tổng dịch vụ
-  let totalRevenue = 0;
-  let totalCommission = 0;
-
-  records.forEach(record => {
-    totalRevenue +=
-      Number(record.price || 0) *
-      Number(record.quantity || 1);
-
-    totalCommission +=
-      Number(record.commission || 0);
+  const services=(servicesResult.data||[]).filter(s=>s.active!==false);
+  const percentMap={};
+  (percentResult.data||[]).forEach(p=>{
+    percentMap[String(p.service_id)]=Number(p.employee_percent??0);
   });
 
-  // Tính tổng tiền ứng
-  let totalAdvance = 0;
+  if(!services.length){
+    box.innerHTML=`
+      <div class="card">
+        <h2>💰 Cài % dịch vụ: ${escapeHtml(employeeName)}</h2>
+        <p>Chưa có dịch vụ nào. Bạn hãy tạo dịch vụ trước nhé.</p>
+        <button class="secondary" onclick="closeEmployeePercentages()">Đóng</button>
+      </div>`;
+    return;
+  }
 
-  advanceRecords.forEach(record => {
-    totalAdvance += Number(record.amount || 0);
+  box.innerHTML=`
+    <div class="card">
+      <h2>💰 Cài % dịch vụ</h2>
+      <p>Nhân viên: <strong class="gold">${escapeHtml(employeeName)}</strong></p>
+      <p class="muted">Mỗi dịch vụ có một mức % riêng. Nhập từ 0 đến 100. Dịch vụ chưa cài sẽ là 0%.</p>
+      <div id="employeePercentRows"></div>
+      <button onclick='saveEmployeePercentages(${jsArg(employeeId)},${jsArg(employeeName)})'>💾 Lưu tất cả %</button>
+      <button class="secondary" onclick="closeEmployeePercentages()">Đóng danh sách</button>
+    </div>`;
+
+  const rows=document.getElementById("employeePercentRows");
+  services.forEach((service,index)=>{
+    const row=document.createElement("div");
+    row.className="percent-row";
+
+    const info=document.createElement("div");
+    info.className="service-info";
+    const title=document.createElement("strong");
+    title.textContent=service.name;
+    const price=document.createElement("div");
+    price.className="muted";
+    price.textContent=money(service.price);
+    info.append(title,price);
+
+    const input=document.createElement("input");
+    input.type="number";
+    input.min="0";
+    input.max="100";
+    input.step="0.01";
+    input.value=percentMap[String(service.id)]??0;
+    input.className="employee-percent-input";
+    input.dataset.serviceId=String(service.id);
+    input.setAttribute("aria-label","Phần trăm "+service.name);
+
+    const percentLabel=document.createElement("label");
+    percentLabel.style.margin="0";
+    percentLabel.textContent="%";
+    percentLabel.appendChild(input);
+
+    row.append(info,percentLabel);
+    rows.appendChild(row);
   });
+}
 
-  const ok = confirm(
-    "⚠️ RESET TUẦN\n\n" +
-    "Nhân viên: " + employeeName +
-    "\nSố lượt dịch vụ: " + records.length +
-    "\nDoanh thu: " + money(totalRevenue) +
-    "\nTiền hoa hồng: " + money(totalCommission) +
-    "\nSố khoản ứng tiền: " + advanceRecords.length +
-    "\nTổng tiền ứng: " + money(totalAdvance) +
-    "\n\nChỉ xóa dịch vụ đã thực hiện và các khoản " +
-    "có nội dung chứa 'ứng tiền' của nhân viên này." +
-    "\nKhông xóa danh sách dịch vụ đã tạo." +
-    "\nKhông xóa giao dịch của nhân viên khác." +
-    "\n\nBạn có chắc muốn Reset không?"
-  );
+function closeEmployeePercentages(){
+  document.getElementById("employeePercentEditor").innerHTML="";
+}
 
-  if(!ok) return;
+async function saveEmployeePercentages(employeeId,employeeName){
+  if(currentEmployee)return;
+  const inputs=Array.from(document.querySelectorAll("#employeePercentRows .employee-percent-input"));
+  const rows=[];
 
-  // Xóa dịch vụ đã thực hiện của riêng nhân viên
-  if(records.length > 0){
-
-    const deleteServices =
-      await supabaseClient
-        .from("service_records")
-        .delete()
-        .eq("employee_name", employeeName);
-
-    if(deleteServices.error){
-      alert(
-        "Không thể Reset dịch vụ:\n\n" +
-        deleteServices.error.message
-      );
+  for(const input of inputs){
+    const value=Number(input.value);
+    if(input.value.trim()===""||!Number.isFinite(value)||value<0||value>100){
+      alert("Mỗi dịch vụ phải có % từ 0 đến 100.");
+      input.focus();
       return;
     }
+    rows.push({
+      employee_id:String(employeeId),
+      service_id:String(input.dataset.serviceId),
+      employee_percent:value
+    });
   }
 
-  // Xóa các khoản ứng tiền của riêng nhân viên
-  if(advanceRecords.length > 0){
-
-    const advanceIds =
-      advanceRecords.map(record => record.id);
-
-    const deleteAdvances =
-      await supabaseClient
-        .from("money")
-        .delete()
-        .in("id", advanceIds);
-
-    if(deleteAdvances.error){
-      alert(
-        "Dịch vụ đã Reset nhưng tiền ứng chưa xóa được.\n\n" +
-        deleteAdvances.error.message
-      );
-      await loadmoney();
-      return;
-    }
+  if(!rows.length){
+    alert("Chưa có dịch vụ để lưu.");
+    return;
   }
 
-  alert(
-    "✅ Reset thành công!\n\n" +
-    "Nhân viên: " + employeeName +
-    "\nDịch vụ đã xóa: " + records.length +
-    "\nTiền hoa hồng đã Reset: " + money(totalCommission) +
-    "\nKhoản ứng tiền đã xóa: " + advanceRecords.length +
-    "\nTổng tiền ứng đã xóa: " + money(totalAdvance) +
-    "\n\nDanh sách dịch vụ do Chủ tạo vẫn được giữ nguyên."
-  );
+  const {error}=await supabaseClient
+    .from("employee_service_percentages")
+    .upsert(rows,{onConflict:"employee_id,service_id"});
 
-  const reportBox =
-    document.getElementById("employeeReportBox");
-
-  if(reportBox){
-    reportBox.innerHTML = "";
+  if(error){
+    alert("Lưu % chưa thành công: "+error.message);
+    return;
   }
 
-  await loadmoney();
+  alert("Đã lưu % dịch vụ cho "+employeeName+".");
 }
-
-// ============================
-// DỊCH VỤ
-// ============================
 
 async function loadservices(){
+  if(!checkSupabase())return;
+  const list=document.getElementById("serviceList");
+  const hint=document.getElementById("serviceHint");
 
-  const box =
-    document.getElementById(
-      "serviceList"
-    );
+  const {data,error}=await supabaseClient
+    .from("services")
+    .select("id, name, price, employee_percent, active")
+    .order("id",{ascending:true});
 
-  if(!box) return;
-
-  if(!checkSupabase()) return;
-
-  box.innerHTML =
-    "<div class='card empty'>" +
-    "⏳ Đang tải dịch vụ..." +
-    "</div>";
-
-  // ĐÃ SỬA: services
-
-  const result =
-    await supabaseClient
-      .from("services")
-      .select(
-        "id, name, price, employee_percent, active"
-      )
-      .order(
-        "id",
-        {
-          ascending:true
-        }
-      );
-
-  if(result.error){
-
-    console.error(
-      "LỖI SERVICE:",
-      result.error
-    );
-
-    box.innerHTML =
-      "<div class='card'>" +
-
-      "<h3>❌ Không tải được dịch vụ</h3>" +
-
-      "<p>" +
-      escapeHtml(
-        result.error.message
-      ) +
-      "</p>" +
-
-      "</div>";
-
+  if(error){
+    list.innerHTML='<p class="muted">Không tải được dịch vụ: '+escapeHtml(error.message)+'</p>';
     return;
-
   }
 
-  currentservices =
-    result.data || [];
+  currentservices=(data||[]).filter(s=>s.active!==false);
+  const isOwner=!currentEmployee;
+  let percentMap={};
 
-  box.innerHTML = "";
+  if(currentEmployee){
+    const {data:percentages,error:percentError}=await supabaseClient
+      .from("employee_service_percentages")
+      .select("service_id, employee_percent")
+      .eq("employee_id",String(currentEmployee.id));
 
-  const services =
-    currentservices.filter(
-      service =>
-        service.active !== false
-    );
-
-  if(services.length === 0){
-
-    box.innerHTML =
-      "<div class='card empty'>" +
-      "Chưa có dịch vụ." +
-      "</div>";
-
-    return;
-
-  }
-
-  services.forEach(
-    service => {
-
-      const item =
-        document.createElement(
-          "div"
-        );
-
-      item.className =
-        "card service-card";
-
-      const percent =
-        Number(
-          service.employee_percent || 0
-        );
-
-      const price =
-        Number(
-          service.price || 0
-        );
-
-      if(currentEmployee){
-
-        item.onclick =
-          function(){
-
-            recordService(
-              service
-            );
-
-          };
-
-        item.innerHTML =
-
-          "<h3>✂️ " +
-          escapeHtml(
-            service.name
-          ) +
-          "</h3>" +
-
-          "<p>💵 Giá: " +
-          money(price) +
-          "</p>" +
-
-          "<p>👤 Bạn nhận: " +
-          money(
-            price *
-            percent /
-            100
-          ) +
-          "</p>" +
-
-          "<p class='success'>" +
-          "👆 Bấm để ghi nhận dịch vụ" +
-          "</p>";
-
-      }else{
-
-        item.innerHTML =
-
-          "<h3>✂️ " +
-          escapeHtml(
-            service.name
-          ) +
-          "</h3>" +
-
-          "<p>💵 Giá: " +
-          money(price) +
-          "</p>" +
-
-          "<p>👤 Nhân viên: " +
-          percent +
-          "%</p>" +
-
-          "<div class='service-actions'>" +
-
-          "<button " +
-          "type='button' " +
-          "onclick='editService(" +
-          service.id +
-          ")'>" +
-          "✏️ Sửa" +
-          "</button>" +
-
-          "<button " +
-          "type='button' " +
-          "class='danger' " +
-          "onclick='deleteService(" +
-          service.id +
-          ")'>" +
-          "🗑️ Xóa" +
-          "</button>" +
-
-          "</div>";
-
-      }
-
-      box.appendChild(
-        item
-      );
-
+    if(percentError){
+      list.innerHTML='<p class="muted">Không tải được % của bạn: '+escapeHtml(percentError.message)+'</p>';
+      return;
     }
-  );
+    (percentages||[]).forEach(p=>{
+      percentMap[String(p.service_id)]=Number(p.employee_percent??0);
+    });
+  }
 
+  hint.textContent=isOwner
+    ?"Chọn Cài % nhân viên theo dịch vụ trong thẻ nhân viên để thiết lập hoa hồng."
+    :"Chạm vào dịch vụ để ghi nhận. Hoa hồng được tính theo % đã cài cho tài khoản của bạn.";
+
+  if(!currentservices.length){
+    list.innerHTML='<div class="card">Chưa có dịch vụ nào.</div>';
+    return;
+  }
+
+  list.innerHTML=currentservices.map(service=>{
+    if(isOwner){
+      return `
+        <div class="service-card">
+          <div class="row">
+            <div>
+              <strong>${escapeHtml(service.name)}</strong>
+              <div class="gold">${money(service.price)}</div>
+            </div>
+          </div>
+          <div class="service-actions">
+            <button class="secondary" onclick='editService(${jsArg(service.id)})'>Sửa</button>
+            <button class="danger" onclick='deleteService(${jsArg(service.id)})'>Xóa</button>
+          </div>
+        </div>`;
+    }
+
+    const percent=percentMap[String(service.id)]??0;
+    const commission=Number(service.price||0)*percent/100;
+    return `
+      <div class="service-card">
+        <div class="row">
+          <div>
+            <strong>${escapeHtml(service.name)}</strong>
+            <div class="gold">Giá: ${money(service.price)}</div>
+            <div class="muted">Phần trăm của bạn: ${percent}%</div>
+            <div>Tiền %: <strong class="gold">${money(commission)}</strong></div>
+          </div>
+          <button onclick='recordService(${jsArg(service.id)})'>Ghi nhận</button>
+        </div>
+      </div>`;
+  }).join("");
 }
-
-// ============================
-// THÊM DỊCH VỤ
-// ============================
 
 async function addService(){
+  if(currentEmployee)return;
+  const name=document.getElementById("serviceName").value.trim();
+  const price=Number(document.getElementById("servicePrice").value);
 
-  if(currentEmployee){
-
-    alert(
-      "Nhân viên không có quyền thêm dịch vụ."
-    );
-
+  if(!name||document.getElementById("servicePrice").value.trim()===""||!Number.isFinite(price)||price<0){
+    alert("Bạn nhập tên dịch vụ và giá hợp lệ nhé.");
     return;
-
   }
 
-  const name =
-    document
-      .getElementById("serviceName")
-      .value
-      .trim();
+  // employee_percent là cột cũ trong cơ sở dữ liệu; không dùng để tính hoa hồng nữa.
+  const {error}=await supabaseClient.from("services").insert({
+    name:name,
+    price:price,
+    employee_percent:0,
+    active:true
+  });
 
-  const price =
-    Number(
-      document
-        .getElementById("servicePrice")
-        .value
-    );
-
-  const employeePercent =
-    Number(
-      document
-        .getElementById("servicePercent")
-        .value
-    );
-
-  if(!name){
-
-    alert(
-      "Vui lòng nhập tên dịch vụ."
-    );
-
+  if(error){
+    alert("Thêm dịch vụ không thành công: "+error.message);
     return;
-
   }
 
-  if(
-    !price ||
-    price <= 0
-  ){
-
-    alert(
-      "Vui lòng nhập giá dịch vụ."
-    );
-
-    return;
-
-  }
-
-  if(
-    isNaN(employeePercent) ||
-    employeePercent < 0 ||
-    employeePercent > 100
-  ){
-
-    alert(
-      "Vui lòng nhập % nhân viên từ 0 đến 100."
-    );
-
-    return;
-
-  }
-
-  if(!checkSupabase()) return;
-
-  const result =
-    await supabaseClient
-      .from("services")
-      .insert([
-        {
-          name:name,
-          price:price,
-          employee_percent:
-            employeePercent,
-          active:true
-        }
-      ]);
-
-  if(result.error){
-
-    alert(
-      "LỖI THÊM DỊCH VỤ:\n\n" +
-      result.error.message
-    );
-
-    return;
-
-  }
-
-  alert(
-    "Đã thêm dịch vụ!"
-  );
-
-  document
-    .getElementById("serviceName")
-    .value = "";
-
-  document
-    .getElementById("servicePrice")
-    .value = "";
-
-  document
-    .getElementById("servicePercent")
-    .value = "";
-
+  document.getElementById("serviceName").value="";
+  document.getElementById("servicePrice").value="";
+  alert("Đã thêm dịch vụ.");
   loadservices();
-
 }
-
-// ============================
-// SỬA DỊCH VỤ
-// ============================
 
 async function editService(id){
+  if(currentEmployee)return;
+  const service=currentservices.find(s=>String(s.id)===String(id));
+  if(!service)return;
 
-  if(currentEmployee){
-
-    alert(
-      "Nhân viên không có quyền sửa dịch vụ."
-    );
-
+  const newName=prompt("Tên dịch vụ:",service.name);
+  if(newName===null)return;
+  if(!newName.trim()){
+    alert("Tên dịch vụ không được để trống.");
     return;
-
   }
 
-  const service =
-    currentservices.find(
-      item =>
-        String(item.id) ===
-        String(id)
-    );
-
-  if(!service){
-
-    alert(
-      "Không tìm thấy dịch vụ."
-    );
-
+  const newPriceText=prompt("Giá dịch vụ (đ):",String(service.price));
+  if(newPriceText===null)return;
+  const newPrice=Number(newPriceText);
+  if(newPriceText.trim()===""||!Number.isFinite(newPrice)||newPrice<0){
+    alert("Giá dịch vụ không hợp lệ.");
     return;
-
   }
 
-  const newName =
-    prompt(
-      "Tên dịch vụ:",
-      service.name
-    );
+  const {error}=await supabaseClient.from("services")
+    .update({name:newName.trim(),price:newPrice})
+    .eq("id",id);
 
-  if(newName === null)
+  if(error){
+    alert("Sửa dịch vụ không thành công: "+error.message);
     return;
-
-  const newPriceText =
-    prompt(
-      "Giá dịch vụ:",
-      service.price
-    );
-
-  if(newPriceText === null)
-    return;
-
-  const newPercentText =
-    prompt(
-      "% nhân viên:",
-      service.employee_percent
-    );
-
-  if(newPercentText === null)
-    return;
-
-  const newPrice =
-    Number(
-      newPriceText
-    );
-
-  const newPercent =
-    Number(
-      newPercentText
-    );
-
-  if(
-    !newName.trim() ||
-    !newPrice ||
-    newPrice <= 0 ||
-    isNaN(newPercent) ||
-    newPercent < 0 ||
-    newPercent > 100
-  ){
-
-    alert(
-      "Thông tin dịch vụ không hợp lệ."
-    );
-
-    return;
-
   }
-
-  // ĐÃ SỬA: services
-
-  const result =
-    await supabaseClient
-      .from("services")
-      .update({
-        name:newName.trim(),
-        price:newPrice,
-        employee_percent:
-          newPercent
-      })
-      .eq(
-        "id",
-        id
-      );
-
-  if(result.error){
-
-    alert(
-      "Lỗi sửa dịch vụ:\n\n" +
-      result.error.message
-    );
-
-    return;
-
-  }
-
-  alert(
-    "Đã sửa dịch vụ!"
-  );
-
   loadservices();
-
 }
-
-// ============================
-// XÓA DỊCH VỤ
-// ============================
 
 async function deleteService(id){
+  if(currentEmployee)return;
+  const service=currentservices.find(s=>String(s.id)===String(id));
+  if(!service)return;
+  if(!confirm("Bạn chắc chắn muốn xóa dịch vụ "+service.name+"?"))return;
 
-  if(currentEmployee){
-
-    alert(
-      "Nhân viên không có quyền xóa dịch vụ."
-    );
-
+  const {error}=await supabaseClient.from("services").delete().eq("id",id);
+  if(error){
+    alert("Xóa dịch vụ không thành công: "+error.message);
     return;
-
   }
-
-  const service =
-    currentservices.find(
-      item =>
-        String(item.id) ===
-        String(id)
-    );
-
-  if(!service) return;
-
-  const ok =
-    confirm(
-      "Bạn có chắc muốn xóa dịch vụ:\n\n" +
-      service.name +
-      "?"
-    );
-
-  if(!ok) return;
-
-  // ĐÃ SỬA: services
-
-  const result =
-    await supabaseClient
-      .from("services")
-      .delete()
-      .eq(
-        "id",
-        id
-      );
-
-  if(result.error){
-
-    alert(
-      "Lỗi xóa dịch vụ:\n\n" +
-      result.error.message
-    );
-
-    return;
-
-  }
-
-  alert(
-    "Đã xóa dịch vụ!"
-  );
-
   loadservices();
-
 }
 
-// ============================
-// GHI NHẬN DỊCH VỤ
-// ============================
-
-async function recordService(service){
-
-  if(!currentEmployee){
+async function recordService(serviceId){
+  if(!currentEmployee)return;
+  const service=currentservices.find(s=>String(s.id)===String(serviceId));
+  if(!service){
+    alert("Không tìm thấy dịch vụ. Bạn tải lại trang Dịch vụ nhé.");
     return;
   }
 
-  if(!checkSupabase()) return;
+  const {data:percentage,error:percentError}=await supabaseClient
+    .from("employee_service_percentages")
+    .select("employee_percent")
+    .eq("employee_id",String(currentEmployee.id))
+    .eq("service_id",String(service.id))
+    .maybeSingle();
 
-  const price =
-    Number(
-      service.price || 0
-    );
-
-  const percent =
-    Number(
-      currentEmployee.employee_percent || 0
-    );
-
-  const commission =
-    price *
-    percent /
-    100;
-
-  const ok =
-    confirm(
-      "Ghi nhận dịch vụ?\n\n" +
-
-      service.name +
-
-      "\nGiá: " +
-      money(price) +
-
-      "\nBạn nhận: " +
-      money(commission)
-    );
-
-  if(!ok) return;
-
-  const result =
-    await supabaseClient
-      .from("service_records")
-      .insert([
-        {
-          employee_name:
-            currentEmployee.Name,
-
-          service_name:
-            service.name,
-
-          price:
-            price,
-
-          quantity:
-            1,
-
-          commission:
-            commission
-        }
-      ]);
-
-  if(result.error){
-
-    alert(
-      "Không thể ghi nhận dịch vụ:\n\n" +
-      result.error.message
-    );
-
+  if(percentError){
+    alert("Không đọc được % dịch vụ: "+percentError.message);
     return;
-
   }
 
-  alert(
-    "Đã ghi nhận dịch vụ!\n\n" +
-    service.name +
-    "\nBạn nhận: " +
-    money(commission)
+  const percent=Number(percentage?.employee_percent??0);
+  const commission=Math.round(Number(service.price||0)*percent/100);
+
+  if(!confirm(
+    "Ghi nhận dịch vụ: "+service.name+
+    "\nGiá: "+money(service.price)+
+    "\n% của bạn: "+percent+"%"+
+    "\nTiền %: "+money(commission)+"?"
+  ))return;
+
+  const {error}=await supabaseClient.from("service_records").insert({
+    employee_name:currentEmployee.Name,
+    service_name:service.name,
+    price:Number(service.price||0),
+    quantity:1,
+    commission:commission
+  });
+
+  if(error){
+    alert("Ghi nhận dịch vụ không thành công: "+error.message);
+    return;
+  }
+
+  alert("Đã ghi nhận dịch vụ.");
+  loadservices();
+  loadmoney();
+}
+  async function showEmployeeReport(employeeId,employeeName){
+  if(currentEmployee)return;
+  const box=document.getElementById("employeeReportBox");
+  box.innerHTML='<div class="card">Đang tải báo cáo...</div>';
+  box.scrollIntoView({behavior:"smooth",block:"start"});
+
+  const {data,error}=await supabaseClient
+    .from("service_records")
+    .select("id, created_at, employee_name, service_name, price, quantity, commission")
+    .eq("employee_name",employeeName)
+    .order("created_at",{ascending:false});
+
+  if(error){
+    box.innerHTML='<div class="card">Lỗi tải báo cáo: '+escapeHtml(error.message)+'</div>';
+    return;
+  }
+
+  const records=data||[];
+  const today=localDateKey(new Date());
+  const todayRecords=records.filter(r=>localDateKey(r.created_at)===today);
+  const monthRecords=records.filter(r=>sameMonth(r.created_at));
+
+  const sumRevenue=arr=>arr.reduce((sum,r)=>sum+Number(r.price||0)*Number(r.quantity||1),0);
+  const sumCommission=arr=>arr.reduce((sum,r)=>sum+Number(r.commission||0),0);
+
+  box.innerHTML=`
+    <div class="card">
+      <h2>Báo cáo: ${escapeHtml(employeeName)}</h2>
+      <div class="stat-grid">
+        <div class="stat">Doanh thu hôm nay<strong>${money(sumRevenue(todayRecords))}</strong></div>
+        <div class="stat">Tiền % hôm nay<strong>${money(sumCommission(todayRecords))}</strong></div>
+        <div class="stat">Doanh thu tháng<strong>${money(sumRevenue(monthRecords))}</strong></div>
+        <div class="stat">Tiền % tháng<strong>${money(sumCommission(monthRecords))}</strong></div>
+      </div>
+      <h3 style="margin-top:18px">Lịch sử dịch vụ</h3>
+      ${records.length?records.map(r=>`
+        <div class="service-card">
+          <strong>${escapeHtml(r.service_name)}</strong>
+          <div class="muted">${new Date(r.created_at).toLocaleString("vi-VN")}</div>
+          <div>Giá: ${money(Number(r.price||0)*Number(r.quantity||1))}</div>
+          <div class="gold">Tiền %: ${money(r.commission)}</div>
+        </div>
+      `).join(""):'<p class="muted">Chưa có dịch vụ nào được ghi nhận.</p>'}
+      <button class="secondary" onclick="document.getElementById('employeeReportBox').innerHTML=''">Đóng báo cáo</button>
+    </div>`;
+}
+
+async function resetEmployeeServices(employeeId,employeeName){
+  if(currentEmployee)return;
+
+  const {data:records,error:recordError}=await supabaseClient
+    .from("service_records")
+    .select("id, created_at, employee_name, service_name, price, quantity, commission")
+    .eq("employee_name",employeeName);
+
+  if(recordError){
+    alert("Không tải được dịch vụ của nhân viên: "+recordError.message);
+    return;
+  }
+
+  const {data:moneyRecords,error:moneyError}=await supabaseClient
+    .from("money")
+    .select("id, employee_name, note, amount, type")
+    .eq("employee_name",employeeName);
+
+  if(moneyError){
+    alert("Không tải được khoản ứng tiền: "+moneyError.message);
+    return;
+  }
+
+  const advances=(moneyRecords||[]).filter(r=>
+    String(r.note||"").toLowerCase().includes("ứng tiền")
   );
 
-  loadmoney();
+  const serviceCount=(records||[]).length;
+  const revenue=(records||[]).reduce(
+    (sum,r)=>sum+Number(r.price||0)*Number(r.quantity||1),0
+  );
+  const commission=(records||[]).reduce(
+    (sum,r)=>sum+Number(r.commission||0),0
+  );
+  const advanceTotal=advances.reduce(
+    (sum,r)=>sum+Number(r.amount||0),0
+  );
 
-}
+  const message=
+    "⚠️ RESET DỊCH VỤ\n\n"+
+    "Nhân viên: "+employeeName+"\n"+
+    "Số lượt dịch vụ: "+serviceCount+"\n"+
+    "Doanh thu: "+money(revenue)+"\n"+
+    "Tiền hoa hồng: "+money(commission)+"\n"+
+    "Số khoản ứng tiền: "+advances.length+"\n"+
+    "Tổng tiền ứng: "+money(advanceTotal)+"\n\n"+
+    "Chỉ xóa dịch vụ đã thực hiện và các khoản có nội dung chứa 'ứng tiền' của nhân viên này.\n"+
+    "Không xóa danh sách dịch vụ đã tạo.\n\n"+
+    "Bạn có chắc chắn muốn Reset không?";
 
-// ============================
-// THU CHI
-// ============================
-async function loadmoney(){
+  if(!confirm(message))return;
 
-  if(!checkSupabase()) return;
+  if(serviceCount){
+    const ids=(records||[]).map(r=>r.id);
+    const {error}=await supabaseClient
+      .from("service_records")
+      .delete()
+      .in("id",ids);
 
-  // ==========================
-
-  // NHÂN VIÊN
-
-  // ==========================
-
-  if(currentEmployee){
-
-    // Nhân viên không được thêm
-
-    // hoặc xem các khoản thu/chi thủ công
-
-    const manualBox =
-
-      document.getElementById(
-
-        "manualmoneyBox"
-
-      );
-
-    if(manualBox){
-
-      manualBox.style.display =
-
-        "none";
-
+    if(error){
+      alert("Không xóa được lịch sử dịch vụ: "+error.message);
+      return;
     }
-
-    const moneyList =
-
-      document.getElementById(
-
-        "moneyList"
-
-      );
-
-    if(moneyList){
-
-      await loadEmployeeMoney();
-
-    }
-
-  }else{
-
-    // ==========================
-
-    // CHỦ
-
-    // ==========================
-
-    const manualBox =
-
-      document.getElementById(
-
-        "manualmoneyBox"
-
-      );
-
-    if(manualBox){
-
-      manualBox.style.display =
-
-        "block";
-
-    }
-
-    await loadManualmoney();
-
   }
 
-  // Doanh thu dịch vụ
+  if(advances.length){
+    const ids=advances.map(r=>r.id);
+    const {error}=await supabaseClient
+      .from("money")
+      .delete()
+      .in("id",ids);
 
-  await loadmoneySummary();
+    if(error){
+      alert("Đã xóa dịch vụ nhưng không xóa được khoản ứng tiền: "+error.message);
+      loadmoney();
+      showEmployeeReport(employeeId,employeeName);
+      return;
+    }
+  }
 
-  // Dịch vụ đã thực hiện
-
-  await loadServiceRecords();
-
+  alert("Đã Reset dịch vụ và các khoản ứng tiền của "+employeeName+".");
+  document.getElementById("employeeReportBox").innerHTML="";
+  loadEmployees();
+  loadmoney();
 }
 
-
-// ============================
-// TỔNG DOANH THU
-// ============================
+async function loadmoney(){
+  if(!checkSupabase())return;
+  await loadmoneySummary();
+  if(currentEmployee){
+    await loadEmployeeMoney();
+  }else{
+    await loadManualmoney();
+  }
+  await loadServiceRecords();
+}
 
 async function loadmoneySummary(){
+  const serviceQuery=supabaseClient
+    .from("service_records")
+    .select("price, quantity, commission, created_at, employee_name");
 
-  if(!checkSupabase()) return;
+  const moneyQuery=supabaseClient
+    .from("money")
+    .select("type, amount, employee_name, created_at");
 
-  // ============================
-
-  // LẤY DỊCH VỤ ĐÃ THỰC HIỆN
-
-  // ============================
-
-  let serviceQuery =
-
-    supabaseClient
-
-      .from("service_records")
-
-      .select(
-
-        "price, quantity, commission, created_at"
-
-      );
-
-  // Nhân viên chỉ xem tiền của mình
-
-  if(currentEmployee){
-
-    serviceQuery =
-
-      serviceQuery.eq(
-
-        "employee_name",
-
-        currentEmployee.Name
-
-      );
-
-  }
-
-  const serviceResult =
-
-    await serviceQuery;
+  const [serviceResult,moneyResult]=await Promise.all([
+    currentEmployee
+      ?serviceQuery.eq("employee_name",currentEmployee.Name)
+      :serviceQuery,
+    currentEmployee
+      ?Promise.resolve({data:[],error:null})
+      :moneyQuery
+  ]);
 
   if(serviceResult.error){
-
-    console.error(
-
-      serviceResult.error
-
-    );
-
+    console.error(serviceResult.error);
     return;
-
   }
-
-  const serviceRecords =
-
-    serviceResult.data || [];
-
-  // ============================
-
-  // LẤY THU CHI THỦ CÔNG
-
-  // ============================
-
-  const moneyResult =
-
-    await supabaseClient
-
-      .from("money")
-
-      .select(
-
-        "type, amount, employee_name, created_at"
-
-      );
-
   if(moneyResult.error){
-
-    console.error(
-
-      moneyResult.error
-
-    );
-
+    console.error(moneyResult.error);
     return;
-
   }
 
-  const moneyRecords =
+  const services=serviceResult.data||[];
+  const transactions=(moneyResult.data||[]).filter(r=>!r.employee_name);
+  const today=localDateKey(new Date());
 
-    moneyResult.data || [];
+  const todayServices=services.filter(r=>localDateKey(r.created_at)===today);
+  const monthServices=services.filter(r=>sameMonth(r.created_at));
+  const todayMoney=transactions.filter(r=>localDateKey(r.created_at)===today);
+  const monthMoney=transactions.filter(r=>sameMonth(r.created_at));
 
-  // ============================
-
-  // BIẾN TÍNH TOÁN
-
-  // ============================
-
-  const now =
-
-    new Date();
-
-  let todayRevenue = 0;
-
-  let monthRevenue = 0;
-
-  let todayCommission = 0;
-
-  let monthCommission = 0;
-
-  let todayThu = 0;
-
-  let monthThu = 0;
-
-  let todayChi = 0;
-
-  let monthChi = 0;
-
-  // ============================
-
-  // TÍNH TIỀN DỊCH VỤ
-
-  // ============================
-
-  serviceRecords.forEach(
-
-    record => {
-
-      const d =
-
-        new Date(
-
-          record.created_at
-
-        );
-
-      const price =
-
-        Number(
-
-          record.price || 0
-
-        ) *
-
-        Number(
-
-          record.quantity || 1
-
-        );
-
-      const commission =
-
-        Number(
-
-          record.commission || 0
-
-        );
-
-      // HÔM NAY
-
-      if(
-
-        d.toDateString() ===
-
-        now.toDateString()
-
-      ){
-
-        todayRevenue +=
-
-          price;
-
-        todayCommission +=
-
-          commission;
-
-      }
-
-      // THÁNG NÀY
-
-      if(
-
-        d.getMonth() ===
-
-          now.getMonth() &&
-
-        d.getFullYear() ===
-
-          now.getFullYear()
-
-      ){
-
-        monthRevenue +=
-
-          price;
-
-        monthCommission +=
-
-          commission;
-
-      }
-
-    }
-
+  const revenue=arr=>arr.reduce(
+    (sum,r)=>sum+Number(r.price||0)*Number(r.quantity||1),0
   );
-
-  // ============================
-
-  // TÍNH THU CHI THỦ CÔNG
-
-  // ============================
-
-  moneyRecords.forEach(
-
-    record => {
-      if(record.employee_name){
-  return;
-}
-
-      const d =
-
-        new Date(
-
-          record.created_at
-
-        );
-
-      const amount =
-
-        Number(
-
-          record.amount || 0
-
-        );
-
-      // HÔM NAY
-
-      if(
-
-        d.toDateString() ===
-
-        now.toDateString()
-
-      ){
-
-        if(
-
-          record.type === "thu"
-
-        ){
-
-          todayThu +=
-
-            amount;
-
-        }
-
-        if(
-
-          record.type === "chi"
-
-        ){
-
-          todayChi +=
-
-            amount;
-
-        }
-
-      }
-
-      // THÁNG NÀY
-
-      if(
-
-        d.getMonth() ===
-
-          now.getMonth() &&
-
-        d.getFullYear() ===
-
-          now.getFullYear()
-
-      ){
-
-        if(
-
-          record.type === "thu"
-
-        ){
-
-          monthThu +=
-
-            amount;
-
-        }
-
-        if(
-
-          record.type === "chi"
-
-        ){
-
-          monthChi +=
-
-            amount;
-
-        }
-
-      }
-
-    }
-
+  const commission=arr=>arr.reduce(
+    (sum,r)=>sum+Number(r.commission||0),0
   );
+  const manualTotal=arr=>arr.reduce((sum,r)=>{
+    const amount=Number(r.amount||0);
+    return sum+(String(r.type).toLowerCase()==="thu"?amount:-amount);
+  },0);
 
-  // ============================
-
-  // TỔNG CUỐI CÙNG
-
-  // ============================
-
-  const todayTotal =
-
-    todayRevenue +
-
-    todayThu -
-
-    todayChi;
-
-  const monthTotal =
-
-    monthRevenue +
-
-    monthThu -
-
-    monthChi;
-
-  // ============================
-
-  // HIỂN THỊ
-
-  // ============================
-
-  document
-
-    .getElementById(
-
-      "todayRevenue"
-
-    )
-
-    .textContent =
-
-    money(todayTotal);
-
-  document
-
-    .getElementById(
-
-      "monthRevenue"
-
-    )
-
-    .textContent =
-
-    money(monthTotal);
-
-  document
-
-    .getElementById(
-
-      "todayCommission"
-
-    )
-
-    .textContent =
-
-    money(todayCommission);
-
-  document
-
-    .getElementById(
-
-      "monthCommission"
-
-    )
-
-    .textContent =
-
-    money(monthCommission);
-
+  document.getElementById("todayRevenue").textContent=
+    money(revenue(todayServices)+manualTotal(todayMoney));
+  document.getElementById("monthRevenue").textContent=
+    money(revenue(monthServices)+manualTotal(monthMoney));
+  document.getElementById("todayCommission").textContent=
+    money(commission(todayServices));
+  document.getElementById("monthCommission").textContent=
+    money(commission(monthServices));
 }
-  // ============================
-// TIỀN ỨNG CỦA NHÂN VIÊN
-// ============================
 
 async function loadEmployeeMoney(){
+  const box=document.getElementById("employeeMoneyList");
+  const {data,error}=await supabaseClient
+    .from("money")
+    .select("id, created_at, employee_name, note, amount, type")
+    .eq("employee_name",currentEmployee.Name)
+    .order("created_at",{ascending:false});
 
-  if(!currentEmployee) return;
-
-  const box =
-    document.getElementById(
-      "moneyList"
-    );
-
-  if(!box) return;
-
-  const result =
-    await supabaseClient
-      .from("money")
-      .select(
-        "id, created_at, employee_name, note, amount, type"
-      )
-      .eq(
-        "employee_name",
-        currentEmployee.Name
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-  if(result.error){
-
-    box.innerHTML =
-      "<div class='empty'>" +
-      "Không tải được khoản tiền của bạn.<br><br>" +
-      escapeHtml(
-        result.error.message
-      ) +
-      "</div>";
-
+  if(error){
+    box.innerHTML='<p class="muted">Không tải được giao dịch: '+escapeHtml(error.message)+'</p>';
     return;
-
   }
 
-  const records =
-    result.data || [];
-
-  if(records.length === 0){
-
-    box.innerHTML =
-      "<div class='empty'>" +
-      "Chưa có khoản tiền nào." +
-      "</div>";
-
+  if(!data||!data.length){
+    box.innerHTML='<p class="muted">Chưa có khoản thu chi hoặc ứng tiền.</p>';
     return;
-
   }
 
-  box.innerHTML = "";
-
-  records.forEach(
-    record => {
-
-      const item =
-        document.createElement(
-          "div"
-        );
-
-      item.className =
-        "card";
-
-      const sign =
-        record.type === "chi"
-          ? "-"
-          : "+";
-
-      const date =
-        new Date(
-          record.created_at
-        );
-
-      item.innerHTML =
-
-        "<h3>💰 " +
-        escapeHtml(
-          record.note || ""
-        ) +
-        "</h3>" +
-
-        "<p class='money'>" +
-        sign +
-        money(
-          record.amount
-        ) +
-        "</p>" +
-
-        "<p class='muted'>" +
-        "📅 " +
-        date.toLocaleString(
-          "vi-VN"
-        ) +
-        "</p>";
-
-      box.appendChild(
-        item
-      );
-
-    }
-  );
-
+  box.innerHTML=data.map(r=>`
+    <div class="service-card">
+      <strong>${escapeHtml(r.note||r.type||"Giao dịch")}</strong>
+      <div class="muted">${new Date(r.created_at).toLocaleString("vi-VN")}</div>
+      <div>${escapeHtml(r.type||"")}: ${money(r.amount)}</div>
+    </div>
+  `).join("");
 }
-
-
-
-// ============================
-// THU CHI THỦ CÔNG
-// ============================
 
 async function loadManualmoney(){
+  if(currentEmployee)return;
+  const box=document.getElementById("moneyList");
+  const {data,error}=await supabaseClient
+    .from("money")
+    .select("id, created_at, employee_name, note, amount, type")
+    .order("created_at",{ascending:false});
 
-  const box =
-
-    document.getElementById(
-
-      "moneyList"
-
-    );
-
-  if(!box) return;
-
-  const result =
-
-    await supabaseClient
-
-      .from("money")
-
-      .select("*")
-
-      .order(
-
-        "created_at",
-
-        {
-
-          ascending:false
-
-        }
-
-      );
-
-  if(result.error){
-
-    box.innerHTML =
-
-      "<div class='empty'>" +
-
-      "Không tải được dữ liệu thu chi.<br><br>" +
-
-      escapeHtml(
-
-        result.error.message
-
-      ) +
-
-      "</div>";
-
+  if(error){
+    box.innerHTML='<p class="muted">Không tải được giao dịch: '+escapeHtml(error.message)+'</p>';
     return;
-
   }
 
-  const today =
+  const today=localDateKey(new Date());
+  const records=(data||[]).filter(r=>localDateKey(r.created_at)===today);
 
-    new Date()
-
-      .toDateString();
-
-  const records =
-
-    (result.data || [])
-
-      .filter(
-
-        record =>
-
-          new Date(
-
-            record.created_at
-
-          ).toDateString() ===
-
-          today
-
-      );
-
-  if(records.length === 0){
-
-    box.innerHTML =
-
-      "<div class='empty'>" +
-
-      "Hôm nay chưa có khoản thu/chi thủ công." +
-
-      "</div>";
-
+  if(!records.length){
+    box.innerHTML='<p class="muted">Hôm nay chưa có giao dịch.</p>';
     return;
-
   }
 
-  box.innerHTML = "";
-
-  records.forEach(
-
-    record => {
-
-      const item =
-
-        document.createElement(
-
-          "div"
-
-        );
-
-      item.className =
-
-        "card";
-
-      const sign =
-
-        record.type === "chi"
-
-          ? "-"
-
-          : "+";
-
-      item.innerHTML =
-
-        "<h3>💰 " +
-
-        escapeHtml(
-
-          record.note || ""
-
-        ) +
-
-        "</h3>" +
-
-        "<p class='money'>" +
-
-        sign +
-
-        money(
-
-          record.amount
-
-        ) +
-
-        "</p>" +
-
-        "<p class='muted'>" +
-
-        "Loại: " +
-
-        escapeHtml(
-
-          record.type || ""
-
-        ) +
-
-        "</p>";
-
-      // ============================
-
-      // NÚT XÓA GIAO DỊCH
-
-      // ============================
-
-      const deleteButton =
-
-        document.createElement(
-
-          "button"
-
-        );
-
-      deleteButton.type =
-
-        "button";
-
-      deleteButton.textContent =
-
-        "🗑️ Xóa giao dịch";
-
-      deleteButton.className =
-
-        "danger";
-
-      deleteButton.onclick =
-
-        function(){
-
-          deleteManualmoney(
-
-            record.id
-
-          );
-
-        };
-
-      item.appendChild(
-
-        deleteButton
-
-      );
-
-      box.appendChild(
-
-        item
-
-      );
-
-    }
-
-  );
-
+  box.innerHTML=records.map(r=>`
+    <div class="service-card">
+      <div class="row">
+        <div>
+          <strong>${escapeHtml(r.note||r.type||"Giao dịch")}</strong>
+          <div class="muted">${new Date(r.created_at).toLocaleString("vi-VN")}</div>
+          ${r.employee_name?`<div class="muted">Nhân viên: ${escapeHtml(r.employee_name)}</div>`:""}
+          <div>${escapeHtml(r.type||"")}: ${money(r.amount)}</div>
+        </div>
+        <button class="danger" onclick='deleteManualmoney(${jsArg(r.id)})'>Xóa</button>
+      </div>
+    </div>
+  `).join("");
 }
-
-// ============================
-
-// XÓA GIAO DỊCH THU CHI
-
-// ============================
-
-async function deleteManualmoney(id){
-
-  // Nhân viên không được xóa
-
-  if(currentEmployee){
-
-    alert(
-
-      "Nhân viên không có quyền xóa giao dịch."
-
-    );
-
-    return;
-
-  }
-
-  if(!checkSupabase()) return;
-
-  const ok =
-
-    confirm(
-
-      "Bạn có chắc muốn xóa giao dịch này không?"
-
-    );
-
-  if(!ok) return;
-
-  const result =
-
-    await supabaseClient
-
-      .from("money")
-
-      .delete()
-
-      .eq(
-
-        "id",
-
-        id
-
-      );
-
-  if(result.error){
-
-    alert(
-
-      "❌ Không thể xóa giao dịch!\n\n" +
-
-      result.error.message
-
-    );
-
-    return;
-
-  }
-
-  alert(
-
-    "✅ Đã xóa giao dịch!"
-
-  );
-
-  // Cập nhật lại danh sách
-
-  await loadManualmoney();
-
-  // Cập nhật lại tổng tiền
-
-  await loadmoneySummary();
-
-}
-
-
-
-// ============================
-// THÊM KHOẢN THU CHI
-// ============================
 
 async function addmoney(){
+  if(currentEmployee)return;
 
-  const note =
-    document
-      .getElementById("moneyNote")
-      .value
-      .trim();
+  const note=document.getElementById("moneyNote").value.trim();
+  const amountText=document.getElementById("moneyAmount").value;
+  const amount=Number(amountText);
+  const type=document.getElementById("moneyType").value;
+  const employeeName=document.getElementById("moneyEmployee").value||null;
 
-  const amount =
-    Number(
-      document
-        .getElementById("moneyAmount")
-        .value
-    );
-
-  const type =
-    document
-      .getElementById("moneyType")
-      .value;
-  
-  const employeeName =
-  document
-    .getElementById("moneyEmployee")
-    .value;
-
-  if(!note){
-
-    alert(
-      "Vui lòng nhập nội dung."
-    );
-
+  if(amountText.trim()===""||!Number.isFinite(amount)||amount<0){
+    alert("Bạn nhập số tiền hợp lệ nhé.");
     return;
-
   }
 
-  if(
-    !amount ||
-    amount <= 0
-  ){
+  const {error}=await supabaseClient.from("money").insert({
+    note:note,
+    amount:amount,
+    type:type,
+    employee_name:employeeName
+  });
 
-    alert(
-      "Vui lòng nhập số tiền hợp lệ."
-    );
-
+  if(error){
+    alert("Lưu giao dịch không thành công: "+error.message);
     return;
-
   }
 
-  if(!checkSupabase()) return;
-
-  const result =
-    await supabaseClient
-      .from("money")
-      .insert([
-        {
-          type:type,
-          amount:amount,
-          note:note,
-          employee_name:employeeName
-        }
-      ]);
-
-  if(result.error){
-
-    alert(
-      "Không thể lưu khoản tiền:\n\n" +
-      result.error.message
-    );
-
-    return;
-
-  }
-
-  alert(
-    "Đã lưu khoản tiền!"
-  );
-
-  document
-    .getElementById("moneyNote")
-    .value = "";
-
-  document
-    .getElementById("moneyAmount")
-    .value = "";
-
+  document.getElementById("moneyNote").value="";
+  document.getElementById("moneyAmount").value="";
+  alert("Đã lưu giao dịch.");
   loadmoney();
-
 }
 
-// ============================
-// DỊCH VỤ ĐÃ THỰC HIỆN
-// ============================
+async function deleteManualmoney(id){
+  if(currentEmployee)return;
+  if(!confirm("Bạn chắc chắn muốn xóa giao dịch này?"))return;
+
+  const {error}=await supabaseClient.from("money").delete().eq("id",id);
+  if(error){
+    alert("Xóa giao dịch không thành công: "+error.message);
+    return;
+  }
+  loadmoney();
+}
 
 async function loadServiceRecords(){
+  const box=document.getElementById("serviceRecordList");
+  let query=supabaseClient
+    .from("service_records")
+    .select("id, created_at, employee_name, service_name, price, quantity, commission")
+    .order("created_at",{ascending:false});
 
-  const box =
-    document.getElementById(
-      "serviceRecordList"
-    );
-
-  if(!box) return;
-
-  if(!checkSupabase()) return;
-
-  let query =
-    supabaseClient
-      .from("service_records")
-      .select(
-        "id, created_at, employee_name, service_name, price, quantity, commission"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-  // Nhân viên chỉ xem dịch vụ của mình
   if(currentEmployee){
-
-    query =
-      query.eq(
-        "employee_name",
-        currentEmployee.Name
-      );
-
+    query=query.eq("employee_name",currentEmployee.Name);
   }
 
-  const result =
-    await query;
-
-  if(result.error){
-
-    box.innerHTML =
-      "<div class='empty'>" +
-      "Không tải được lịch sử dịch vụ.<br><br>" +
-      escapeHtml(
-        result.error.message
-      ) +
-      "</div>";
-
+  const {data,error}=await query;
+  if(error){
+    box.innerHTML='<p class="muted">Không tải được lịch sử dịch vụ: '+escapeHtml(error.message)+'</p>';
     return;
-
   }
 
-  const now =
-    new Date();
+  const records=(data||[]).filter(r=>sameMonth(r.created_at));
 
-  const records =
-    (result.data || [])
-      .filter(
-        record => {
-
-          const d =
-            new Date(
-              record.created_at
-            );
-
-          return (
-            d.getMonth() ===
-              now.getMonth() &&
-            d.getFullYear() ===
-              now.getFullYear()
-          );
-
-        }
-      );
-
-  if(records.length === 0){
-
-    box.innerHTML =
-      "<div class='empty'>" +
-      "Tháng này chưa có dịch vụ." +
-      "</div>";
-
+  if(!records.length){
+    box.innerHTML='<p class="muted">Chưa có dịch vụ nào trong tháng này.</p>';
     return;
-
   }
 
-  box.innerHTML = "";
-
-  records.forEach(
-    record => {
-
-      const item =
-        document.createElement(
-          "div"
-        );
-
-      item.className =
-        "card";
-
-      const d =
-        new Date(
-          record.created_at
-        );
-
-      const price =
-        Number(
-          record.price || 0
-        ) *
-        Number(
-          record.quantity || 1
-        );
-
-      const commission =
-        Number(
-          record.commission || 0
-        );
-
-      item.innerHTML =
-
-        "<h3>✂️ " +
-        escapeHtml(
-          record.service_name
-        ) +
-        "</h3>" +
-
-        "<p>👤 " +
-        escapeHtml(
-          record.employee_name
-        ) +
-        "</p>" +
-
-        "<p>📅 " +
-        d.toLocaleString(
-          "vi-VN"
-        ) +
-        "</p>" +
-
-        "<p>💵 Giá: " +
-        money(price) +
-        "</p>" +
-
-        "<p>💰 Nhân viên nhận: " +
-        money(commission) +
-        "</p>";
-
-      // ============================
-      // CHỈ CHỦ MỚI CÓ NÚT XÓA
-      // ============================
-
-      if(!currentEmployee){
-
-        const deleteButton =
-          document.createElement(
-            "button"
-          );
-
-        deleteButton.type =
-          "button";
-
-        deleteButton.textContent =
-          "🗑️ Xóa";
-
-        deleteButton.className =
-          "danger";
-
-        deleteButton.onclick =
-          function(){
-
-            deleteServiceRecord(
-              record.id
-            );
-
-          };
-
-        item.appendChild(
-          deleteButton
-        );
-
-      }
-
-      box.appendChild(
-        item
-      );
-
-    }
-  );
-
+  box.innerHTML=records.map(r=>`
+    <div class="service-card">
+      <strong>${escapeHtml(r.service_name)}</strong>
+      <div class="muted">${new Date(r.created_at).toLocaleString("vi-VN")}</div>
+      <div>Nhân viên: ${escapeHtml(r.employee_name)}</div>
+      <div>Doanh thu: ${money(Number(r.price||0)*Number(r.quantity||1))}</div>
+      <div class="gold">Tiền % nhân viên: ${money(r.commission)}</div>
+      ${!currentEmployee?`<button class="danger" onclick='deleteServiceRecord(${jsArg(r.id)})'>Xóa bản ghi</button>`:""}
+    </div>
+  `).join("");
 }
-
-
-// ============================
-// XÓA DỊCH VỤ ĐÃ THỰC HIỆN
-// ============================
 
 async function deleteServiceRecord(id){
+  if(currentEmployee)return;
+  if(!confirm("Bạn chắc chắn muốn xóa bản ghi dịch vụ này?"))return;
 
-  // Nhân viên không được xóa
-  if(currentEmployee){
+  const {error}=await supabaseClient
+    .from("service_records")
+    .delete()
+    .eq("id",id);
 
-    alert(
-      "Nhân viên không có quyền xóa dịch vụ."
-    );
-
+  if(error){
+    alert("Xóa bản ghi không thành công: "+error.message);
     return;
-
   }
-
-  if(!checkSupabase()) return;
-
-  const ok =
-    confirm(
-      "Bạn có chắc muốn xóa dịch vụ này không?\n\n" +
-      "Doanh thu và tiền nhân viên của dịch vụ này cũng sẽ được cập nhật lại."
-    );
-
-  if(!ok) return;
-
-  const result =
-    await supabaseClient
-      .from("service_records")
-      .delete()
-      .eq(
-        "id",
-        id
-      );
-
-  if(result.error){
-
-    alert(
-      "❌ Không thể xóa dịch vụ!\n\n" +
-      result.error.message
-    );
-
-    return;
-
-  }
-
-  alert(
-    "✅ Đã xóa dịch vụ!"
-  );
-
-  // Cập nhật lại doanh thu
-  await loadmoneySummary();
-
-  // Cập nhật lại danh sách
-  await loadServiceRecords();
-
+  loadmoney();
 }
 
-
-// ============================
-// BẢO VỆ HTML
-// ============================
-
-function escapeHtml(text){
-
-  const div =
-    document.createElement(
-      "div"
-    );
-
-  div.textContent =
-    String(
-      text ?? ""
-    );
-
-  return div.innerHTML;
-
-}
-
+checkRememberLogin();
 </script>
-
 </body>
 </html>
