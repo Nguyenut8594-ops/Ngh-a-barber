@@ -921,43 +921,43 @@ async function loadEmployeeMoney(){
 
 
 async function loadManualmoney(){
-  if(currentEmployee)return;
+  if(currentEmployee) return;
 
-  const box=document.getElementById("moneyList");
+  const box = document.getElementById("moneyList");
+  if(!box) return;
 
-  const {data,error}=await supabaseClient
+  const {data, error} = await supabaseClient
     .from("money")
     .select("id, created_at, employee_name, note, amount, type")
-    .order("created_at",{ascending:false});
+    .order("created_at", {ascending: false});
 
   if(error){
-    box.innerHTML='<p class="muted">Không tải được giao dịch: '
-      +escapeHtml(error.message)+'</p>';
+    box.innerHTML =
+      '<p class="muted">Không tải được giao dịch: ' +
+      escapeHtml(error.message) + '</p>';
     return;
   }
 
-  const today=localDateKey(new Date());
-  const records=(data||[]).filter(
-    r=>localDateKey(r.created_at)===today
-  );
+  const records = data || [];
 
   if(!records.length){
-    box.innerHTML='<p class="muted">Hôm nay chưa có giao dịch.</p>';
+    box.innerHTML =
+      '<p class="muted">Chưa có giao dịch.</p>';
     return;
   }
 
-  box.innerHTML=records.map(r=>`
+  box.innerHTML = records.map(r => `
     <div class="service-card">
       <div class="row">
         <div>
-          <strong>${escapeHtml(r.note||r.type||"Giao dịch")}</strong>
+          <strong>${escapeHtml(r.note || r.type || "Giao dịch")}</strong>
           <div class="muted">
             ${new Date(r.created_at).toLocaleString("vi-VN")}
           </div>
           ${r.employee_name
-            ?`<div class="gold">Nhân viên: ${escapeHtml(r.employee_name)}</div>`
-            :'<div class="muted">Giao dịch chung của tiệm</div>'}
-          <div>${escapeHtml(r.type||"")}: ${money(r.amount)}</div>
+            ? `<div class="gold">Nhân viên: ${escapeHtml(r.employee_name)}</div>`
+            : '<div class="muted">Giao dịch chung của tiệm</div>'}
+          <div>${escapeHtml(r.type || "")}: ${money(r.amount)}</div>
         </div>
         <button class="danger"
           onclick='deleteManualmoney(${jsArg(r.id)})'>Xóa</button>
@@ -965,6 +965,7 @@ async function loadManualmoney(){
     </div>
   `).join("");
 }
+
 
 
 async function addmoney(){
