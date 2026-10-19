@@ -286,13 +286,16 @@ function logout(){
   document.getElementById("employeeReportBox").innerHTML="";
 }
 
+
 function show(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   if(id==="services")loadservices();
   if(id==="money")loadmoney();
   if(id==="employees"&&!currentEmployee)loadEmployees();
+  if(id==="revenue")loadRevenueHistory();
 }
+
   async function loadEmployees(){
   if(!checkSupabase()||currentEmployee)return;
   const list=document.getElementById("employeeList");
