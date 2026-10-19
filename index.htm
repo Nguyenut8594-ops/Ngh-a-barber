@@ -19,6 +19,28 @@ button.secondary{background:#34363d;color:#fff}
 button.danger{background:#9d3737;color:#fff}
 input,select{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #41434b;border-radius:8px;background:#1c1e23;color:#fff}
 label{display:block;color:#ddd;font-size:14px;margin-top:7px}
+  
+/* Chỉ chỉnh ô ngày trong mục Lịch sử doanh thu */
+#revenue .card {
+  min-width: 0;
+}
+
+#revenue .revenue-date-field {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#revenue #revenueDate {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 6px 0 16px 0;
+}
+
 .card{background:#1a1c21;border:1px solid #30323a;border-radius:13px;padding:15px;margin:12px 0}
 .login-box{max-width:440px;margin:8vh auto}
 .page{display:none}
@@ -145,9 +167,10 @@ hr{border:0;border-top:1px solid #383a42;margin:14px 0}
   <section id="revenue" class="page">
     <div class="card">
       <h2>📊 Lịch sử doanh thu</h2>
-      
-<label for="revenueDate" style="display:block;width:100%;box-sizing:border-box;margin:0 0 8px 0;">Chọn ngày</label>
-<input id="revenueDate" type="date" style="display:block;width:100%;max-width:100%;box-sizing:border-box;margin:0 0 16px 0;">
+      <div class="revenue-date-field">
+  <label for="revenueDate">Chọn ngày</label>
+  <input id="revenueDate" type="date">
+</div>
 
       <div id="revenueHistoryBox"></div>
     </div>
