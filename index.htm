@@ -296,6 +296,100 @@ function show(id){
   if(id==="revenue")loadRevenueHistory();
 }
 
+async function loadRevenueHistory(){
+  const box = document.getElementById("revenueHistoryBox");
+  const dateInput = document.getElementById("revenueDate");
+
+  if(!box || !dateInput) return;
+
+  if(!dateInput.value){
+    dateInput.value = localDateKey(new Date());
+  }
+
+  if(!dateInput.dataset.bound){
+    dateInput.addEventListener("change", loadRevenueHistory);
+    dateInput.dataset.bound = "1";
+  }
+
+  box.innerHTML = '<p class="muted">Đang tải lịch sử doanh thu...</p>';
+
+  let historyQuery = supabaseClient
+    .from("service_records_history")
+    .select("history_id, created_at, employee_name, service_name, price, quantity, commission");
+
+  let currentQuery = supabaseClient
+    .from("service_records")
+    .select("id, created_at, employee_name, service_name, price, quantity, commission");
+
+  if(currentEmployee){
+    historyQuery = historyQuery.eq("employee_name", currentEmployee.Name);
+    currentQuery = currentQuery.eq("employee_name", currentEmployee.Name);
+  }
+
+  const [historyResult, currentResult] = await Promise.all([
+    historyQuery,
+    currentQuery
+  ]);
+
+  if(historyResult.error || currentResult.error){
+    const err = historyResult.error || currentResult.error;
+    box.innerHTML =
+      '<p>Lỗi tải lịch sử: ' + escapeHtml(err.message) + '</p>';
+    return;
+  }
+
+  const selectedDate = dateInput.value;
+
+  const records = [
+    ...(historyResult.data || []),
+    ...(currentResult.data || [])
+  ]
+  .filter(r => r.created_at && localDateKey(r.created_at) === selectedDate)
+  .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+
+  const totalRevenue = records.reduce(
+    (sum,r) => sum + Number(r.price || 0) * Number(r.quantity || 1), 0
+  );
+
+  const totalCommission = records.reduce(
+    (sum,r) => sum + Number(r.commission || 0), 0
+  );
+
+  box.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat">
+        Doanh thu ngày
+        <strong>${money(totalRevenue)}</strong>
+      </div>
+      <div class="stat">
+        Tiền hoa hồng
+        <strong>${money(totalCommission)}</strong>
+      </div>
+    </div>
+
+    <h3>Dịch vụ ngày ${escapeHtml(selectedDate)}</h3>
+
+    ${records.length ? records.map(r => `
+      <div class="service-card">
+        ${currentEmployee ? "" :
+          `<strong>Nhân viên: ${escapeHtml(r.employee_name || "")}</strong>`}
+        <div><strong>${escapeHtml(r.service_name || "")}</strong></div>
+        <div class="muted">
+          ${new Date(r.created_at).toLocaleString("vi-VN")}
+        </div>
+        <div>
+          Giá: ${money(Number(r.price || 0) * Number(r.quantity || 1))}
+        </div>
+        <div>Số lượng: ${Number(r.quantity || 1)}</div>
+        <div class="gold">
+          Tiền hoa hồng: ${money(r.commission)}
+        </div>
+      </div>
+    `).join("") :
+      '<p class="muted">Ngày này chưa có dịch vụ được ghi nhận.</p>'}
+  `;
+}
+
   async function loadEmployees(){
   if(!checkSupabase()||currentEmployee)return;
   const list=document.getElementById("employeeList");
