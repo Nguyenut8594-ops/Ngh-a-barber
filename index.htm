@@ -799,50 +799,104 @@ async function recordService(serviceId){
   loadservices();
   loadmoney();
 }
-  async function showEmployeeReport(employeeId,employeeName){
+  
+async function showEmployeeReport(employeeId,employeeName){
   if(currentEmployee)return;
+
   const box=document.getElementById("employeeReportBox");
   box.innerHTML='<div class="card">Đang tải báo cáo...</div>';
   box.scrollIntoView({behavior:"smooth",block:"start"});
 
-  const {data,error}=await supabaseClient
-    .from("service_records")
-    .select("id, created_at, employee_name, service_name, price, quantity, commission")
-    .eq("employee_name",employeeName)
-    .order("created_at",{ascending:false});
+  const [historyResult,currentResult]=await Promise.all([
+    supabaseClient
+      .from("service_records_history")
+      .select("history_id, created_at, employee_name, service_name, price, quantity, commission")
+      .eq("employee_name",employeeName)
+      .order("created_at",{ascending:false}),
 
-  if(error){
-    box.innerHTML='<div class="card">Lỗi tải báo cáo: '+escapeHtml(error.message)+'</div>';
+    supabaseClient
+      .from("service_records")
+      .select("id, created_at, employee_name, service_name, price, quantity, commission")
+      .eq("employee_name",employeeName)
+      .order("created_at",{ascending:false})
+  ]);
+
+  if(historyResult.error || currentResult.error){
+    const err=historyResult.error || currentResult.error;
+    box.innerHTML=
+      '<div class="card">Lỗi tải báo cáo: '+
+      escapeHtml(err.message)+'</div>';
     return;
   }
 
-  const records=data||[];
-  const today=localDateKey(new Date());
-  const todayRecords=records.filter(r=>localDateKey(r.created_at)===today);
-  const monthRecords=records.filter(r=>sameMonth(r.created_at));
+  const records=[
+    ...(historyResult.data||[]),
+    ...(currentResult.data||[])
+  ].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
 
-  const sumRevenue=arr=>arr.reduce((sum,r)=>sum+Number(r.price||0)*Number(r.quantity||1),0);
-  const sumCommission=arr=>arr.reduce((sum,r)=>sum+Number(r.commission||0),0);
+  const today=localDateKey(new Date());
+  const todayRecords=records.filter(
+    r=>r.created_at&&localDateKey(r.created_at)===today
+  );
+  const monthRecords=records.filter(
+    r=>r.created_at&&sameMonth(r.created_at)
+  );
+
+  const sumRevenue=arr=>arr.reduce(
+    (sum,r)=>sum+Number(r.price||0)*Number(r.quantity||1),0
+  );
+  const sumCommission=arr=>arr.reduce(
+    (sum,r)=>sum+Number(r.commission||0),0
+  );
 
   box.innerHTML=`
     <div class="card">
       <h2>Báo cáo: ${escapeHtml(employeeName)}</h2>
+
       <div class="stat-grid">
-        <div class="stat">Doanh thu hôm nay<strong>${money(sumRevenue(todayRecords))}</strong></div>
-        <div class="stat">Tiền % hôm nay<strong>${money(sumCommission(todayRecords))}</strong></div>
-        <div class="stat">Doanh thu tháng<strong>${money(sumRevenue(monthRecords))}</strong></div>
-        <div class="stat">Tiền % tháng<strong>${money(sumCommission(monthRecords))}</strong></div>
+        <div class="stat">
+          Doanh thu hôm nay
+          <strong>${money(sumRevenue(todayRecords))}</strong>
+        </div>
+        <div class="stat">
+          Tiền % hôm nay
+          <strong>${money(sumCommission(todayRecords))}</strong>
+        </div>
+        <div class="stat">
+          Doanh thu tháng
+          <strong>${money(sumRevenue(monthRecords))}</strong>
+        </div>
+        <div class="stat">
+          Tiền % tháng
+          <strong>${money(sumCommission(monthRecords))}</strong>
+        </div>
       </div>
+
       <h3 style="margin-top:18px">Lịch sử dịch vụ</h3>
+
       ${records.length?records.map(r=>`
         <div class="service-card">
-          <strong>${escapeHtml(r.service_name)}</strong>
-          <div class="muted">${new Date(r.created_at).toLocaleString("vi-VN")}</div>
-          <div>Giá: ${money(Number(r.price||0)*Number(r.quantity||1))}</div>
-          <div class="gold">Tiền %: ${money(r.commission)}</div>
+          <strong>${escapeHtml(r.service_name||"")}</strong>
+          <div class="muted">
+            ${r.created_at
+              ?new Date(r.created_at).toLocaleString("vi-VN")
+              :"Không có ngày ghi nhận"}
+          </div>
+          <div>
+            Doanh thu:
+            ${money(Number(r.price||0)*Number(r.quantity||1))}
+          </div>
+          <div>Số lượng: ${Number(r.quantity||1)}</div>
+          <div class="gold">
+            Tiền %: ${money(r.commission)}
+          </div>
         </div>
-      `).join(""):'<p class="muted">Chưa có dịch vụ nào được ghi nhận.</p>'}
-      <button class="secondary" onclick="document.getElementById('employeeReportBox').innerHTML=''">Đóng báo cáo</button>
+      `).join(""):'<p class="muted">Chưa có lịch sử dịch vụ.</p>'}
+
+      <button class="secondary"
+        onclick="document.getElementById('employeeReportBox').innerHTML=''">
+        Đóng báo cáo
+      </button>
     </div>`;
 }
 
