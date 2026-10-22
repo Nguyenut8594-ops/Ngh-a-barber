@@ -1265,6 +1265,7 @@ async function loadServiceRecords(){
   `).join("");
 }
 
+
 async function deleteServiceRecord(id){
   if(currentEmployee){
     alert("Nhân viên không có quyền xóa dịch vụ.");
@@ -1273,15 +1274,33 @@ async function deleteServiceRecord(id){
 
   if(!checkSupabase()) return;
 
-  if(!confirm("Bạn chắc chắn muốn xóa bản ghi dịch vụ này?"))return;
+  if(!confirm("Bạn chắc chắn muốn xóa bản ghi dịch vụ này?")) return;
 
-  const {error}=await supabaseClient
+  // Tìm bản ghi gốc để lấy thông tin liên kết lịch sử
+  const { data: record, error: findError } = await supabaseClient
+    .from("service_records")
+    .select("id")
+    .eq("id", id)
+    .maybeSingle();
+
+  if(findError){
+    alert("Không tìm được bản ghi: " + findError.message);
+    return;
+  }
+
+  if(!record){
+    alert("Bản ghi dịch vụ không còn tồn tại.");
+    return;
+  }
+
+  // Xóa bản ghi dịch vụ hiện tại
+  const { error: deleteError } = await supabaseClient
     .from("service_records")
     .delete()
-    .eq("id",id);
+    .eq("id", id);
 
-  if(error){
-    alert("Xóa bản ghi không thành công: "+error.message);
+  if(deleteError){
+    alert("Xóa bản ghi không thành công: " + deleteError.message);
     return;
   }
 
@@ -1290,6 +1309,7 @@ async function deleteServiceRecord(id){
 
   alert("Đã xóa bản ghi dịch vụ và tải lại doanh thu.");
 }
+
 
 checkRememberLogin();
 </script>
