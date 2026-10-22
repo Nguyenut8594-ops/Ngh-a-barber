@@ -1276,7 +1276,7 @@ async function deleteServiceRecord(id){
 
   if(!confirm("Bạn chắc chắn muốn xóa bản ghi dịch vụ này?")) return;
 
-  // Tìm bản ghi gốc để lấy thông tin liên kết lịch sử
+  // Tìm đúng bản ghi cần xóa
   const { data: record, error: findError } = await supabaseClient
     .from("service_records")
     .select("id")
@@ -1290,26 +1290,44 @@ async function deleteServiceRecord(id){
 
   if(!record){
     alert("Bản ghi dịch vụ không còn tồn tại.");
+    await loadmoney();
+    await loadRevenueHistory();
     return;
   }
 
-  // Xóa bản ghi dịch vụ hiện tại
+  // Xóa dịch vụ đang hoạt động
   const { error: deleteError } = await supabaseClient
     .from("service_records")
     .delete()
-    .eq("id", id);
+    .eq("id", record.id);
 
   if(deleteError){
     alert("Xóa bản ghi không thành công: " + deleteError.message);
     return;
   }
 
+  // Xóa đúng bản ghi lịch sử liên kết với dịch vụ này,
+  // không xóa lịch sử của các dịch vụ khác
+  const { error: historyError } = await supabaseClient
+    .from("service_records_history")
+    .delete()
+    .eq("original_record_id", record.id);
+
+  // Tải lại số liệu kể cả khi xóa lịch sử gặp lỗi
   await loadmoney();
   await loadRevenueHistory();
 
-  alert("Đã xóa bản ghi dịch vụ và tải lại doanh thu.");
-}
+  if(historyError){
+    alert(
+      "Đã xóa dịch vụ hiện tại nhưng chưa xóa được bản ghi lịch sử liên quan: " +
+      historyError.message +
+      "\nDoanh thu có thể chưa cập nhật đúng. Bạn hãy báo mình lỗi này."
+    );
+    return;
+  }
 
+  alert("Đã xóa dịch vụ và cập nhật lại doanh thu.");
+}
 
 checkRememberLogin();
 </script>
