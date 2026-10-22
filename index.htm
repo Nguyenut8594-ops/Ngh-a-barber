@@ -1273,7 +1273,7 @@ async function deleteServiceRecord(id){
 
   if(!confirm("Bạn chắc chắn muốn xóa bản ghi dịch vụ này?")) return;
 
-  // Bước 1: Lấy đúng bản ghi đang hiển thị trong Thu chi
+  // 1. Lấy đúng bản ghi trong Thu chi
   const {data: record, error: findError} = await supabaseClient
     .from("service_records")
     .select("id, created_at, employee_name, service_name, price, quantity, commission")
@@ -1292,18 +1292,25 @@ async function deleteServiceRecord(id){
     return;
   }
 
-  // Bước 2: Xóa đúng bản ghi hiện tại
-  const {error: deleteError} = await supabaseClient
+  // 2. Xóa bản ghi hiện tại và xác nhận đã xóa
+  const {data: deletedRows, error: deleteError} = await supabaseClient
     .from("service_records")
     .delete()
-    .eq("id", record.id);
+    .eq("id", record.id)
+    .select("id");
 
   if(deleteError){
     alert("Xóa không thành công: " + deleteError.message);
     return;
   }
 
-  // Bước 3: Tìm đúng bản ghi lịch sử tương ứng
+  if(!deletedRows || deletedRows.length === 0){
+    alert("Không xác nhận được bản ghi đã xóa. Hãy kiểm tra quyền Supabase.");
+    return;
+  }
+
+  // 3. Đọc lịch sử sau khi xóa.
+  // Nếu cơ sở dữ liệu tự lưu lịch sử khi xóa, ta cũng kiểm tra được.
   const {data: historyRows, error: historyError} = await supabaseClient
     .from("service_records_history")
     .select("history_id, created_at, employee_name, service_name, price, quantity, commission");
@@ -1313,59 +1320,80 @@ async function deleteServiceRecord(id){
     await loadRevenueHistory();
 
     alert(
-      "Đã xóa bản ghi Thu chi nhưng chưa đồng bộ được lịch sử doanh thu. " +
-      "Lỗi: " + historyError.message
+      "Đã xóa Thu chi nhưng chưa kiểm tra được lịch sử doanh thu: " +
+      historyError.message
     );
     return;
   }
 
-  const sameRecord = r =>
-    r.created_at &&
-    record.created_at &&
-    new Date(r.created_at).getTime() ===
-      new Date(record.created_at).getTime() &&
+  const sameDetails = r =>
     String(r.employee_name || "") === String(record.employee_name || "") &&
     String(r.service_name || "") === String(record.service_name || "") &&
     Number(r.price || 0) === Number(record.price || 0) &&
     Number(r.quantity || 1) === Number(record.quantity || 1) &&
     Number(r.commission || 0) === Number(record.commission || 0);
 
-  // Chỉ xóa một bản ghi lịch sử khớp chính xác,
-  // không xóa hàng loạt dịch vụ trùng tên hoặc cùng giá.
-  const historyRecord = (historyRows || []).find(sameRecord);
+  const histories = (historyRows || []).filter(r =>
+    r.created_at &&
+    record.created_at &&
+    sameDetails(r) &&
+    localDateKey(r.created_at) === localDateKey(record.created_at)
+  );
 
+  const originalTime = new Date(record.created_at).getTime();
+
+  // Ưu tiên khớp chính xác thời gian
+  let historyRecord = histories.find(r =>
+    new Date(r.created_at).getTime() === originalTime
+  );
+
+  // Nếu thời gian khác nhau, chỉ xóa khi tìm được duy nhất một
+  // bản ghi cùng ngày có toàn bộ thông tin dịch vụ trùng khớp.
+  if(!historyRecord && histories.length === 1){
+    historyRecord = histories[0];
+  }
+
+  // 4. Xóa một bản ghi lịch sử tương ứng nếu xác định đủ chắc chắn
   if(historyRecord){
-    const {error: historyDeleteError} = await supabaseClient
-      .from("service_records_history")
-      .delete()
-      .eq("history_id", historyRecord.history_id);
+    const {data: deletedHistory, error: historyDeleteError} =
+      await supabaseClient
+        .from("service_records_history")
+        .delete()
+        .eq("history_id", historyRecord.history_id)
+        .select("history_id");
 
-    if(historyDeleteError){
+    if(historyDeleteError || !deletedHistory || !deletedHistory.length){
       await loadmoney();
       await loadRevenueHistory();
 
       alert(
-        "Đã xóa bản ghi Thu chi nhưng chưa xóa được bản ghi lịch sử tương ứng. " +
-        "Lỗi: " + historyDeleteError.message
+        "Đã xóa Thu chi nhưng chưa xác nhận được việc xóa lịch sử. " +
+        (historyDeleteError
+          ? historyDeleteError.message
+          : "Có thể quyền Supabase đang chặn thao tác.")
       );
       return;
     }
   }
 
-  // Bước 4: Tải lại các mục để cập nhật số tiền
+  // 5. Tải lại số liệu và lịch sử
   await loadmoney();
   await loadRevenueHistory();
 
   if(historyRecord){
-    alert("Đã xóa dịch vụ và bản ghi lịch sử tương ứng.");
+    alert("Đã xóa bản ghi Thu chi và lịch sử doanh thu tương ứng.");
+  }else if(histories.length > 1){
+    alert(
+      "Đã xóa bản ghi Thu chi. Có nhiều bản ghi lịch sử giống nhau " +
+      "nên mình giữ nguyên lịch sử để tránh xóa nhầm."
+    );
   }else{
     alert(
-      "Đã xóa dịch vụ khỏi Thu chi. Không tìm thấy bản ghi lịch sử " +
-      "khớp chính xác để xóa. Lịch sử cũ được giữ nguyên."
+      "Đã xóa bản ghi Thu chi. Không tìm thấy lịch sử tương ứng " +
+      "đủ chắc chắn để xóa."
     );
   }
 }
-
 
 
 checkRememberLogin();
