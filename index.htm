@@ -1266,7 +1266,13 @@ async function loadServiceRecords(){
 }
 
 async function deleteServiceRecord(id){
-  if(currentEmployee)return;
+  if(currentEmployee){
+    alert("Nhân viên không có quyền xóa dịch vụ.");
+    return;
+  }
+
+  if(!checkSupabase()) return;
+
   if(!confirm("Bạn chắc chắn muốn xóa bản ghi dịch vụ này?"))return;
 
   const {error}=await supabaseClient
@@ -1278,7 +1284,11 @@ async function deleteServiceRecord(id){
     alert("Xóa bản ghi không thành công: "+error.message);
     return;
   }
-  loadmoney();
+
+  await loadmoney();
+  await loadRevenueHistory();
+
+  alert("Đã xóa bản ghi dịch vụ và tải lại doanh thu.");
 }
 
 checkRememberLogin();
