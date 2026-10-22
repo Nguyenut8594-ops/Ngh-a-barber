@@ -1183,8 +1183,6 @@ async function loadManualmoney(){
   `).join("");
 }
 
-
-
 async function addmoney(){
   if(currentEmployee)return;
 
@@ -1265,7 +1263,6 @@ async function loadServiceRecords(){
   `).join("");
 }
 
-
 async function deleteServiceRecord(id){
   if(currentEmployee){
     alert("Nhân viên không có quyền xóa dịch vụ.");
@@ -1276,10 +1273,10 @@ async function deleteServiceRecord(id){
 
   if(!confirm("Bạn chắc chắn muốn xóa bản ghi dịch vụ này?")) return;
 
-  // Tìm đúng bản ghi cần xóa
+  // Đọc đầy đủ thông tin của bản ghi cần xóa
   const { data: record, error: findError } = await supabaseClient
     .from("service_records")
-    .select("id")
+    .select("id, created_at, employee_name, service_name, price, quantity, commission")
     .eq("id", id)
     .maybeSingle();
 
@@ -1289,13 +1286,13 @@ async function deleteServiceRecord(id){
   }
 
   if(!record){
-    alert("Bản ghi dịch vụ không còn tồn tại.");
+    alert("Bản ghi này không còn trong Thu chi.");
     await loadmoney();
     await loadRevenueHistory();
     return;
   }
 
-  // Xóa dịch vụ đang hoạt động
+  // Xóa bản ghi khỏi danh sách dịch vụ hiện tại
   const { error: deleteError } = await supabaseClient
     .from("service_records")
     .delete()
@@ -1306,27 +1303,65 @@ async function deleteServiceRecord(id){
     return;
   }
 
-  // Xóa đúng bản ghi lịch sử liên kết với dịch vụ này,
-  // không xóa lịch sử của các dịch vụ khác
-  const { error: historyError } = await supabaseClient
+  // Tìm lịch sử liên kết trực tiếp với ID ban đầu
+  const { data: historyRows, error: historyFindError } = await supabaseClient
     .from("service_records_history")
-    .delete()
-    .eq("original_record_id", record.id);
+    .select("history_id, original_record_id, created_at, employee_name, service_name, price, quantity, commission");
 
-  // Tải lại số liệu kể cả khi xóa lịch sử gặp lỗi
-  await loadmoney();
-  await loadRevenueHistory();
-
-  if(historyError){
+  if(historyFindError){
+    await loadmoney();
+    await loadRevenueHistory();
     alert(
-      "Đã xóa dịch vụ hiện tại nhưng chưa xóa được bản ghi lịch sử liên quan: " +
-      historyError.message +
-      "\nDoanh thu có thể chưa cập nhật đúng. Bạn hãy báo mình lỗi này."
+      "Đã xóa dịch vụ khỏi Thu chi nhưng chưa kiểm tra được lịch sử doanh thu: " +
+      historyFindError.message
     );
     return;
   }
 
-  alert("Đã xóa dịch vụ và cập nhật lại doanh thu.");
+  const sameValue = (a, b) =>
+    Number(a || 0) === Number(b || 0);
+
+  const sameRecord = (r) =>
+    String(r.created_at) === String(record.created_at) &&
+    String(r.employee_name || "") === String(record.employee_name || "") &&
+    String(r.service_name || "") === String(record.service_name || "") &&
+    sameValue(r.price, record.price) &&
+    sameValue(r.quantity, record.quantity) &&
+    sameValue(r.commission, record.commission);
+
+  // Ưu tiên ID liên kết; nếu không có thì mới đối chiếu
+  // đầy đủ thông tin của đúng bản ghi vừa xóa.
+  const linkedRows = (historyRows || []).filter(r =>
+    String(r.original_record_id) === String(record.id)
+  );
+
+  const rowsToDelete = linkedRows.length
+    ? linkedRows
+    : (historyRows || []).filter(sameRecord);
+
+  if(rowsToDelete.length){
+    const historyIds = rowsToDelete.map(r => r.history_id);
+
+    const { error: historyDeleteError } = await supabaseClient
+      .from("service_records_history")
+      .delete()
+      .in("history_id", historyIds);
+
+    if(historyDeleteError){
+      await loadmoney();
+      await loadRevenueHistory();
+      alert(
+        "Đã xóa dịch vụ khỏi Thu chi nhưng chưa xóa được lịch sử liên quan: " +
+        historyDeleteError.message
+      );
+      return;
+    }
+  }
+
+  await loadmoney();
+  await loadRevenueHistory();
+
+  alert("Đã xóa bản ghi. Bạn hãy kiểm tra lại Lịch sử doanh thu.");
 }
 
 checkRememberLogin();
