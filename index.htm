@@ -1282,7 +1282,6 @@ async function loadServiceRecords(){
   `).join("");
 }
 
-
 async function deleteServiceRecord(id){
   if(currentEmployee){
     alert("Nhân viên không có quyền xóa dịch vụ.");
@@ -1293,7 +1292,6 @@ async function deleteServiceRecord(id){
 
   if(!confirm("Bạn chắc chắn muốn xóa bản ghi dịch vụ này?")) return;
 
-  // 1. Tìm bản ghi dịch vụ cần xóa
   const {data: record, error: findError} = await supabaseClient
     .from("service_records")
     .select("id")
@@ -1312,79 +1310,21 @@ async function deleteServiceRecord(id){
     return;
   }
 
-  // 2. Xóa bản ghi hiện tại.
-  // Trigger của Supabase sẽ lưu bản sao vào bảng lịch sử.
-  const {data: deletedRows, error: deleteError} = await supabaseClient
-    .from("service_records")
-    .delete()
-    .eq("id", record.id)
-    .select("id");
+  const {error: deleteError} = await supabaseClient
+    .rpc("delete_service_record_manually", {
+      p_record_id: record.id
+    });
 
   if(deleteError){
     alert("Xóa không thành công: " + deleteError.message);
     return;
   }
 
-  if(!deletedRows || deletedRows.length === 0){
-    alert("Không xác nhận được bản ghi đã xóa. Hãy kiểm tra quyền Supabase.");
-    return;
-  }
-
-  // 3. Tìm đúng bản ghi lịch sử theo ID gốc
-  const {data: historyRows, error: historyError} = await supabaseClient
-    .from("service_records_history")
-    .select("history_id")
-    .eq("original_record_id", record.id);
-
-  if(historyError){
-    await loadmoney();
-    await loadRevenueHistory();
-    alert(
-      "Đã xóa bản ghi Thu chi nhưng chưa xóa được lịch sử: " +
-      historyError.message
-    );
-    return;
-  }
-
-  // 4. Xóa bản lưu lịch sử tương ứng với thao tác xóa thủ công
-  if(historyRows && historyRows.length > 0){
-    const historyIds = historyRows.map(r => r.history_id);
-
-    const {data: deletedHistory, error: historyDeleteError} =
-      await supabaseClient
-        .from("service_records_history")
-        .delete()
-        .in("history_id", historyIds)
-        .select("history_id");
-
-    if(historyDeleteError){
-      await loadmoney();
-      await loadRevenueHistory();
-      alert(
-        "Đã xóa Thu chi nhưng xóa lịch sử chưa thành công: " +
-        historyDeleteError.message
-      );
-      return;
-    }
-
-    if(!deletedHistory || deletedHistory.length !== historyIds.length){
-      await loadmoney();
-      await loadRevenueHistory();
-      alert(
-        "Đã xóa Thu chi nhưng chưa xác nhận xóa hết lịch sử. " +
-        "Bạn kiểm tra lại mục Doanh thu nhé."
-      );
-      return;
-    }
-  }
-
-  // 5. Cập nhật lại giao diện
   await loadmoney();
   await loadRevenueHistory();
 
   alert("Đã xóa bản ghi Thu chi và lịch sử doanh thu tương ứng.");
 }
-
 
 
 checkRememberLogin();
