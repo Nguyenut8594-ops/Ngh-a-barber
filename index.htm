@@ -351,6 +351,7 @@ function show(id){
   if(id==="revenue")loadRevenueHistory();
 }
 
+
 async function loadRevenueHistory(){
   const box = document.getElementById("revenueHistoryBox");
   const dateInput = document.getElementById("revenueDate");
@@ -370,7 +371,7 @@ async function loadRevenueHistory(){
 
   let historyQuery = supabaseClient
     .from("service_records_history")
-    .select("history_id, created_at, employee_name, service_name, price, quantity, commission");
+    .select("history_id, original_record_id, created_at, employee_name, service_name, price, quantity, commission");
 
   let currentQuery = supabaseClient
     .from("service_records")
@@ -394,20 +395,37 @@ async function loadRevenueHistory(){
   }
 
   const selectedDate = dateInput.value;
+  const currentRows = currentResult.data || [];
+
+  // Các ID vẫn còn trong bảng dịch vụ hiện tại
+  const currentIds = new Set(
+    currentRows.map(r => String(r.id))
+  );
+
+  // Không cộng bản lưu lịch sử nếu bản gốc vẫn còn tồn tại
+  const historyRows = (historyResult.data || []).filter(r =>
+    !currentIds.has(String(r.original_record_id))
+  );
 
   const records = [
-    ...(historyResult.data || []),
-    ...(currentResult.data || [])
+    ...historyRows,
+    ...currentRows
   ]
-  .filter(r => r.created_at && localDateKey(r.created_at) === selectedDate)
+  .filter(r =>
+    r.created_at &&
+    localDateKey(r.created_at) === selectedDate
+  )
   .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
   const totalRevenue = records.reduce(
-    (sum,r) => sum + Number(r.price || 0) * Number(r.quantity || 1), 0
+    (sum,r) =>
+      sum + Number(r.price || 0) * Number(r.quantity || 1),
+    0
   );
 
   const totalCommission = records.reduce(
-    (sum,r) => sum + Number(r.commission || 0), 0
+    (sum,r) => sum + Number(r.commission || 0),
+    0
   );
 
   box.innerHTML = `
@@ -444,6 +462,7 @@ async function loadRevenueHistory(){
       '<p class="muted">Ngày này chưa có dịch vụ được ghi nhận.</p>'}
   `;
 }
+
 
   async function loadEmployees(){
   if(!checkSupabase()||currentEmployee)return;
