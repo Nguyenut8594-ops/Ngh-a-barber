@@ -874,56 +874,55 @@ async function recordService(serviceId){
   loadmoney();
 }
   
-async function showEmployeeReport(employeeId,employeeName){
-  if(currentEmployee)return;
+async function showEmployeeReport(employeeId, employeeName){
+  if(currentEmployee) return;
 
-  const box=document.getElementById("employeeReportBox");
-  box.innerHTML='<div class="card">Đang tải báo cáo...</div>';
-  box.scrollIntoView({behavior:"smooth",block:"start"});
+  const box = document.getElementById("employeeReportBox");
+  if(!box) return;
 
-  const [historyResult,currentResult]=await Promise.all([
-    supabaseClient
-      .from("service_records_history")
-      .select("history_id, created_at, employee_name, service_name, price, quantity, commission")
-      .eq("employee_name",employeeName)
-      .order("created_at",{ascending:false}),
+  box.innerHTML =
+    '<div class="card">⏳ Đang tải báo cáo...</div>';
 
-    supabaseClient
-      .from("service_records")
-      .select("id, created_at, employee_name, service_name, price, quantity, commission")
-      .eq("employee_name",employeeName)
-      .order("created_at",{ascending:false})
-  ]);
+  if(!checkSupabase()) return;
 
-  if(historyResult.error || currentResult.error){
-    const err=historyResult.error || currentResult.error;
-    box.innerHTML=
-      '<div class="card">Lỗi tải báo cáo: '+
-      escapeHtml(err.message)+'</div>';
+  // Chỉ lấy dịch vụ của kỳ hiện tại.
+  // Không đọc service_records_history tại đây.
+  const {data: records, error} = await supabaseClient
+    .from("service_records")
+    .select("id, created_at, employee_name, service_name, price, quantity, commission")
+    .eq("employee_name", employeeName)
+    .order("created_at", {ascending: false});
+
+  if(error){
+    box.innerHTML =
+      '<div class="card">Lỗi tải báo cáo: ' +
+      escapeHtml(error.message) + '</div>';
     return;
   }
 
-  const records=[
-    ...(historyResult.data||[]),
-    ...(currentResult.data||[])
-  ].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  const list = records || [];
+  const today = localDateKey(new Date());
 
-  const today=localDateKey(new Date());
-  const todayRecords=records.filter(
-    r=>r.created_at&&localDateKey(r.created_at)===today
-  );
-  const monthRecords=records.filter(
-    r=>r.created_at&&sameMonth(r.created_at)
+  const todayRecords = list.filter(r =>
+    r.created_at && localDateKey(r.created_at) === today
   );
 
-  const sumRevenue=arr=>arr.reduce(
-    (sum,r)=>sum+Number(r.price||0)*Number(r.quantity||1),0
-  );
-  const sumCommission=arr=>arr.reduce(
-    (sum,r)=>sum+Number(r.commission||0),0
+  const monthRecords = list.filter(r =>
+    r.created_at && sameMonth(r.created_at)
   );
 
-  box.innerHTML=`
+  const sumRevenue = arr => arr.reduce(
+    (sum, r) =>
+      sum + Number(r.price || 0) * Number(r.quantity || 1),
+    0
+  );
+
+  const sumCommission = arr => arr.reduce(
+    (sum, r) => sum + Number(r.commission || 0),
+    0
+  );
+
+  box.innerHTML = `
     <div class="card">
       <h2>Báo cáo: ${escapeHtml(employeeName)}</h2>
 
@@ -932,14 +931,17 @@ async function showEmployeeReport(employeeId,employeeName){
           Doanh thu hôm nay
           <strong>${money(sumRevenue(todayRecords))}</strong>
         </div>
+
         <div class="stat">
           Tiền % hôm nay
           <strong>${money(sumCommission(todayRecords))}</strong>
         </div>
+
         <div class="stat">
           Doanh thu tháng
           <strong>${money(sumRevenue(monthRecords))}</strong>
         </div>
+
         <div class="stat">
           Tiền % tháng
           <strong>${money(sumCommission(monthRecords))}</strong>
@@ -948,24 +950,29 @@ async function showEmployeeReport(employeeId,employeeName){
 
       <h3 style="margin-top:18px">Lịch sử dịch vụ</h3>
 
-      ${records.length?records.map(r=>`
+      ${list.length ? list.map(r => `
         <div class="service-card">
-          <strong>${escapeHtml(r.service_name||"")}</strong>
+          <strong>${escapeHtml(r.service_name || "")}</strong>
+
           <div class="muted">
             ${r.created_at
-              ?new Date(r.created_at).toLocaleString("vi-VN")
-              :"Không có ngày ghi nhận"}
+              ? new Date(r.created_at).toLocaleString("vi-VN")
+              : "Không có ngày ghi nhận"}
           </div>
+
           <div>
             Doanh thu:
-            ${money(Number(r.price||0)*Number(r.quantity||1))}
+            ${money(Number(r.price || 0) * Number(r.quantity || 1))}
           </div>
-          <div>Số lượng: ${Number(r.quantity||1)}</div>
+
+          <div>Số lượng: ${Number(r.quantity || 1)}</div>
+
           <div class="gold">
             Tiền %: ${money(r.commission)}
           </div>
         </div>
-      `).join(""):'<p class="muted">Chưa có lịch sử dịch vụ.</p>'}
+      `).join("") :
+        '<p class="muted">Chưa có lịch sử dịch vụ trong kỳ mới.</p>'}
 
       <button class="secondary"
         onclick="document.getElementById('employeeReportBox').innerHTML=''">
